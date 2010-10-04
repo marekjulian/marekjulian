@@ -1,0 +1,8 @@
+development:
+  bucket: archives.marekjulian-dev
+  access_key_id: AKIAJ5BQUSOWRLAWYHTQ
+  secret_access_key: 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
+
+production:
+  bucket: archives.marekjulian
+

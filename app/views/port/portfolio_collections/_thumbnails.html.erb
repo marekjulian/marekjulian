@@ -1,0 +1,13 @@
+    <div id="Thumbnails" class="Thumbnails">
+      <% @portfolio_collection.image_show_views.each do | showView | %>
+        <% thumbnailVariant = ImageVariant.find showView.thumbnail_variant_id %>
+        <% mainVariant = ImageVariant.find showView.show_variant_id %>
+        <% thumbnailElem = image_variant_tag thumbnailVariant %>
+        <% mainElem = image_variant_tag mainVariant %>
+        <div class="Thumbnail">
+          <%= link_to_function thumbnailElem do | page |
+              page[:MainImage].replace_html mainElem
+           end %>
+        </div>
+      <% end %>
+    </div>

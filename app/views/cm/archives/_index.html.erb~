@@ -1,0 +1,10 @@
+<div class="ArchiveList">
+  <%= render :partial => "archives/heading", :locals => { :label => "Archives" } %>
+
+  <% if @archives %>
+    <% @archives.each do | archive | %>
+      <%= link_to archive.name, archive_path( archive.id ), :class => "NavLink" %>
+    <% end %>
+  <% end %>
+
+</div>

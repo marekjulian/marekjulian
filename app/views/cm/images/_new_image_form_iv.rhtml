@@ -1,0 +1,25 @@
+<div class="ImageVariant">
+    <% image_form.fields_for :image_variants, image_variant do |iv| %>
+        <div class="ImageVariantFields">
+            <p>Select image variant file:<%= iv.file_field :file %></p>
+            <div class="ImageVariantFieldProperties">
+                <%= iv.hidden_field :properties_mode, :class => "ImageVariantFieldPropertiesMode" %>
+                <div class="ImageVariantFieldPropertiesSelect">
+                    <div class="ImageVariantFieldPropertiesSelectLabel">properties:</div>
+                    <div class="ImageVariantFieldPropertiesSelectValues">
+                        <%= select_tag :ImageVariantPropMode, options_for_select( ["We'll set them for you...", "You tell us..."], :selected => "We'll set them for you..." ),
+                                :onchange => "nifShowHideCheckBoxes( this, this.parentNode.parentNode.nextElementSibling, this.parentNode.parentNode.previousElementSibling );"
+                        %>
+                    </div>
+                </div>
+                <div class="ImageVariantFieldPropertiesCheckBoxes" style="display:none">
+                    <div class="ImageVariantFieldCheckBox">master<%= iv.check_box :is_master %></div>
+                    <div class="ImageVariantFieldCheckBox">web default<%= iv.check_box :is_web_default %></div>
+                    <div class="ImageVariantFieldCheckBox">thumbnail<%= iv.check_box :is_thumbnail %></div>
+                    <div class="ImageVariantFieldCheckBox">default thumbnail<%= iv.check_box :is_thumbnail_default %></div>
+                </div>
+            </div>
+        </div>
+    <% end %>
+    <div class="ImageVariantDeleteBlock"><%= link_to_function "delete", "removeField($(this), ('.ImageVariant'))", :class => "ImageVariantDelete" %></div>
+</div>

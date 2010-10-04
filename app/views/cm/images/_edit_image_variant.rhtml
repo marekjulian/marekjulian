@@ -1,0 +1,31 @@
+<% iv_id = "ImageVariantListElementID_" + image_variant.id.to_s %>
+<div id=<%=iv_id%> class="ImageVariantListElement">
+  <% t_str = image_variant_type_string image_variant, " (", ")" %>
+  <% s_str = image_variant_file_size_str image_variant %>
+  <p><%= image_variant.file_file_name%><%=t_str%></p>
+  <div class="ImageVariantListElementProperties">
+    <div class="ImageVariantListElementProp">size : <%= s_str %></div>
+    <div class="ImageVariantListElementProp">wxh : <%= Paperclip::Geometry.from_file image_variant.file.path %></div>
+    <div class="ImageVariantListElementProp">type : <%= image_variant.file_content_type %></div>
+    <div class="ImageVariantListElementProp">uploaded : <%= image_variant.created_at %></div>
+  </div>
+  <% if is_thumbnail %>
+    <div class="ImageVariantListElementThumbnail">
+      <%= image_variant_tag image_variant %>
+    </div>
+  <% end %>
+  <div class="ImageVariantListElementDelete">
+    <% delete_id = "DeleteVariantID_" + image_variant.id.to_s %>
+    <div id=<%=delete_id%>
+      <%= hidden_field_tag 'update_type', 'delete_image_variant' %>
+      <%= hidden_field_tag 'delete_variant_id', image_variant.id %>
+    </div>
+    <%= link_to_remote '> delete image variant',
+                       :submit => delete_id,
+                       :method => :put,
+                       :url => { :action => :update },
+                       :success => "$('%s').hide()" % iv_id,
+		       :html => { :class => "NavLink" }
+     %>
+  </div>
+</div>

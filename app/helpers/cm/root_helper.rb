@@ -1,0 +1,2 @@
+module Cm::RootHelper
+end

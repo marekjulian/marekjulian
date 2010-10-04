@@ -1,0 +1,12 @@
+<div class="ImageVariant">
+  <% image_form.fields_for :image_variants, image_variant do |iv| %>
+    <p>Select image variant file:<%= iv.file_field :file %></p>
+    <% if select_type %>
+      <%= iv.radio_button :variant_type, 'M' %>Master
+      <%= iv.radio_button :variant_type, 'V' %>Other
+      <%= iv.radio_button :variant_type, 'T' %>Thumbnail
+    <% else %>
+      <% image_variant.variant_type = 'V' %>
+    <% end %>
+  <% end %>
+</div>

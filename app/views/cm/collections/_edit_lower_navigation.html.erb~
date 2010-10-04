@@ -1,0 +1,4 @@
+<div class="ArchiveLowerNavigation">
+    <%= link_to "Show Collection", { :controller => "collection", :action => "show", :id => @collection.id }, :class => "NavLink" %>
+    <%= link_to "Return To Archive", { :controller => "archive", :action => "edit", :id => session['current_archive'] }, :class => "NavLink" %>
+</div>

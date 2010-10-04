@@ -1,0 +1,19 @@
+<div class="ImageVariant">
+  <% image_form.fields_for :image_variants, image_variant do |iv| %>
+    <div class="ImageVariantFields">
+      <div class="ImageVariantFieldsSelect">
+        <p>Select image variant file:<%= iv.file_field :file %></p>
+	<div class="ImageVariantFieldProperties">proprties:
+	  <div class="ImageVariantFieldPropertiesSelect"><div class="ImageVariantFieldPropertiesSelectLabel">auto:</div><%= select_tag :properties_mode, options_for_select( ["We'll do it for you...", "You tell us..."], :selected => "We'll do it for you..." ), :class => "ImageVariantFieldPropertiesSelectValues" %></div>
+	  <div class="ImageVariantFieldCheckBoxes" style="display:none">
+            <div class="ImageVariantFieldCheckBox">master<%= iv.check_box :is_master %></div>
+            <div class="ImageVariantFieldCheckBox">web default<%= iv.check_box :is_web_default %></div>
+            <div class="ImageVariantFieldCheckBox">thumbnail<%= iv.check_box :is_thumbnail %></div>
+            <div class="ImageVariantFieldCheckBox">default thumbnail<%= iv.check_box :is_thumbnail_default %></div>
+          </div>
+        </div>
+      </div>
+      <div class="ImageVariantDeleteBlock"><%= link_to_function "delete", "remove_field($(this), ('.ImageVariant'))", :class => "ImageVariantDelete" %></div>
+    </div>
+  <% end %>
+</div>

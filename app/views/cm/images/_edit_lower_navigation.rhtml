@@ -1,0 +1,11 @@
+<div class="ArchiveLowerNavigation">
+    <% if @collection %>
+      <% if action == :edit %>
+        <%= link_to "Show Image", cm_archive_collection_image_path( @archive, @collection, @image ), :class => "NavLink" %>
+      <% end %>
+      <%= link_to "Return To Collection", edit_cm_archive_collection_path( @archive, @collection ), :class => "NavLink" %>
+    <% else %>
+      <%= link_to "Show Image", cm_archive_image_path( @archive, @image ), :class => "NavLink" %>
+    <% end %>
+    <%= link_to "Return To Archive", edit_cm_archive_path( @archive ), :class => "NavLink" %>
+</div>

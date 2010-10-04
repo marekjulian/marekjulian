@@ -1,0 +1,31 @@
+<div class="Login">
+  <h1 class="Heading">log in with your account</h1>
+  <% form_tag session_path do -%>
+
+    <div class="FieldRow">
+      <%= label_tag 'login', "Username" %>
+      <%= text_field_tag 'login', @login %><br />
+    </div>
+
+    <div class="FieldRow">
+      <%= label_tag 'password' %>
+      <%= password_field_tag 'password', nil %><br/>
+    </div>
+    <p class="Link"><%= link_to 'Forgot Password?', forgot_password_path, :class => "Link" %></p>
+
+    <% if_recaptcha? do %>
+      <div class="FieldRow">
+        <label for="recaptcha">Please enter the following words below.</label>
+        <%= recaptcha_tags %><br />
+      </div>
+    <% end %>
+
+    Stay logged in on this computer:<br/>
+    <div class="FieldRow">
+      <%= label_tag 'remember_me', 'Remember me' %>
+      <%= check_box_tag 'remember_me', '1', @remember_me %><br />
+    </div>
+
+    <p><%= submit_tag 'Log in', :disable_with => "Signing in&hellip;" %></p>
+  <% end -%>
+</div>

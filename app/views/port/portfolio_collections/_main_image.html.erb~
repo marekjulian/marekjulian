@@ -1,0 +1,3 @@
+    <div id="MainImage" class="MainImage">
+      <%= image_variant_tag @mainImageVariant %>
+    </div>

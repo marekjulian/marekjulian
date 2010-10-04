@@ -1,0 +1,10 @@
+<div class="AddImageVariant">
+  <% image_form.fields_for :image_variants, image_variant do |iv| %>
+    <div class="ImageVariantFields">
+      <div class="ImageVariantFieldsSelect">
+        <p>Select image variant file:<%= iv.file_field :file, :index => nil %></p>
+      </div>
+      <%= link_to_function "delete", "remove_field($(this), ('.AddImageVariant'))", :class => "ImageVariantDelete" %>
+    </div>
+  <% end %>
+</div>

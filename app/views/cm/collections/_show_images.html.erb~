@@ -1,0 +1,50 @@
+<% initialMainVariant = nil %>
+<% if @collection %>
+    <% images = @collection.images %>
+    <% images.each do | image | %>
+        <% image.image_variants.each do | imageVariant | %>
+            <% if imageVariant.variant_type == 'W' %>
+                <% initialMainVariant = imageVariant %>
+                <% break %>
+            <% end %>
+        <% end %>
+    <% end %>
+<% end %>
+<div class="ArchiveList">
+    <% if @collection %>
+        <div class="ArchiveListHeading">
+            <%= render :partial => "heading", :locals => { :label => "Collection" } %>
+        </div>
+        <% images = @collection.images %>
+        <% images.each do | image | %>
+            <% thumbnailVariant = nil %>
+            <% mainVariant = nil %>
+            <% image.image_variants.each do | imageVariant | %>
+                <% if imageVariant.variant_type == 'T' %>
+                    <% thumbnailVariant = imageVariant %>
+                <% elsif imageVariant.variant_type == 'W' %>
+                    <% mainVariant = imageVariant %>
+                <% end %>
+            <% end %>
+            <div class="ArchiveListElement">
+                <div class="ArchiveListLink">
+                    <%= link_to image.description, cm_archive_collection_image_path( @archive, @collection, image.id ), :class => "NavLink" %>
+                </div>
+                <% if thumbnailVariant and mainVariant %>
+                    <% thumbnailElem = image_variant_tag thumbnailVariant %>
+                    <% mainElem = image_variant_tag mainVariant %>
+                    <div class="ArchiveListThumbnail">
+		        <%= link_to_function thumbnailElem do | page |
+                            page[:ArchiveMainImage].replace_html mainElem
+                         end %>
+                    </div>
+                <% end %>
+            </div>
+        <% end %>
+    <% end %>
+</div>
+<div id="ArchiveMainImage" class="ArchiveMainImage">
+    <% if initialMainVariant %>
+        <%= image_variant_tag initialMainVariant %>
+    <% end %>
+</div>

@@ -1,0 +1,3 @@
+<div id="ArchiveNavigation" class="ArchiveNavigation">
+  <%= render :partial => "archives/index" %>
+</div>

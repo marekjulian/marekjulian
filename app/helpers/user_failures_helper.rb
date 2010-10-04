@@ -1,0 +1,2 @@
+module UserFailuresHelper
+end
