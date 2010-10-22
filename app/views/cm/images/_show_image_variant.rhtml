@@ -4,7 +4,7 @@
   <p><%= image_variant.file_file_name%><%=t_str%></p>
   <div class="ImageVariantListElementProperties">
     <div class="ImageVariantListElementProp">size : <%= s_str %></div>
-    <div class="ImageVariantListElementProp">wxh : <%= Paperclip::Geometry.from_file image_variant.file.path %></div>
+    <div class="ImageVariantListElementProp">wxh : <%= dimensions_str image_variant %></div>
     <div class="ImageVariantListElementProp">type : <%= image_variant.file_content_type %></div>
     <div class="ImageVariantListElementProp">uploaded : <%= image_variant.created_at %></div>
   </div>

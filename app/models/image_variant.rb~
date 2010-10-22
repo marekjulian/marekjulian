@@ -3,8 +3,10 @@ class ImageVariant < ActiveRecord::Base
     belongs_to :image
 
     has_attached_file :file,
-                      :path => ':rails_root/public/media_archives/:username/images/:image_id/:id/:basename.:extension',
-                      :url => '/media_archives/:username/images/:image_id/:id/:basename.:extension'
+                      :storage => :s3,
+                      :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
+                      :path => ':archive_id/images/:image_id/:basename.:extension',
+                      :url => '/media_archives/:archive_id/images/:image_id/:basename.:extension'
 
     #
     # Can take take on one of 3 values:

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090315030649) do
+ActiveRecord::Schema.define(:version => 20101017024820) do
 
   create_table "archives", :force => true do |t|
     t.integer  "owner_id"
@@ -51,6 +51,8 @@ ActiveRecord::Schema.define(:version => 20090315030649) do
     t.boolean  "is_thumbnail_default", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "file_width",           :default => 0
+    t.integer  "file_height",          :default => 0
   end
 
   create_table "images", :force => true do |t|
@@ -115,7 +117,7 @@ ActiveRecord::Schema.define(:version => 20090315030649) do
     t.string   "country",                   :limit => 32
     t.string   "zip",                       :limit => 16
     t.integer  "age"
-    t.string   "gender",                    :limit => 0
+    t.string   "gender",                    :limit => 1
     t.string   "occupation",                :limit => 64
     t.string   "login"
     t.string   "email"

@@ -1,6 +1,7 @@
 module ImageVariantsHelper
 
   def image_variant_tag( image_variant )
+    logger.info "Generating image variant tag for url - #{image_variant.file.url}."
     image_tag image_variant.file.url, :alt => "", :border => 0
   end
 
@@ -40,5 +41,17 @@ module ImageVariantsHelper
         "%.2f" % size
     end
   end
+
+    def dimensions_str( image_variant )
+        width = '?'
+        height = '?'
+        if image_variant.file_width != nil
+            width = image_variant.file_width.to_s
+        end
+        if image_variant.file_height != nil
+            height = image_variant.file_height.to_s
+        end
+        width + " x " + height
+    end
 
 end

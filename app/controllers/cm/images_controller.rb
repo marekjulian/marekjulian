@@ -46,9 +46,9 @@ class Cm::ImagesController < ApplicationController
                 ok = @collection.images << @image
             end
             ok = resolve_variants if ok
-            # @image.image_variants.each do | iv |
-            #     ok = iv.save if ok
-            # end
+            @image.image_variants.each do | iv |
+                ok = iv.save if ok
+            end
             ok = @image.save if ok
         else
             ok = false

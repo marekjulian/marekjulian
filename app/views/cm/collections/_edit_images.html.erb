@@ -29,7 +29,12 @@
             <% end %>
             <div class="ArchiveListElement">
                 <div class="ArchiveListLink">
-                    <%= link_to image.description, edit_cm_archive_collection_image_path( @archive, @collection, image ), :class => "NavLink" %>
+                    <% if image.description == nil %>
+                        <% description = "?" %>
+                    <% else %>
+                        <% description = image.description %>
+                    <% end %>
+                    <%= link_to description, edit_cm_archive_collection_image_path( @archive, @collection, image ), :class => "NavLink" %>
                 </div>
                 <% if thumbnailVariant %>
                     <% if mainVariant %>
