@@ -47,5 +47,5 @@ production:
   encoding: unicode
   database: marekjulian_production
   pool: 5
-  username: marekjulian
-  password:
+  username: postgres
+  password: J1Ulrich
