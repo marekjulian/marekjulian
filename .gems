@@ -3,5 +3,4 @@ aws-s3 --version 0.6.2
 right_aws --version 2.0.0
 yaml_db
 restful_authentication
-role_requirement
 recaptcha
