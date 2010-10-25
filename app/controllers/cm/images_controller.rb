@@ -6,7 +6,7 @@ class Cm::ImagesController < ApplicationController
     layout "cm"
 
     def show
-        @image = Cm::Image.find(params[:id])
+        @image = Image.find(params[:id])
 
         respond_to do |format|
             format.html { render :action => "show" }
@@ -73,7 +73,7 @@ class Cm::ImagesController < ApplicationController
     end
 
     def edit
-        @image = Cm::Image.find(params[:id])
+        @image = Image.find(params[:id])
 
         respond_to do |format|
             format.html { render :action => "edit" }
@@ -87,7 +87,7 @@ class Cm::ImagesController < ApplicationController
         logger.info params[:id].inspect
         logger.info "About to update image."
 
-        @image = Cm::Image.find(params[:id])
+        @image = Image.find(params[:id])
 
         updated = false
         new_image_variant = nil
@@ -131,7 +131,7 @@ class Cm::ImagesController < ApplicationController
     end
 
     def destroy
-        @image = Cm::Image.find(params[:id])
+        @image = Image.find(params[:id])
         @image.destroy
 
         respond_to do |format|

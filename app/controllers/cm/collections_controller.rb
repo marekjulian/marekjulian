@@ -6,7 +6,7 @@ class Cm::CollectionsController < ApplicationController
   # GET /cm/archive/:archive_id/collections
   # GET /cm/archive/:archive_id/collections.xml
   def index
-    @collections = Cm::Collection.find(:all)
+    @collections = Collection.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,8 +17,8 @@ class Cm::CollectionsController < ApplicationController
   # GET /cm/archive/:archive_id/collections/1
   # GET /cm/archive/:archive_id/collections/1.xml
   def show
-    @archive = Cm::Archive.find( params[:archive_id] )
-    @collection = Cm::Collection.find( params[:id] )
+    @archive = Archive.find( params[:archive_id] )
+    @collection = Collection.find( params[:id] )
 
     respond_to do |format|
       format.html # show.html.erb
@@ -29,7 +29,7 @@ class Cm::CollectionsController < ApplicationController
   # GET /cm/archive/:archive_id/collections/new
   # GET /cm/archive/:archive_id/collections/new.xml
   def new
-    @collection = Cm::Collection.new
+    @collection = Collection.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -39,18 +39,18 @@ class Cm::CollectionsController < ApplicationController
 
   # GET /cm_collections/1/edit
   def edit
-    @archive = Cm::Archive.find( params[:archive_id] )
-    @collection = Cm::Collection.find(params[:id])
+    @archive = Archive.find( params[:archive_id] )
+    @collection = Collection.find(params[:id])
   end
 
   # POST /cm_collections
   # POST /cm_collections.xml
   def create
-    @collection = Cm::Collection.new(params[:collection])
+    @collection = Collection.new(params[:collection])
 
     respond_to do |format|
       if @collection.save
-        flash[:notice] = 'Cm::Collection was successfully created.'
+        flash[:notice] = 'Collection was successfully created.'
         format.html { redirect_to(@collection) }
         format.xml  { render :xml => @collection, :status => :created, :location => @collection }
       else
@@ -63,11 +63,11 @@ class Cm::CollectionsController < ApplicationController
   # PUT /cm_collections/1
   # PUT /cm_collections/1.xml
   def update
-    @collection = Cm::Collection.find(params[:id])
+    @collection = Collection.find(params[:id])
 
     respond_to do |format|
       if @collection.update_attributes(params[:collection])
-        flash[:notice] = 'Cm::Collection was successfully updated.'
+        flash[:notice] = 'Collection was successfully updated.'
         format.html { redirect_to(@collection) }
         format.xml  { head :ok }
       else
@@ -80,7 +80,7 @@ class Cm::CollectionsController < ApplicationController
   # DELETE /cm_collections/1
   # DELETE /cm_collections/1.xml
   def destroy
-    @collection = Cm::Collection.find(params[:id])
+    @collection = Collection.find(params[:id])
     @collection.destroy
 
     respond_to do |format|
