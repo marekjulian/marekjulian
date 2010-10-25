@@ -22,22 +22,34 @@
             <% image.image_variants.each do | imageVariant | %>
                 <% if imageVariant.is_thumbnail_default %>
                     <% thumbnailVariant = imageVariant %>
-                <% elsif imageVariant.is_web_default %>
+                <% end %>
+                <% if imageVariant.is_web_default %>
                     <% mainVariant = imageVariant %>
                 <% end %>
             <% end %>
             <div class="ArchiveListElement">
                 <div class="ArchiveListLink">
-                    <%= link_to image.description, cm_archive_collection_image_path( @archive, @collection, image.id ), :class => "NavLink" %>
+                    <% if image.description == nil %>
+                        <% description = "?" %>
+                    <% else %>
+                        <% description = image.description %>
+                    <% end %>
+                    <%= link_to description, cm_archive_collection_image_path( @archive, @collection, image.id ), :class => "NavLink" %>
                 </div>
-                <% if thumbnailVariant and mainVariant %>
-                    <% thumbnailElem = image_variant_tag thumbnailVariant %>
-                    <% mainElem = image_variant_tag mainVariant %>
-                    <div class="ArchiveListThumbnail">
-		        <%= link_to_function thumbnailElem do | page |
-                            page[:ArchiveMainImage].replace_html mainElem
-                         end %>
-                    </div>
+                <% if thumbnailVariant %>
+                    <% if mainVariant %>
+                        <% thumbnailElem = image_variant_tag thumbnailVariant %>
+                        <% mainElem = image_variant_tag mainVariant %>
+                        <div class="ArchiveListThumbnail">
+                            <%= link_to_function thumbnailElem do | page |
+                                page[:ArchiveMainImage].replace_html mainElem
+                            end %>
+                        </div>
+                    <% else %>
+                        <div class="ArchiveListThumbnail">
+                            <%= thumbnailElem = image_variant_tag thumbnailVariant %>
+                        </div>
+                    <% end %>
                 <% end %>
             </div>
         <% end %>
