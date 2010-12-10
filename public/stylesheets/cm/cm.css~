@@ -1,0 +1,206 @@
+.ArchiveNavigation {
+    display : block;
+    position : fixed;
+    top : 15px;
+    left : 0px;
+    width : 500px;
+    margin-left : 4em;
+}
+
+.ArchiveList {
+    display : block;
+    position : relative;
+    top : 60px;
+    left : 0px;
+    width : 200px;
+    margin-left : 4em;
+}
+
+.ArchiveListHeading {
+    display : block;
+    position : static;
+    margin-top : 0em;
+    margin-bottom : 10px;
+}
+
+.ArchiveListElement {
+    display : block;
+    position : static;
+    height : 80px;
+    margin-top : 10px;
+    margin-bottom : 10px;
+}
+
+.ArchiveListLink {
+    display : block;
+    position : static;
+    left : 0px;
+}
+
+.ArchiveListThumbnail {
+    float : right;
+    margin-right : 0px;
+}
+
+.ArchiveListDelete {
+    display : block;
+    postion : relative;
+    left : 20px;
+    bottom : 0px;
+    margin-left : 20px;
+    margin-bottom : 0px;
+}
+
+.ArchiveMainImage {
+    display : block;
+    position : absolute;
+    width : 60%;
+    top : 6em;
+    left : 400px;
+    right : auto;
+}
+
+.ArchiveLowerNavigation {
+    display : block;
+    position : relative;
+    top : 80px;
+    width : 300px;
+    margin-left : 4em;
+    clear : right;
+}
+
+.ImageVariantFields {
+  display : block;
+  position : static;
+  left : 0px;
+  width : 700px;
+  margin-top : 20px;
+}
+
+.ImageVariantFieldProperties {
+    display : block;
+    position : relative;
+    left : 1em;
+    margin-top : 1em;
+}
+
+.ImageVariantFieldPropertiesSelect {
+    display : block;
+    position : static;
+    height : 20px;
+    width : 250px;
+}
+
+.ImageVariantFieldPropertiesSelectLabel {
+    float : left;
+}
+
+.ImageVariantFieldPropertiesSelectValues {
+    float : right;
+}
+
+.ImageVariantFieldPropertiesCheckBoxes {
+    display : block;
+    position : relative;
+    left : 1em;
+    margin-top : 1em;
+    margin-bottom : 1em;
+}
+
+.ImageVariantDeleteBlock {
+  display : block;
+  position : relative;
+  margin-bottom : 1em;
+  left : 1em;
+}
+
+.ImageVariantDelete {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  color: color: #666666;
+}
+
+A.ImageVariantDelete:link { color: #5b5b5b; text-decoration: none }
+A.ImageVariantDelete:active { color: #5b5b5b; text-decoration: none }
+A.ImageVariantDelete:visited { color: #5b5b5b; text-decoration: none }
+A.ImageVariantDelete:hover { color: magenta; text-decoration: underline }
+A.ImageVariantDelete:vlink { color: #cc3399; text-decoration: none }
+
+.ImageVariantList {
+    display : block;
+    position : relative;
+    top : 60px;
+    left : 0px;
+    width : 300px;
+    margin-left : 4em;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    color: #555555;
+}
+
+.ImageVariantListElement {
+    display : block;
+    position : relative;
+    left : 2em;
+    margin-top : 2em;
+    clear : right;
+}
+
+.ImageVariantListElementProperties {
+    display : block;
+    position : relative;
+    left : 2em;
+    margin-top : 1px;
+    clear : right;
+}
+
+.ImageVariantListElementProp {
+    display : block;
+    position : static;
+    left : 0px;
+    margin-top : 1px;
+    clear : right;
+}
+
+.ImageVariantListElementThumbnail {
+    display : block;
+    float : right;
+    margin-top : 0px;
+    margin-right : 10px;
+}
+
+.ImageVariantListElementDelete {
+    display : block;
+    postion : relative;
+    left : 20px;
+    bottom : 0px;
+    margin-left : 20px;
+    margin-bottom : 0px;
+}
+
+.ImageVariantListElementAdd {
+    display : block;
+    position : relative;
+    left : 2em;
+    margin-top : 2em;
+    clear : right;
+}
+
+.ImageVariantListElementSubmit {
+    display : block;
+    position : relative;
+    left : 20px;
+    bottom : 0px;
+    margin-left : 20px;
+    margin-bottom : 0px;
+}
+
+.ImageVariantAddUploader {
+    width: 0px;
+    height: 0px;
+    border: 0px;
+}
+

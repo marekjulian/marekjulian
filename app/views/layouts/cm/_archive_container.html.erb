@@ -1,0 +1,18 @@
+<div class="ArchiveContainer">
+    <div class="ArchiveHeader">
+        <div id="ArchiveNavigation" class="ArchiveNavigation">
+            <a class="Logo" href="/cm/" ><LogoMagenta>marek julian</LogoMagenta><LogoGrey> photography - content management<LogoGrey></a>
+        </div>
+        <%= render :partial => "shared/user_bar" %>
+    </div>
+    <div class="ArchiveBody">
+        <%= @content_for_layout %>
+    </div>
+    <div class="ArchiveFooter">
+        <div class="Debug">
+            <% if ENV["RAILS_ENV"] == "development" %>
+                <%= debug(params) %>
+            <% end %>
+        </div>
+    </div>
+</div>

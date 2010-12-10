@@ -1,0 +1,23 @@
+.MainImage {
+    display : block;
+    position : relative;
+    width : 60%;
+    top : 6em;
+    left : 345px;
+    right : auto;
+}
+
+.Thumbnails {
+    display : block;
+    position : static;
+    width : auto;
+    margin-top : 10em;
+    margin-left : 60px;
+}
+
+.Thumbnail {
+    display : table-cell;
+    float : left;
+    width : auto;
+    margin-left : 20px;
+}

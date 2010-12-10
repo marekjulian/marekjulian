@@ -1,0 +1,364 @@
+.ArchiveContainer {
+    display : block;
+    position : static;
+    margin : 0px 4em 0px 4em;
+    border : 0px;
+    padding : 0px;
+    width : auto;
+    height : 100%;
+
+    z-index : 0;
+}
+
+.ArchiveHeader {
+    display : block;
+    position : fixed;
+    top : 0px;
+    left : 0px;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    width : 100%;
+    height : 100px;
+
+    z-index: 1;
+
+    background-color: #FFF;
+}
+
+.ArchiveBody {
+    display : block;
+    position : relative;
+    top : 100px;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    width : 100%;
+    height : auto;
+    /* height : 100% - 150px; */
+    min-height : 700px;
+    max-height : 930px;
+    overflow : auto;
+
+    z-index: 0;
+}
+
+.ArchiveFooter {
+    display : block;
+    position : relative;
+    top : 100px;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    width : 100%;
+    height : 50px;
+}
+
+.ArchiveNavigation {
+    display : block;
+    position : static;
+    margin-top : 15px;
+    margin-bottom : 20px;
+    margin-left : 4em;
+    border: 0px;
+    padding : 0px;
+    width : 500px;
+    height : 30px;
+}
+
+.ArchiveHeading {
+    display : block;
+    position : static;
+    margin : 2em 0 0 0;
+    border: 0px;
+    padding : 0px;
+    width : 200px;
+    height : auto;
+}
+
+#ArchiveCollectionDescription {
+    display : block;
+    position : relative;
+    left : 2em;
+}
+
+.ArchiveList {
+    display : block;
+    position : static;
+    margin : 1em 0 3em 4em;
+    border : 0px;
+    padding : 0 2em 0 0;
+    width : auto;
+    max-height : 800px;
+    /* height : 100% - 100px; */
+    overflow : auto;
+}
+
+.ArchiveImageList {
+    display : block;
+    position : static;
+    margin : 0 0 0 4em;
+    border : 0px;
+    padding : 0 2em 0 0;
+    width : 300px;
+    height : auto;
+
+    max-height : 800px;
+    /* height : 100% - 100px; */
+    overflow : auto;
+}
+
+.ArchiveLowerNavigation {
+    display : block;
+    position : static;
+    margin : 10px 0 0 0;
+    border : 0px;
+    padding : 0px;
+    width : 300px;
+    height : 40px;
+}
+
+.ArchiveImageLowerNavigation {
+    display : block;
+    position : static;
+    margin : 10px 0 0 0;
+    border : 0px;
+    padding : 0px;
+    width : 300px;
+    height : 90px;
+}
+
+.ArchiveMainImage {
+    display : block;
+    position : absolute;
+    top : 10%;
+    right : auto;
+    bottom : auto;
+    left : 400px;
+}
+
+.ImageMainImage {
+    display : block;
+    position : absolute;
+    top : 10%;
+    right : auto;
+    bottom : auto;
+    left : 40%;
+}
+
+.ArchiveListElement {
+    display : block;
+    position : static;
+    margin-top : 10px;
+    margin-bottom : 10px;
+    height : auto;
+    width : auto;
+    min-height : 80px;
+}
+
+.ArchiveImageListUpload {
+    display : block;
+    position : static;
+    margin : 20px 0 0 4em;
+    border : 0px;
+    padding : 0;
+    width : 500px;
+    height : 20px;
+}
+
+.ArchiveListLink {
+    display : block;
+    position : static;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    width : 200px;
+}
+
+.ArchiveListThumbnail {
+    float : right;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    max-width : 100px;
+    max-height : 100px;
+}
+
+.ArchiveListDelete {
+    display : block;
+    position : relative;
+    left : 2em;
+    top : 2em;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    width : 100px;
+}
+
+.ImageVariantList {
+    display : block;
+    position : static;
+    margin: 0 0 0 4em;
+    border: 0px;
+    padding: 0 2em 0 0;
+    width : 30%;
+    height : auto;
+
+    max-height : 800px;
+    overflow : auto;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    color: #555555;
+}
+
+.ImageVariantListElement {
+    display : block;
+    position : static;
+    margin : 2em 0 0 0;
+    border : 0px;
+    padding : 0px;
+    height : auto;
+    width : 100%;
+    min-height : 10em;
+}
+
+.ImageVariantListElement p {
+    display : block;
+    position : static;
+    margin : 1em 0px 0px 0px;
+    border : 0px;
+    padding : 0px;
+    height : 1em;
+    width : 250px;
+}
+
+.ImageVariantListElementProperties {
+    display : block;
+    position : static;
+    margin : 0px 0px 0px 2em;
+    border : 0px;
+    padding : 0px;
+    width: 250px;
+    height: auto;
+}
+
+.ImageVariantListElementProp {
+    display : block;
+    position : static;
+    left : 0px;
+    margin : 1em 0 0 0;
+}
+
+.ImageVariantListElementFields {
+  display : block;
+  position : static;
+  margin : 0 0 0 0;
+  border : 0;
+  padding : 0;
+  width : auto;
+}
+
+.ImageVariantListElementThumbnail {
+    float : right;
+    margin : 0px 0px 0px 0px;
+    border: 0px;
+    padding : 0px;
+}
+
+.ImageVariantListElementDelete {
+    display : block;
+    position : static;
+    margin: 0 0 0 2em;
+    border : 0;
+    padding : 0;
+}
+
+.ImageVariantListElementAdd {
+    display : block;
+    position : static;
+    margin-top : 2em;
+}
+
+.ImageVariantListElementSubmit {
+    display : block;
+    position : relative;
+    left : 20px;
+    bottom : 0px;
+    margin-left : 20px;
+    margin-bottom : 0px;
+    width : auto;
+}
+
+.ImageVariantFields {
+  display : block;
+  position : static;
+  left : 0px;
+  width : auto;
+  margin-top : 20px;
+}
+
+.ImageVariantFields p {
+    display : block;
+    position : static;
+    margin : 1em 0px 0px 0px;
+    border : 0px;
+    padding : 0px;
+    height : 4em;
+}
+
+.ImageVariantFieldProperties {
+    display : block;
+    position : relative;
+    left : 0em;
+    margin-top : 1em;
+}
+
+.ImageVariantFieldPropertiesSelect {
+    display : block;
+    position : static;
+    height : 20px;
+    width : 250px;
+}
+
+.ImageVariantFieldPropertiesSelectLabel {
+    float : left;
+}
+
+.ImageVariantFieldPropertiesSelectValues {
+    float : right;
+}
+
+.ImageVariantFieldPropertiesCheckBoxes {
+    display : block;
+    position : relative;
+    left : 1em;
+    margin-top : 1em;
+    margin-bottom : 1em;
+}
+
+.ImageVariantDeleteBlock {
+  display : block;
+  position : relative;
+  margin-bottom : 1em;
+  left : 1em;
+}
+
+.ImageVariantDelete {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  color: #666666;
+}
+
+A.ImageVariantDelete:link { color: #5b5b5b; text-decoration: none }
+A.ImageVariantDelete:active { color: #5b5b5b; text-decoration: none }
+A.ImageVariantDelete:visited { color: #5b5b5b; text-decoration: none }
+A.ImageVariantDelete:hover { color: magenta; text-decoration: underline }
+
+.ImageVariantAddUploader {
+    width: 0px;
+    height: 0px;
+    border: 0px;
+}

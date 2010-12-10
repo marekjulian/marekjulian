@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TF/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>marek julian ryniejski - content management</title>
+
+        <%= stylesheet_link_tag "marekjulian" %>
+        <%= stylesheet_link_tag "cm/cm" %>    
+        <%= stylesheet_link_tag "cm/uploader" %>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.2/mootools.js" type="text/javascript"></script>
+        <%= javascript_include_tag "../FancyUpload/source/Swiff.Uploader.js" %>
+        <%= javascript_include_tag "../FancyUpload/source/Fx.ProgressBar.js" %>
+        <script src="http://github.com/mootools/mootools-more/raw/master/Source/Core/Lang.js" type="text/javascript"></script>
+        <%= javascript_include_tag "../FancyUpload/source/FancyUpload2" %>
+        <%= javascript_include_tag "cm/uploader/uploader" %>
+
+    </head>
+    <body class="DocRoot">
+        <%= render :partial => "layouts/cm/archive_container" %>
+    </body>
+    <%= render :partial => "layouts/cm/archive_styling_script" %>
+</html>

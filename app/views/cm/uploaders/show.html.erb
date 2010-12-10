@@ -1,0 +1,9 @@
+<div class="ArchiveHeading">
+    <% if @collection %>
+        <%= render :partial => "cm/collections/heading", :locals => { :label => "Collection" } %>
+    <% else %>
+        <p>No collection...!</p>
+    <% end %>
+</div>
+<%= render :partial => "uploader_form" %>
+<%= render :partial => "lower_navigation" %>

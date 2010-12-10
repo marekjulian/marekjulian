@@ -1,0 +1,8 @@
+.ImageVariantListElementProperties {
+    float : left;
+    margin : 0px 0px 0px 2em;
+    border : 0px;
+    padding : 0px;
+    width: 250px;
+    height: auto;
+}

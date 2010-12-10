@@ -1,0 +1,25 @@
+<div id="UploaderBody">
+    <% form_tag( cm_archive_collection_uploader_path(@archive, @collection), :id => "UploadForm", :method => "put", :multipart => true ) do %>
+        <fieldset id="UploadFallback">
+        </fieldset>
+        <div id="UploadStatus" class="hide">
+            <p>
+                <a href="#" id="UploadBrowse" class="UploadSelectLink" >Browse Files</a> |
+                <a href="#" id="UploadClear" class="UploadSelectLink" >Clear Files</a> |
+                <a href="#" id="UploadStart" class="UploadSelectLink" >Start Upload</a>
+            </p>
+            <div>
+                <strong class="overall-title"></strong><br />
+                <img src="/FancyUpload/assets/progress-bar/bar.gif" class="progress overall-progress" />
+            </div>
+            <div>
+                <strong class="current-title"></strong><br />
+                <img src="/FancyUpload/assets/progress-bar/bar.gif" class="progress current-progress" />
+            </div>
+            <div class="current-text"></div>
+        </div>
+        <ul id="UploadList">
+        </ul>
+    <% end %>
+</div>
+

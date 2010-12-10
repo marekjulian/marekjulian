@@ -1,0 +1,4 @@
+<div class="ArchiveLowerNavigation">
+    <%= link_to "Return To Collection", edit_cm_archive_collection_path( @archive, @collection ), :class => "NavLink" %>
+    <%= link_to "Return To Archive", cm_archive_path( @archive ), :class => "NavLink" %>
+</div>
