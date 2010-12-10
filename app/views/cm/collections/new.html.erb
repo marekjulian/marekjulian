@@ -1,11 +1,18 @@
-<h1>New collection</h1>
+<div class="ArchiveHeading">
+    <%= render :partial => "heading", :locals => { :label => "New collection" } %>
+</div>
+<div class="ArchiveList">
 
-<% form_for(@collection) do |f| %>
-  <%= f.error_messages %>
+    <% form_for :collection, @collection, :url => cm_archive_collections_path(@archive) do |f| %>
+        <%= f.label :tag_line, "Tag Line:" %>
+        <%= f.text_field :tag_line %>
 
-  <p>
-    <%= f.submit "Create" %>
-  </p>
-<% end %>
+        <%= f.label :description, "Description:" %>
+        <%= f.text_field :description %>
 
-<%= link_to 'Back', collections_path %>
+        <p><%= f.submit "Create collection" %></p>
+    <% end %>
+</div>
+<div class="ArchiveLowerNavigation">
+    <%= link_to "Return To Archive", edit_cm_archive_path( @archive ), :class => "NavLink" %>
+</div>

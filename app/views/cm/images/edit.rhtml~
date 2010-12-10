@@ -1,2 +1,0 @@
-<%= render :partial => "edit_image" %>
-<%= render :partial => "edit_lower_navigation" %>

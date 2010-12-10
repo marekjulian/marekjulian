@@ -1,9 +1,9 @@
+<%= render :partial => "heading", :locals => { :label => "Archive Portfolios" } %>
 <div class="ArchiveList">
-    <%= render :partial => "heading", :locals => { :label => "Archive Portfolios" } %>
     <% if @portfolios %>
         <% @portfolios.each do | a_port | %>
-            <%= link_to a_port.description, [ :cm, @archive, a_port ], :action => :edit, :class => "NavLink" %>
+            <%= link_to "> " + a_port.description, [ :cm, @archive, a_port ], :action => :edit, :class => "NavLink" %>
         <% end %>
-	<%= link_to "new portfolio", [ :cm, @archive, :portfolios ], :action => :new, :class => "NavLink" %>
+    <%= link_to "> New portfolio", [ :cm, @archive, :portfolios ], :action => :new, :class => "NavLink" %>
     <% end %>
 </div>

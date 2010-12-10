@@ -1,9 +1,10 @@
-<div id="CollectionHeading">
+<div id="ArchiveCollectionHeading">
   <p><%= label %>:
     <% if @collection.tag_line %>
       <%= @collection.tag_line %>
     <% else %>
       <%= @collection.id %>
     <% end %>
+    <div id="ArchiveCollectionDescription">Description : <%= @collection.description %></div>
   </p><br/>
 </div>

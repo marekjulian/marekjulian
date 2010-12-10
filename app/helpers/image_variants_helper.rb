@@ -5,6 +5,22 @@ module ImageVariantsHelper
     image_tag image_variant.file.url, :alt => "", :border => 0
   end
 
+  def default_thumb_tag( image_variant )
+    if image_variant.is_master
+      image_tag image_variant.file.url(:default_thumb), :alt => "", :border => 0
+    else
+      ""
+    end
+  end
+
+  def web_tag( image_variant )
+    if image_variant.is_master
+      image_tag image_variant.file.url(:web), :alt => "", :border => 0
+    else
+      ""
+    end
+  end
+
   def image_variant_type_string( image_variant, prefix, postfix )
     t_str = ""
     if image_variant.is_master

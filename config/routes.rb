@@ -34,6 +34,7 @@ ActionController::Routing::Routes.draw do |map|
     cm.resources :archives do |archive|
       archive.resources :collections do |collection|
         collection.resources :images
+        collection.resource :uploader, :controlloer => 'uploader'
       end
       archive.resources :portfolios
       archive.resources :images

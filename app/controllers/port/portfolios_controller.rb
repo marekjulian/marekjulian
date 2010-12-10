@@ -1,5 +1,5 @@
 class Port::PortfoliosController < ApplicationController
-  layout "port"
+  layout "port/port"
 
   # GET /portfolios/1
   # GET /portfolios/1.xml

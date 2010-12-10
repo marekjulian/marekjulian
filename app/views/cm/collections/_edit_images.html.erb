@@ -10,16 +10,24 @@
         <% end %>
     <% end %>
 <% end %>
-<div class="ArchiveList">
+
+<div class="ArchiveHeading">
     <% if @collection %>
-        <div class="ArchiveListHeading">
-            <%= render :partial => "heading", :locals => { :label => "Collection" } %>
-        </div>
+        <%= render :partial => "heading", :locals => { :label => "Collection" } %>
+    <% end %>
+</div>
+
+<div class="ArchiveImageList">
+    <% if @collection %>
         <% images = @collection.images %>
         <% images.each do | image | %>
-            <% thumbnailVariant = nil %>
+            <% masterVariant = nil %>
             <% mainVariant = nil %>
+            <% thumbnailVariant = nil %>
             <% image.image_variants.each do | imageVariant | %>
+                <% if imageVariant.is_master %>
+                    <% masterVariant = imageVariant %>
+                <% end %>
                 <% if imageVariant.is_thumbnail %>
                     <% thumbnailVariant = imageVariant %>
                 <% end %>
@@ -34,12 +42,21 @@
                     <% else %>
                         <% description = image.description %>
                     <% end %>
-                    <%= link_to description, edit_cm_archive_collection_image_path( @archive, @collection, image ), :class => "NavLink" %>
+                    <%= link_to "> " + description, edit_cm_archive_collection_image_path( @archive, @collection, image ), :class => "NavLink" %>
                 </div>
-                <% if thumbnailVariant %>
-                    <% if mainVariant %>
+                <% if masterVariant or thumbnailVariant %>
+                    <% if thumbnailVariant %>
                         <% thumbnailElem = image_variant_tag thumbnailVariant %>
+                    <% else %>
+                        <% thumbnailElem = default_thumb_tag masterVariant %>
+                    <% end %>
+                    <% mainElem = nil %>
+                    <% if mainVariant %>
                         <% mainElem = image_variant_tag mainVariant %>
+                    <% else %>
+                        <% mainElem = web_tag masterVariant %>
+                    <% end %>
+                    <% if mainElem %>
                         <div class="ArchiveListThumbnail">
                             <%= link_to_function thumbnailElem do | page |
                                 page[:ArchiveMainImage].replace_html mainElem
@@ -47,7 +64,7 @@
                         </div>
                     <% else %>
                         <div class="ArchiveListThumbnail">
-                            <%= thumbnailElem = image_variant_tag thumbnailVariant %>
+                            <%= thumbnailElem %>
                         </div>
                     <% end %>
                 <% end %>
@@ -59,8 +76,11 @@
                 </div>
             </div>
         <% end %>
-        <%= link_to "Upload and Add New Image(s)", new_cm_archive_collection_image_path( @archive, @collection), :class => "NavLink" %>
     <% end %>
+</div>
+<div class="ArchiveImageListUpload">
+    <%= link_to "> Mupltiple Image Upload", cm_archive_collection_uploader_path( @archive, @collection), :class => "InlineNavLink" %> |
+    <%= link_to "> Upload New Image w/ Variant(s)", new_cm_archive_collection_image_path( @archive, @collection), :class => "InlineNavLink" %>
 </div>
 <div id="ArchiveMainImage" class="ArchiveMainImage">
     <% if initialMainVariant %>

@@ -1,7 +1,8 @@
 class Cm::ArchivesController < ApplicationController
 
   before_filter :login_required
-  layout "cm"
+
+  layout "cm/cm"
 
   # GET /archives
   # GET /archives.xml

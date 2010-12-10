@@ -1,3 +1,0 @@
-<%= render :partial => "new_image_form" %>
-<%= render :partial => "edit_lower_navigation" %>
-

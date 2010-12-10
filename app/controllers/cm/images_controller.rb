@@ -3,7 +3,7 @@ class Cm::ImagesController < ApplicationController
     before_filter :login_required
     before_filter :load_params
 
-    layout "cm"
+    layout "cm/cm"
 
     def show
         @image = Image.find(params[:id])
@@ -41,16 +41,24 @@ class Cm::ImagesController < ApplicationController
         @image = Image.new(params[:image])
 
         if @image
+            logger.info "Created new image, id = %d." % @image.id
             ok = @archive.images << @image
             if ok && @collection
                 ok = @collection.images << @image
             end
+            logger.info "Added image to archive and collection..."
             ok = resolve_variants if ok
+            logger.info "Variants resolved, status = #{ok}."
             @image.image_variants.each do | iv |
+                logger.info "Saving image variant, id = %d." % iv.id
                 ok = iv.save if ok
+                logger.info "Saved image variant, id = %d." % iv.id
             end
+            logger.info "Saving image, id = %d." % @image.id
             ok = @image.save if ok
+            logger.info "Saved image, id = #{@image.id}, status = #{ok}."
         else
+            logger.info "Failed to create new image."
             ok = false
         end
 
@@ -96,9 +104,12 @@ class Cm::ImagesController < ApplicationController
             @image.save
             updated = true
         elsif params[:image]
+            logger.info "Updating image variant."
             logger.info params[:image].inspect
             updated = @image.update_attributes( params[:image] )
             if params[:update_type] == 'add_image_variant'
+                logger.info "Adding image variant:"
+                logger.info params[:image].inspect
                 new_image_variant = @image.image_variants[ @image.image_variants.size - 1 ]
             end
         end
@@ -228,12 +239,18 @@ class Cm::ImagesController < ApplicationController
             # Compute ONLY for 'auto'. Means we might NOT have a 'web default' or 'thumbmail default'
             # if ONLY saved and/or user values exists without these values set.
             #
+            logger.info "resolve_variants - processing variant, id = %d." % iv.id
             if iv.properties_mode == 'auto'
+                logger.info "resolve_variants - processing variant, auto properties, id = #{iv.id}, iv = #{iv}, m = #{m}."
                 if not m
+                    logger.info "resolve_variants - assigning m."
                     m = iv
+                    logger.info "resolve_variants - assigned m."
                 elsif m != iv and m.properties_mode == 'auto'
+                    logger.info "resolve_variants - Getting geometries."
                     m_geom = Paperclip::Geometry.from_file m.file.path
                     iv_geom = Paperclip::Geometry.from_file iv.file.path
+                    logger.info "resolve_variants - Got geometries."
                     if iv_geom.height > m_geom.height and iv_geom.width >= m_geom.width or \
                         iv_geom.height >= m_geom.height and iv_geom.width > m_geom.width
                         m.is_master = false
@@ -242,11 +259,11 @@ class Cm::ImagesController < ApplicationController
                 end
                 wd_ok = iv.can_be_web_default
                 td_ok = iv.can_be_thumbnail
-                logger.info "Updating auto properties: web default - " + wd_ok.to_s + ", can be thumbnail - " + td_ok.to_s
+                logger.info "resolve_variants - Updating auto properties: web default - " + wd_ok.to_s + ", can be thumbnail - " + td_ok.to_s
                 wd = iv if not wd and iv.can_be_web_default
                 iv.is_thumbnail = true if iv.can_be_thumbnail
                 td = iv if not td and iv.is_thumbnail
-                logger.info "Updated auto properties: %s, %s, %s, %s, %s (filename, is_master, is_web_default, is_thumbnail, is_thumbnail_default)." % \
+                logger.info "resolve_variants - Updated auto properties: %s, %s, %s, %s, %s (filename, is_master, is_web_default, is_thumbnail, is_thumbnail_default)." % \
                     [iv.file_file_name, iv.is_master, iv.is_web_default, iv.is_thumbnail, iv.is_thumbnail_default]
             end
             #

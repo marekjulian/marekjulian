@@ -1,16 +1,16 @@
 <div class="ImageVariantListElement">
-  <% t_str = image_variant_type_string image_variant, " (", ")" %>
-  <% s_str = image_variant_file_size_str image_variant %>
-  <p><%= image_variant.file_file_name%><%=t_str%></p>
-  <div class="ImageVariantListElementProperties">
-    <div class="ImageVariantListElementProp">size : <%= s_str %></div>
-    <div class="ImageVariantListElementProp">wxh : <%= dimensions_str image_variant %></div>
-    <div class="ImageVariantListElementProp">type : <%= image_variant.file_content_type %></div>
-    <div class="ImageVariantListElementProp">uploaded : <%= image_variant.created_at %></div>
-  </div>
-  <% if is_thumbnail %>
-    <div class="ImageVariantListElementThumbnail">
-      <%= image_variant_tag image_variant %>
+    <% if is_thumbnail %>
+      <div class="ImageVariantListElementThumbnail">
+        <%= image_variant_tag image_variant %>
+      </div>
+    <% end %>
+    <% t_str = image_variant_type_string image_variant, " (", ")" %>
+    <% s_str = image_variant_file_size_str image_variant %>
+    <p><%= image_variant.file_file_name%><%=t_str%></p>
+    <div class="ImageVariantListElementProperties">
+      <div class="ImageVariantListElementProp">size : <%= s_str %></div>
+      <div class="ImageVariantListElementProp">wxh : <%= dimensions_str image_variant %></div>
+      <div class="ImageVariantListElementProp">type : <%= image_variant.file_content_type %></div>
+      <div class="ImageVariantListElementProp">uploaded : <%= image_variant.created_at %></div>
     </div>
-  <% end %>
 </div>

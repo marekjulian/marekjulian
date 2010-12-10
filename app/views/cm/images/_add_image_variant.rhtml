@@ -10,18 +10,15 @@
     <%= hidden_field_tag 'list_elem_id', list_elem_id %>
     <div class="ImageVariantListElementProperties">
       <% new_image_variant = ImageVariant.new %>
-      <% add_image_variant_form.fields_for :image_variants, new_image_variant do | iv_fields | %>
-        <div class="ImageVariantListElementProp">Select image variant file:<%= iv_fields.file_field :file, :index => nil %></div>
-      <% end %>
+      <%= render :partial => 'add_image_variant_iv', :as => :image_variant, :locals => { :image_form => add_image_variant_form, :image_variant => new_image_variant } %>
     </div>
     <div class="ImageVariantListElementSubmit">
       <%= submit_tag "> Upload image variant" %>
     </div>
   <% end %>
   <iframe src="/404.html" id="ImageVariantAddUploader" class="ImageVariantAddUploader" name="ImageVariantAddUploader">
-    <script>alert("Hi, from iframe!")</script>
   </iframe>
   <div class="ImageVariantListElementDelete">
-    <%= link_to_function "> delete image variant", "remove_field($(this), ('.ImageVariantListElement'))", :class => "NavLink" %>
+    <%= link_to_function "> delete image variant", "removeField($(this), ('.ImageVariantListElement'))", :class => "NavLink" %>
   </div>
 </div>

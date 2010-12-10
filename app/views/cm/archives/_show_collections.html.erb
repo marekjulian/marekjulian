@@ -1,8 +1,8 @@
+<%= render :partial => "heading", :locals => { :label => "Archive Collections" } %>
 <div class="ArchiveList">
-    <%= render :partial => "heading", :locals => { :label => "Archive Collections" } %>
     <% if @collections %>
         <% @collections.each do | s_coll | %>
-            <%= link_to s_coll.tag_line, cm_archive_collection_path( @archive, s_coll.id ), :class => "NavLink" %>
+            <%= link_to "> " + s_coll.tag_line, cm_archive_collection_path( @archive, s_coll.id ), :class => "NavLink" %>
         <% end %>
     <% end %>
 </div>

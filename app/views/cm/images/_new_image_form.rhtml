@@ -20,6 +20,6 @@
       page << "$(\"ImageVariants\").insert( { \"bottom\" : \"#{ escape_javascript new_iv_html}\".replace(/\\[1\\]/g, \"[\"+CmNewImageForm.imageVariantIndex()+\"]\" ).replace( /image_image_variants_attributes_1_file/, \"image_image_variants_attributes_\"+CmNewImageForm.imageVariantIndex()+\"_file\" ) } )"
      end %>
 
-    <p><%= image_form.submit "Upload image variants" %></p>
+    <p><%= image_form.submit "> Upload image variants" %></p>
   <% end %>
 </div>

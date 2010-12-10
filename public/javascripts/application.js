@@ -37,7 +37,6 @@ var CmNewImageForm = {
 //
 function nifShowHideCheckBoxes( selElem, checkBoxesElem, propModeElem ) {
     var value = selElem.options[selElem.selectedIndex].value
-    alert( selElem.parentNode.parentNode.nextElementSibling.nodeName + ", " + selElem.parentNode.parentNode.nextElementSibling.attributes['class'].value + ", " + propModeElem.attributes['class'].value )
     if ( value == "You tell us..." ) {
         checkBoxesElem.show()
         propModeElem.value = 'user'

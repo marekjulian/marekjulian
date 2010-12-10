@@ -1,3 +1,4 @@
-<div id="ArchiveNavigation" class="ArchiveNavigation">
-  <%= render :partial => "cm/archives/index" %>
+<%= render :partial => "cm/archives/index" %>
+<div class="ArchiveLowerNavigation">
+    <%= link_to '> Create new archive', new_cm_archive_path, :class => "NavLink" %>
 </div>

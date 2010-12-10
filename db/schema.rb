@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101017024820) do
+ActiveRecord::Schema.define(:version => 20101114071334) do
 
   create_table "archives", :force => true do |t|
     t.integer  "owner_id"
@@ -30,6 +30,19 @@ ActiveRecord::Schema.define(:version => 20101017024820) do
   create_table "collections_images", :id => false, :force => true do |t|
     t.integer "collection_id"
     t.integer "image_id"
+  end
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.text     "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "image_show_views", :force => true do |t|
@@ -53,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20101017024820) do
     t.datetime "updated_at"
     t.integer  "file_width",           :default => 0
     t.integer  "file_height",          :default => 0
+    t.boolean  "processing",           :default => false
   end
 
   create_table "images", :force => true do |t|

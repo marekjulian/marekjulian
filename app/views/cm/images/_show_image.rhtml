@@ -14,11 +14,13 @@
     <% end %>
   <% end %>
 <% end %>
+<% if @image %>
+    <div class="ArchiveHeading">
+        <p>Image description : <%= @image.description %></p>
+    </div>
+<% end %>
 <div class="ImageVariantList">
     <% if @image %>
-        <div class="ArchiveListHeading">
-	  <p>Image description : <%= @image.description %></p>
-        </div>
         <% if master_variant %>
           <%= render :partial => "show_image_variant", :locals => { :image_variant => master_variant, :is_thumbnail => false } %>
         <% end %>
@@ -35,7 +37,7 @@
         <% end %>
     <% end %>
 </div>
-<div id="ArchiveMainImage" class="ArchiveMainImage">
+<div class="ImageMainImage">
     <% if web_default_variant %>
         <%= image_variant_tag web_default_variant %>
     <% end %>

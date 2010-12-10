@@ -1,13 +1,37 @@
-.DocRoot {
+html {
     display : block;
-    width : auto;
-    margin-top : 0em;
-    margin-left : 0em;
+    position : static;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;    
+    width : 100%;
+    height : auto;
+    overflow : auto;
+}
+
+head {
+    display : none;
+    position : static;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    height : 0px;
+}
+
+body, .DocRoot {
+    display : block;
+    position : static;
+    margin : 0px;
+    border : 0px;
+    padding : 0px;
+    width : 100%;
+    height : 100%;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-style: normal;
-    color: color: #666666;
+    color: #666666;
 }
+
 .Navigation {
     display : block;
     position : fixed;
@@ -43,7 +67,6 @@ A.UserBarGreeting:link { color: #5b5b5b; text-decoration: none }
 A.UserBarGreeting:active { color: #5b5b5b; text-decoration: none }
 A.UserBarGreeting:visited { color: #5b5b5b; text-decoration: none }
 A.UserBarGreeting:hover { color: magenta; text-decoration: underline }
-A.UserBarGreeting:vlink { color: #cc3399; text-decoration: none }
 
 .TopLines {
     display : block;
@@ -58,30 +81,6 @@ A.UserBarGreeting:vlink { color: #cc3399; text-decoration: none }
     margin-top : 50px;
 }
 
-.MainImage {
-    display : block;
-    position : relative;
-    width : 60%;
-    top : 6em;
-    left : 345px;
-    right : auto;
-}
-
-.Thumbnails {
-    display : block;
-    position : static;
-    width : auto;
-    margin-top : 10em;
-    margin-left : 60px;
-}
-
-.Thumbnail {
-    display : table-cell;
-    float : left;
-    width : auto;
-    margin-left : 20px;
-}
-
 .NavLink {
     display : block;
     position : static;
@@ -89,85 +88,27 @@ A.UserBarGreeting:vlink { color: #cc3399; text-decoration: none }
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-style: normal;
-    color: color: #666666;
+    color: #666666;
 }
 
 A.NavLink:link { color: #5b5b5b; text-decoration: none }
 A.NavLink:active { color: #5b5b5b; text-decoration: none }
 A.NavLink:visited { color: #5b5b5b; text-decoration: none }
 A.NavLink:hover { color: magenta; text-decoration: underline }
-A.NavLink:vlink { color: #cc3399; text-decoration: none }
 
-.ArchiveNavigation {
-    display : block;
-    position : fixed;
-    top : 15px;
-    left : 0px;
-    width : 500px;
-    margin-left : 4em;
-}
-
-.ArchiveList {
-    display : block;
-    position : relative;
-    top : 60px;
-    left : 0px;
-    width : 200px;
-    margin-left : 4em;
-}
-
-.ArchiveListHeading {
-    display : block;
-    position : static;
-    margin-top : 0em;
-    margin-bottom : 10px;
-}
-
-.ArchiveListElement {
-    display : block;
-    position : static;
-    height : 80px;
+.InlineNavLink {
+    display : inline;
     margin-top : 10px;
-    margin-bottom : 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    color: #666666;
 }
 
-.ArchiveListLink {
-    display : block;
-    position : static;
-    left : 0px;
-}
-
-.ArchiveListThumbnail {
-    float : right;
-    margin-right : 0px;
-}
-
-.ArchiveListDelete {
-    display : block;
-    postion : relative;
-    left : 20px;
-    bottom : 0px;
-    margin-left : 20px;
-    margin-bottom : 0px;
-}
-
-.ArchiveMainImage {
-    display : block;
-    position : absolute;
-    width : 60%;
-    top : 6em;
-    left : 400px;
-    right : auto;
-}
-
-.ArchiveLowerNavigation {
-    display : block;
-    position : relative;
-    top : 80px;
-    width : 300px;
-    margin-left : 4em;
-    clear : right;
-}
+A.InlineNavLink:link { color: #5b5b5b; text-decoration: none }
+A.InlineNavLink:active { color: #5b5b5b; text-decoration: none }
+A.InlineNavLink:visited { color: #5b5b5b; text-decoration: none }
+A.InlineNavLink:hover { color: magenta; text-decoration: underline }
 
 .Login {
     color : #555555;
@@ -186,7 +127,6 @@ a.Login:link { color: #5b5b5b; text-decoration: none }
 a.Login:active { color: #5b5b5b; text-decoration: none }
 a.Login:visited { color: #5b5b5b; text-decoration: none }
 a.Login:hover { color: magenta; text-decoration: underline }
-a.Login:vlink { color: #cc3399; text-decoration: none }
 
 .Heading {
     color : #555555;
@@ -213,144 +153,9 @@ a.Link:link { color: #555555; text-decoration: none }
 a.Link:active { color: #555555; text-decoration: none }
 a.Link:visited { color: #555555; text-decoration: none }
 a.Link:hover { color: magenta; text-decoration: underline }
-a.Link:vlink { color: #cc3399; text-decoration: none }
-
-.ImageVariantFields {
-  display : block;
-  position : static;
-  left : 0px;
-  width : 700px;
-  margin-top : 20px;
-}
-
-.ImageVariantFieldProperties {
-    display : block;
-    position : relative;
-    left : 1em;
-    margin-top : 1em;
-}
-
-.ImageVariantFieldPropertiesSelect {
-    display : block;
-    position : static;
-    height : 20px;
-    width : 250px;
-}
-
-.ImageVariantFieldPropertiesSelectLabel {
-    float : left;
-}
-
-.ImageVariantFieldPropertiesSelectValues {
-    float : right;
-}
-
-.ImageVariantFieldPropertiesCheckBoxes {
-    display : block;
-    position : relative;
-    left : 1em;
-    margin-top : 1em;
-    margin-bottom : 1em;
-}
-
-.ImageVariantDeleteBlock {
-  display : block;
-  position : relative;
-  margin-bottom : 1em;
-  left : 1em;
-}
-
-.ImageVariantDelete {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  font-style: normal;
-  color: color: #666666;
-}
-
-A.ImageVariantDelete:link { color: #5b5b5b; text-decoration: none }
-A.ImageVariantDelete:active { color: #5b5b5b; text-decoration: none }
-A.ImageVariantDelete:visited { color: #5b5b5b; text-decoration: none }
-A.ImageVariantDelete:hover { color: magenta; text-decoration: underline }
-A.ImageVariantDelete:vlink { color: #cc3399; text-decoration: none }
-
-.ImageVariantList {
-    display : block;
-    position : relative;
-    top : 60px;
-    left : 0px;
-    width : 300px;
-    margin-left : 4em;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
-    font-style: normal;
-    color: #555555;
-}
-
-.ImageVariantListElement {
-    display : block;
-    position : relative;
-    left : 2em;
-    margin-top : 2em;
-    clear : right;
-}
-
-.ImageVariantListElementProperties {
-    display : block;
-    position : relative;
-    left : 2em;
-    margin-top : 1px;
-    clear : right;
-}
-
-.ImageVariantListElementProp {
-    display : block;
-    position : static;
-    left : 0px;
-    margin-top : 1px;
-    clear : right;
-}
-
-.ImageVariantListElementThumbnail {
-    display : block;
-    float : right;
-    margin-top : 0px;
-    margin-right : 10px;
-}
-
-.ImageVariantListElementDelete {
-    display : block;
-    postion : relative;
-    left : 20px;
-    bottom : 0px;
-    margin-left : 20px;
-    margin-bottom : 0px;
-}
-
-.ImageVariantListElementAdd {
-    display : block;
-    position : relative;
-    left : 2em;
-    margin-top : 2em;
-    clear : right;
-}
-
-.ImageVariantListElementSubmit {
-    display : block;
-    position : relative;
-    left : 20px;
-    bottom : 0px;
-    margin-left : 20px;
-    margin-bottom : 0px;
-}
-
-.ImageVariantAddUploader {
-    width: 0px;
-    height: 0px;
-    border: 0px;
-}
 
 .Debug {
+  display : none;
   position : fixed;
   bottom : 0px;
   text-align: left;

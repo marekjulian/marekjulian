@@ -13,12 +13,12 @@ development:
     site_key: e587f9d09baa59c920b9ee97ac70f58b3c51356c
     stretches: 10
   mail:
-    address: marek.marekjulian.com
-    port: 25
-    domain: marekjulian.com
+    address: smtpout.secureserver.net
+    port: 80
+    domain: localhost
     authentication: :login
     user_name: marek@marekjulian.com
-    password: J1Ulrich
+    password: JMuseeuw
     sender: donotreply@marekjulian.com
   recaptcha:
     publickey: 6Lc2TQUAAAAAAKD0EQKOgJ_jtAQqIcRHCBuc7-Xu

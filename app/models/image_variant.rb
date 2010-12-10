@@ -5,8 +5,12 @@ class ImageVariant < ActiveRecord::Base
     has_attached_file :file,
                       :storage => :s3,
                       :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
-                      :path => ':archive_id/images/:image_id/:basename.:extension',
-                      :url => '/media_archives/:archive_id/images/:image_id/:basename.:extension'
+                      :path => ':archive_id/images/:image_id/:style/:basename.:extension',
+                      :url => '/media_archives/:archive_id/images/:image_id/:style/:basename.:extension',
+                      :styles => { :default_thumb => ["60x60#", :jpg],
+                                   :web => ["600x600", :jpg] }
+
+
 
     #
     # Can take take on one of 3 values:
@@ -14,7 +18,13 @@ class ImageVariant < ActiveRecord::Base
     #
     attr_accessor :properties_mode
 
+    # cancel post-processing now, and set flag...
+    before_post_process :do_processing!
+
     before_save :set_dimensions
+
+    # ...and perform post-processing after save in background
+    after_save :schedule_processing
 
     def can_be_web_default
         height, width = self.dimensions
@@ -46,7 +56,7 @@ class ImageVariant < ActiveRecord::Base
         width = -1
         height = -1
         tmpFile = self.file.queued_for_write[ :original ]
-        if tmpFile.nil? then
+        unless tmpFile.nil? then
             geom = Paperclip::Geometry.from_file( tmpFile )
             if geom then
                 width = geom.width
@@ -63,10 +73,45 @@ class ImageVariant < ActiveRecord::Base
         return height, width
     end
 
+    # generate styles (downloads original first)
+    def regenerate_styles!
+        logger.info "Regenerate styles for %d..." % self.id
+        self.file.reprocess!
+        self.processing = false
+        self.save(false)
+    end
+
+    def file_changed?
+        self.file_file_size_changed? ||
+        self.file_file_name_changed? ||
+        self.file_content_type_changed? ||
+        self.updated_at_changed?
+    end
+
+    def url(style=:default_thumb)
+        if self.processing
+            # Show an image that reflects the style is in the processing of being created.
+            self.file.url(style)
+        else
+            self.file.url(style)
+        end
+    end
+
     private
 
-        def set_dimensions
+        # do_processing, set_dimensions and schedule_processing go in the order they are defined here.
 
+        def do_processing!
+            logger.info "ImageVariant.do_processing..."
+            if self.file_changed? and self.is_master
+                logger.info "ImageVariant.do_processing - setting processing = true."
+                self.processing = true
+                false # halts processing.
+            end
+        end
+
+        def set_dimensions
+            logger.info "ImageVariant.set_dimensions..."
             tmpFile = self.file.queued_for_write[ :original ]
 
             unless tmpFile.nil?
@@ -78,6 +123,14 @@ class ImageVariant < ActiveRecord::Base
                 rescue Exception
                     logger.error "Cannot obtain dimensions for image (%s), temp file is: %s." % [ self.file_file_name, tmpFile.path ]
                 end
+            end
+        end
+
+        def schedule_processing
+            logger.info "ImageVariant.schedule_processing..."
+            if self.processing and self.file_changed?
+                logger.info "ImageVariant.schedule_processing - Queuing image variant job for %d..." % self.id
+                Delayed::Job.enqueue ImageVariantJob.new(self.id)
             end
         end
 

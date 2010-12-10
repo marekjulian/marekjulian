@@ -2,11 +2,12 @@ class Cm::ArchivesController < ApplicationController
 
   before_filter :login_required
 
-  layout "cm"
+  layout "cm/cm"
 
   # GET /archives
   # GET /archives.xml
   def index
+    logger.debug "cm/archives/index - session_id: #{request.session_options[:id]}"
     @archives = @current_user.archives
 
     respond_to do |format|
@@ -16,6 +17,7 @@ class Cm::ArchivesController < ApplicationController
   end
 
   def show
+    logger.debug "cm/archives/index - session_id: #{request.session_options[:id]}"
     @archive = Archive.find( params[:id] )
     @collections = @archive.collections
     @portfolios = @archive.portfolios

@@ -1,8 +1,8 @@
+<%= render :partial => "heading", :locals => { :label => "Archive Portfolios" } %>
 <div class="ArchiveList">
-    <%= render :partial => "heading", :locals => { :label => "Archive Portfolios" } %>
     <% if @portfolios %>
         <% @portfolios.each do | a_port | %>
-            <%= link_to a_port.description, cm_archive_portfolio_path(a_port.id), :class => "NavLink" %>
+            <%= link_to "> " + a_port.description, cm_archive_portfolio_path(a_port.id), :class => "NavLink" %>
         <% end %>
     <% end %>
 </div>

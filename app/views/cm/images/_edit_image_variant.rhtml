@@ -1,5 +1,10 @@
 <% iv_id = "ImageVariantListElementID_" + image_variant.id.to_s %>
 <div id=<%=iv_id%> class="ImageVariantListElement">
+  <% if is_thumbnail %>
+    <div class="ImageVariantListElementThumbnail">
+      <%= image_variant_tag image_variant %>
+    </div>
+  <% end %>
   <% t_str = image_variant_type_string image_variant, " (", ")" %>
   <% s_str = image_variant_file_size_str image_variant %>
   <p><%= image_variant.file_file_name%><%=t_str%></p>
@@ -9,11 +14,35 @@
     <div class="ImageVariantListElementProp">type : <%= image_variant.file_content_type %></div>
     <div class="ImageVariantListElementProp">uploaded : <%= image_variant.created_at %></div>
   </div>
-  <% if is_thumbnail %>
-    <div class="ImageVariantListElementThumbnail">
-      <%= image_variant_tag image_variant %>
-    </div>
-  <% end %>
+  <div class="ImageVariantListElementProperties">
+    <% if @collection %>
+      <% url_path = cm_archive_collection_images_path( @archive, @collection ) %>
+    <% else %>
+      <% url_path = cm_archive_images_path( @archive ) %>
+    <% end %>
+    <% update_id = "UpdaeImageVariantProperties_" + image_variant.id.to_s %>
+    <% form_for :image, @image, :url => url_path, :html => { :id => update_id } do |iv_prop_form| %>
+        <div class="ImageVariantListElementFields">
+            <div class="ImageVariantFieldProperties">
+                <div class="ImageVariantFieldPropertiesSelectLabel">editable properties:</div>
+                <div class="ImageVariantFieldPropertiesCheckBoxes">
+                    <% iv_prop_form.fields_for :image_variants, image_variant do |iv| %>
+                        <div class="ImageVariantFieldCheckBox">master<%= iv.check_box :is_master %></div>
+                        <div class="ImageVariantFieldCheckBox">web default<%= iv.check_box :is_web_default %></div>
+                        <div class="ImageVariantFieldCheckBox">thumbnail<%= iv.check_box :is_thumbnail %></div>
+                        <div class="ImageVariantFieldCheckBox">default thumbnail<%= iv.check_box :is_thumbnail_default %></div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+        <%= link_to_remote '> update properties', 
+                           :submit => update_id,
+                           :method => :put,
+                           :url => { :action => :update },
+                           :html => { :class => "NavLink"}
+         %>
+    <% end %>
+  </div>
   <div class="ImageVariantListElementDelete">
     <% delete_id = "DeleteVariantID_" + image_variant.id.to_s %>
     <div id=<%=delete_id%>
@@ -25,7 +54,7 @@
                        :method => :put,
                        :url => { :action => :update },
                        :success => "$('%s').hide()" % iv_id,
-		       :html => { :class => "NavLink" }
+                       :html => { :class => "NavLink" }
      %>
   </div>
 </div>
