@@ -5,4 +5,6 @@ development:
 
 production:
   bucket: archives.marekjulian
+  access_key_id: AKIAJ5BQUSOWRLAWYHTQ
+  secret_access_key: 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
 
