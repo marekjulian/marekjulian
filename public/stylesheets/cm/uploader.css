@@ -42,6 +42,20 @@ a.UploadSelectLink:hover { color: magenta; text-decoration: underline }
     font-weight: bold;
 }
 
+#UploadListContainer {
+    display : block;
+    position : static;
+    margin : 0 0 0 4em;
+    border : 0px;
+    padding : 0 2em 0 0;
+    width : 600px;
+    height : auto;
+
+    max-height : 800px;
+    /* height : 100% - 100px; */
+    overflow : auto;
+}
+
 #UploadList {
     list-style: none;
     width: 450px;
@@ -112,12 +126,10 @@ a.UploadSelectLink:hover { color: magenta; text-decoration: underline }
 
 .UploaderLowerNavigation {
     display : block;
-    position : absolute;
-    left : 0px;
-    bottom : 0px;
+    position : static;
     margin : 10px 0 0 0;
     border : 0px;
     padding : 0px;
     width : 300px;
-    height : 50px;
+    height : 40px;
 }

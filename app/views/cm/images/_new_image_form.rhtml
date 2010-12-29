@@ -15,7 +15,7 @@
 
     <%= link_to_function "Add image variant", :class => "NavLink" do |page|
       page << "CmNewImageForm.addImageVariant();"
-      new_iv = ImageVariant.new( :properties_mode => 'auto' )
+      new_iv = ImageVariant.new( :attributes_mode => :auto )
       new_iv_html = render :partial => 'new_image_form_iv', :object => new_iv, :locals => { :image_form => image_form, :image_variant => new_iv }
       page << "$(\"ImageVariants\").insert( { \"bottom\" : \"#{ escape_javascript new_iv_html}\".replace(/\\[1\\]/g, \"[\"+CmNewImageForm.imageVariantIndex()+\"]\" ).replace( /image_image_variants_attributes_1_file/, \"image_image_variants_attributes_\"+CmNewImageForm.imageVariantIndex()+\"_file\" ) } )"
      end %>

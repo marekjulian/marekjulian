@@ -1,12 +1,12 @@
 <% iv_id = "ImageVariantListElementID_" + image_variant.id.to_s %>
 <div id=<%=iv_id%> class="ImageVariantListElement">
-  <% if is_thumbnail %>
-    <div class="ImageVariantListElementThumbnail">
-      <%= image_variant_tag image_variant %>
-    </div>
-  <% end %>
-  <% t_str = image_variant_type_string image_variant, " (", ")" %>
-  <% s_str = image_variant_file_size_str image_variant %>
+    <% if is_thumbnail %>
+        <div class="ImageVariantListElementThumbnail">
+            <%= image_variant_tag image_variant %>
+        </div>
+    <% end %>
+    <% t_str = image_variant_type_string image_variant, " (", ")" %>
+    <% s_str = image_variant_file_size_str image_variant %>
   <p><%= image_variant.file_file_name%><%=t_str%></p>
   <div class="ImageVariantListElementProperties">
     <div class="ImageVariantListElementProp">size : <%= s_str %></div>
@@ -27,6 +27,9 @@
                 <div class="ImageVariantFieldPropertiesSelectLabel">editable properties:</div>
                 <div class="ImageVariantFieldPropertiesCheckBoxes">
                     <% iv_prop_form.fields_for :image_variants, image_variant do |iv| %>
+                        <%= iv.hidden_field :update_type, { :value => :update_image_variant } %>
+                        <%= iv.hidden_field :attributes_mode, { :value => :user } %>
+                        <%= iv.hidden_field :list_elem_id, { :value => iv_id } %>
                         <div class="ImageVariantFieldCheckBox">master<%= iv.check_box :is_master %></div>
                         <div class="ImageVariantFieldCheckBox">web default<%= iv.check_box :is_web_default %></div>
                         <div class="ImageVariantFieldCheckBox">thumbnail<%= iv.check_box :is_thumbnail %></div>
@@ -35,20 +38,33 @@
                 </div>
             </div>
         </div>
+        <script>
+            function update_callback(response)
+            {
+                // In some browsers (Firefox yes, MSIE no) you can dump the object's source:
+                updated = response["updated"];
+                var i;
+                for (i = 0; i < updated.length; i += 1) {
+                    updatedElement = updated[i]
+                    $(updatedElement['id']).replace( updatedElement['html'] );
+                }
+            }
+        </script>
         <%= link_to_remote '> update properties', 
                            :submit => update_id,
                            :method => :put,
-                           :url => { :action => :update },
+                           :url => { :action => :update, :format => :json },
                            :html => { :class => "NavLink"}
          %>
     <% end %>
   </div>
   <div class="ImageVariantListElementDelete">
     <% delete_id = "DeleteVariantID_" + image_variant.id.to_s %>
-    <div id=<%=delete_id%>
-      <%= hidden_field_tag 'update_type', 'delete_image_variant' %>
-      <%= hidden_field_tag 'delete_variant_id', image_variant.id %>
-    </div>
+    <% form_for :image, @image, :html=> { :id => delete_id } do |delete_iv_form| %>
+      <% delete_iv_form.fields_for :image_variants, image_variant do |iv| %>
+         <%= iv.hidden_field :update_type, { :value => :delete_image_variant } %>
+      <% end %>
+    <% end %>
     <%= link_to_remote '> delete image variant',
                        :submit => delete_id,
                        :method => :put,

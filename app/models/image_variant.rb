@@ -13,10 +13,18 @@ class ImageVariant < ActiveRecord::Base
 
 
     #
+    # Can take one of: 'none', 'add_image_variant', 'update_image_variant', or 'delete_image_variant'
+    #
+    attr_accessor :update_type
+    #
     # Can take take on one of 3 values:
     #   'saved', 'user', or 'auto'
     #
-    attr_accessor :properties_mode
+    attr_accessor :attributes_mode
+    #
+    # Identifies an HTML id tag for an image_variant being added.
+    #
+    attr_accessor :list_elem_id
 
     # cancel post-processing now, and set flag...
     before_post_process :do_processing!

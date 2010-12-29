@@ -19,5 +19,13 @@
     <body class="DocRoot">
         <%= render :partial => "layouts/cm/archive_container" %>
     </body>
-    <%= render :partial => "layouts/cm/archive_styling_script" %>
+    <script>
+    var docScrollSize = document.getScrollSize();
+    viewportHeight = docScrollSize.y;
+    document.getElement('html').set('styles', { 'height' : viewportHeight + 'px' });
+    document.getElement('body').set('styles', { 'height' : (viewportHeight - 20) + 'px'});
+    $$('.ArchiveBody')[0].set('styles', {'max-height' : (viewportHeight - 170) + 'px'});
+    $('UploadListContainer').set('styles', {'max-height' : (viewportHeight - 500) + 'px'});
+</script>
+
 </html>

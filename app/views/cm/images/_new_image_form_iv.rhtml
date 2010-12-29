@@ -1,9 +1,11 @@
 <div class="ImageVariant">
     <% image_form.fields_for :image_variants, image_variant do |iv| %>
+        <%= iv.hidden_field :update_type, { :value => :add_image_variant } %>
+        <%= iv.hidden_field :attributes_mode, { :value => :auto } %>
         <div class="ImageVariantFields">
             <p>Select image variant file:<%= iv.file_field :file %></p>
             <div class="ImageVariantFieldProperties">
-                <%= iv.hidden_field :properties_mode, :class => "ImageVariantFieldPropertiesMode" %>
+                <%= iv.hidden_field :attributes_mode, :class => "ImageVariantFieldPropertiesMode" %>
                 <div class="ImageVariantFieldPropertiesSelect">
                     <div class="ImageVariantFieldPropertiesSelectLabel">properties:</div>
                     <div class="ImageVariantFieldPropertiesSelectValues">

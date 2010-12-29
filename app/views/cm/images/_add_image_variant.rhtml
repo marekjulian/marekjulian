@@ -6,11 +6,9 @@
     :html => { :method => :put,
                :multipart => true,
                :target => "ImageVariantAddUploader" } do | add_image_variant_form | %>
-    <%= hidden_field_tag 'update_type', 'add_image_variant' %>
-    <%= hidden_field_tag 'list_elem_id', list_elem_id %>
     <div class="ImageVariantListElementProperties">
       <% new_image_variant = ImageVariant.new %>
-      <%= render :partial => 'add_image_variant_iv', :as => :image_variant, :locals => { :image_form => add_image_variant_form, :image_variant => new_image_variant } %>
+      <%= render :partial => 'add_image_variant_iv', :as => :image_variant, :locals => { :image_form => add_image_variant_form, :image_variant => new_image_variant, :list_elem_id => list_elem_id } %>
     </div>
     <div class="ImageVariantListElementSubmit">
       <%= submit_tag "> Upload image variant" %>
