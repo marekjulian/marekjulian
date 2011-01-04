@@ -1,8 +1,9 @@
 <% if logged_in? -%>
   <div class="UserBarGreeting">
-    <%= link_to "Log Out", logout_path, { :class => "Link", :title => "Log out" }    %>
+    <%= link_to "Log Out", logout_path, { :class => "Link", :title => "Log out" } %>
   </div>
 <% else -%>
-  <div class="UserBarGreeting">Log in with: 
-    <%= link_to_remote "Username", {:url => new_session_path, :method => :get}, :href => login_path %> |
+  <div class="UserBarGreeting">Log in with:
+    <%= link_to_remote "Username", { :url => new_session_path, :method => :get }, :class => "Link", :href => login_path %>
+  </div>
 <% end -%>

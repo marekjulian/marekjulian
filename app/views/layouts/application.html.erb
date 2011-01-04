@@ -1,15 +1,31 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TF/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TF/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <title>marek julian ryniejski - photographer</title>
-    <%= javascript_include_tag :defaults %>
-    <%= stylesheet_link_tag "marekjulian" %>
-</head>
-  <body class="DocRoot">
-    <div id="Navigation" class="Navigation">
-      <a class="Logo" href="/portfolios/1"><LogoMagenta>marek julian</LogoMagenta><LogoGrey> photography<LogoGrey></a>
-    </div>
-    <%= @content_for_layout %>
-  </body>
+    <head>
+        <title>marek julian ryniejski - photographer</title>
+        <%= javascript_include_tag :defaults %>
+        <%= stylesheet_link_tag "marekjulian" %>
+    </head>
+    <body class="DocRoot">
+        <div class="PageContainer">
+            <div class="PageHeader">
+                <div id="Navigation" class="Navigation">
+                    <a class="Logo" href="/portfolios/1"><LogoMagenta>marek julian</LogoMagenta><LogoGrey> photography<LogoGrey></a>
+                </div>
+                <%= render :partial => "shared/user_bar" %>
+                <div id="Login" class="Login">
+                </div>
+            </div>
+            <div class="PageBody">
+                <%= @content_for_layout %>
+            </div>
+            <div class="PageFooter">
+                <div class="Debug">
+                    <% if ENV["RAILS_ENV"] == "development" %>
+                    <%= debug(params) %>
+                  <% end %>
+                </div>
+            </div>
+        </div>
+    </body>
+    <%= render :partial => "layouts/styling_script" %>
 </html>

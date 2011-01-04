@@ -34,17 +34,23 @@ ActionController::Routing::Routes.draw do |map|
     cm.resources :archives do |archive|
       archive.resources :collections do |collection|
         collection.resources :images
-        collection.resource :uploader, :controlloer => 'uploader'
+        collection.resource :uploader, :controller => 'uploaders'
       end
       archive.resources :portfolios
       archive.resources :images
       archive.resource  :organizer
     end
-    # cm.resources :archives, :has_many => [ :collections, :portfolios ]
   end
 
   map.resources :image_variants
-  # map.resources :images
+
+  map.resources :users
+
+  map.resources :archives do |archive|
+    archive.resources :collections do |collection|
+      collection.resource :gallery, :controller => 'gallery'
+    end
+  end
 
   map.root :controller => 'port/portfolios', :action => "show", :id => 1
 
