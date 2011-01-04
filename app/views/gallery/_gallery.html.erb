@@ -1,0 +1,11 @@
+<div id="Gallery">
+    <% if @collection %>
+        <div class="CollectionListHeading">
+            <p><%=@collection.tag_line%></p>
+        </div>
+        <% images = @collection.images %>
+        <% images.each do | image | %>
+               <%= lightbox2_image_tag @collection, image %>
+        <% end %>
+    <% end %>
+<div>

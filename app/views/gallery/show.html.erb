@@ -1,0 +1,10 @@
+<% if @current_user %>
+    <%= render :partial => "gallery" %>
+    <div class="CollectionListHeading">
+        <%= link_to "> Back to Your stuff", "/users/" + @current_user.login, :class => "NavLink" %>
+    </div>
+<% else %>
+    <div class="CollectionsListHeading">
+        <p>You must be logged in to see your collections!</p>
+    </div>
+<% end %>

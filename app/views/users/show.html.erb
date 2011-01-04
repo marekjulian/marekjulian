@@ -1,0 +1,10 @@
+<% if @current_user and @current_user == @user %>
+    <%= render :partial => "show_collections" %>
+    <div class="CollectionListHeading">
+        <%= link_to "> Manage your stuff", "/cm", :class => "NavLink" %>
+    </div>
+<% else %>
+    <div class="CollectionsListHeading">
+        <p>You must be logged in to see your collections!</p>
+    </div>
+<% end %>

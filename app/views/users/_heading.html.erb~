@@ -1,0 +1,3 @@
+<div class="ArchiveHeading">
+  <p><%= label %>:</p>
+</div>

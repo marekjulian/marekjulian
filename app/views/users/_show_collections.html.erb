@@ -1,0 +1,11 @@
+<%= render :partial => "heading", :locals => { :label => "Your Collections:" } %>
+<div class="CollectionList">
+    <% archives = @user.archives %>
+    <% if archives %>
+        <% archives.each do | a_archive | %>
+            <% a_archive.collections.each do | a_collection | %>
+                <%= link_to "> " + a_collection.tag_line, archive_collection_gallery_path( a_archive, a_collection.id ), :class => "NavLink" %>
+            <% end %>
+        <% end %>
+    <% end %>
+</div>
