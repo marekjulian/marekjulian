@@ -1,0 +1,6 @@
+<script>
+    var viewportHeight = document.viewport.getHeight();
+    $$('html').invoke('setStyle', 'height: ' + viewportHeight + 'px');
+    $$('body').invoke('setStyle', 'height: ' + (viewportHeight - 20) + 'px');
+    $$('.PageBody').invoke('setStyle', 'max-height: ' + (viewportHeight - 170) + 'px');
+</script>

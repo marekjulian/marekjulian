@@ -1,0 +1,12 @@
+if @bad_visitor
+    page.redirect_to login_path
+else
+    page['Login'].hide
+    page['Login'].replace_html :partial => "shared/login"
+    page['Login'].appear
+    page.delay(1) do
+        update_page do |up_page|
+            up_page['Login'].focus
+        end
+    end
+end
