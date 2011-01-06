@@ -1,0 +1,29 @@
+#Gallery > .ImageThumbnail {
+    display : inline-block;
+    margin-top : 5px;
+    margin-right : 5px;
+    margin-bottom : 5px;
+    margin-left : 5px;
+    border-top : 1px;
+    border-right : 1px;
+    border-bottom : 1px;
+    border-left : 1px;
+    border-color : #cccccc;
+    border-style : solid;
+    padding-top : 5px;
+    padding-right : 5px;
+    padding-bottom : 10px;
+    padding-left : 5px;
+    background : #eeeeee;
+}
+
+#Gallery > .ImageThumbnail > img {
+    opacity : 0.4;
+    filter : alpha(opacity=40);
+}
+
+
+#Gallery > .ImageThumbnail:hover > img {
+    opacity : 1.0;
+    filter : alpha(opacity=100);
+}

@@ -30,7 +30,7 @@ module GalleryHelper
             webDefaultUrl = nil
         end
         if webDefaultUrl and thumbnailElem
-            link_to thumbnailElem, webDefaultUrl, :rel => "lightbox[%s]" % collection.tag_line
+            link_to thumbnailElem, webDefaultUrl, :rel => "lightbox[%s]" % collection.tag_line, :class => "ImageThumbnail"
         end
     end
 end
