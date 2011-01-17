@@ -1,0 +1,71 @@
+<div id="OrganizerBody">
+    <div id="OrganizerPreview">
+        <div id="OrganizerPreviewSelection">
+            <form>
+                <select>
+                    <option value="all">All your images</option>
+                    <% @archive.collections.each do |collection| %>
+                        <option value="<%=collection.id%>"><%="Collection: " + collection.tag_line%></option>
+                    <% end %>
+                </select>
+            </form>
+        </div>
+        <div id="OrganizerPreviewContent">
+            <% @archive.collections.each do | collection | %>
+                <% collection.images.each do | image | %>
+                    <% imageTagId = "OrganizerPreviewImage-#{image.id}" %>
+                    <%= organizer_image_tag image, imageTagId, "OrganizerPreviewImage" %>
+                    <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+    <% if true %>
+        <!-- BEGIN OF COMMWENT -->
+    <div id="OrganizerWorkspace">
+        <div id="OrganizerWorkspaceTabs">
+            <ul id="OrganizerWorkspaceTabsList">
+                <li id="OrganizerWorkspaceBodyCollectionsTab" class="OrganizerWorkspaceTab">
+                    <div class="OrganizerWorkspaceTabContent">
+                        <a class="OrganizerWorkspaceTabInactiveLink" href="#OrganizerWorkspaceBodyCollections">Collections</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="OrganizerWorkspaceBody">
+            <div id="OrganizerWorkspaceBodyCollections" class="OrganizerWorkspaceBodyTabContent">
+                <% if @archive.collections.any? %>
+                    <ul id="OrganizerWorkspaceBodyCollectionsList">
+                        <% @archive.collections.each do |collection| %>
+                            <li>
+                                <% if collection.images.first %>
+                                    <% imageTagId = "OrganizerWorkspaceBodyCollectionsItem-#{collection.id}" %>
+                                    <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "OrganizerWorkspaceThumbnail") %><br/>
+                                    <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                                                   :archive_id => @archive.id,
+                                                                   :action => :create_new_collection_tab,
+                                                                   :collection_id => collection.id ) %>
+                                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                                        req = new Ajax.Request( '#{createNewTabLink}', {
+                                                                method :  'get' } )
+                                        });"
+                                    %>
+                                <% end %>
+                                <%= link_to collection.tag_line, archive_collection_gallery_path(@archive, collection.id), :class => "NavLink" %>
+                                <%= pluralize collection.images.count, 'image' %>
+                                <% if logged_in? %>
+                                    <%= link_to image_tag("delete.png", :class => 'OrganizerWorkspaceBodyTabContentListItemDelete'), cm_archive_collection_path(@archive, collection.id), :method => :delete %>
+                                <% end %><br/>
+                            </li>
+                        <% end %>
+                    </ul>
+                <% end %>
+            </div>
+            <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'OrganizerWorkspaceTabsList',
+                                                                   { activeClassName : 'OrganizerWorkspaceTabActiveLink',
+                                                                     inactiveClassName : 'OrganizerWorkspaceTabInactiveLink' } );" %>
+        </div>
+    </div>
+        <!-- END OF COMMENT -->
+    <% end %>
+</div>

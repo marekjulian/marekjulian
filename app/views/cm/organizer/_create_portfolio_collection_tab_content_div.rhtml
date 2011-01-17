@@ -1,0 +1,7 @@
+<div id="<%=tab_content_id%>" class="OrganizerWorkspaceBodyTabContent">
+    <% portfolio_collection.image_show_views.each do |image_show_view| %>
+        <% imageTagId = "OrganizerWorkspaceImageShowView-#{portfolio_collection.id}-#{image_show_view.id}" %>
+        <%= organizer_image_tag( image_show_view.image, imageTagId, "OrganizerWorkspaceThumbnail") %>
+        <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
+    <% end %>
+</div>
