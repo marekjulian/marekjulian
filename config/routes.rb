@@ -38,7 +38,9 @@ ActionController::Routing::Routes.draw do |map|
       end
       archive.resources :portfolios
       archive.resources :images
-      archive.resource  :organizer
+      archive.resource  :organizer, :controller => 'organizer', :member => { :show => :get }
+      archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_collection_tab => :get }
+      archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_collection_tab => :get }
     end
   end
 

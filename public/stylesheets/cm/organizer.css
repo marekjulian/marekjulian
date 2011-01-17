@@ -1,0 +1,186 @@
+#OrganizerBody {
+    position : static;
+    height : 75%;
+    max-height : none;
+    margin-left : 0%;
+    margin-right : 0%;
+}
+
+#OrganizerPreview {
+    position : static;
+    padding-top : 5px;
+    padding-right : 5px;
+    padding-bottom : 5px;
+    padding-left : 5px;
+    border-width : 1px;
+    border-color : black;
+    border-style : solid;
+    margin-top : 5px;
+    margin-bottom : 5px;
+    overflow : auto;
+    white-space : nowrap;
+    background : white;
+}
+
+.OrganizerPreviewImage {
+    display : inline-block;
+    margin-top : 5px;
+    margin-right : 2px;
+    margin-bottom : 5px;
+    margin-left : 2px;
+    cursor : move;
+}
+
+#OrganizerWorkspace {
+    position : static;
+    height : 75%;
+    width : auto;
+    background : white;
+    border-width : 1px;
+    border-color : black;
+    border-style : solid;
+    margin-left : 0%;
+    margin-right : 0%;
+}
+
+#OrganizerWorkspaceTabs {
+    position : relative;
+    height : 50px;
+    width : auto;
+    padding-left : 0px;
+    padding-bottom : 0px;
+    border-bottom : 1px solid #CCCCCC;
+    margin-bottom : 0px;
+    background : white;
+}
+
+#OrganizerWorkspaceBody {
+    display : block;
+    position : static;
+    height : auto;
+    min-height : 400px;
+    padding : 0px;
+    border-width : 1px;
+    border-color : black;
+    border-style : solid;
+    margin : 0px;
+    background-color : #ebf099;
+}
+
+ul#OrganizerWorkspaceTabsList {
+    display : block;
+    position : absolute;
+    bottom : 0px;
+    left : 0px;
+    height 40px;
+    padding-right : 0px;
+    padding-bottom : 0px;
+    padding-left : 0px;
+    border : 0px;
+    margin-right : 0px;
+    margin-bottom : 0px;
+    margin-left : 0px;
+}
+
+li.OrganizerWorkspaceTab {
+    display : block;
+    float : left;
+    height : 40px;
+    width : 120px;
+    padding : 0px;
+    border : 0px;
+    margin : 0px 7px 0px 0px;
+    text-align : center;
+}
+
+li.OrganizerWorkspaceTab div.OrganizerWorkspaceTabContent {
+    display : block;
+    position : relative;
+}
+
+li.OrganizerWorkspaceTab a {
+    display : block;
+    position : static;
+    height : 26px;
+    width : 106px;
+    padding : 6px 6px 6px 6px;
+    border : 1px solid #CCCCCC;
+    margin : 0px 0px 0px 0px;
+    color : #666666;
+}
+
+li.OrganizerWorkspaceTab a {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    text-decoration : none;
+}
+
+li.OrganizerWorkspaceTab a.OrganizerWorkspaceTabInactiveLink {
+    background-color : #FFFFFF;
+}
+
+li.OrganizerWorkspaceTab a.OrganizerWorkspaceTabActiveLink {
+    background-color : #DDDDDD;
+}
+
+li.OrganizerWorkspaceTab img.OrganizerWorkspaceTabClose {
+    display : block;
+    position : absolute;
+    top : 6px;
+    right : 6px;
+    height : 8px;
+    width : 8px;
+    padding : 0px;
+    border : 0px;
+    margin : 0px;
+}
+
+.OrganizerWorkspaceBodyTabContent {
+    position : static;
+    height : auto;
+    padding : 0px;
+    margin-top : 0px;
+    margin-bottom : 0px;
+    margin-left : 0px;
+    color : #555;
+    font-size : 0.9em;
+}
+
+.OrganizerWorkspaceBodyTabContent ul {
+    margin : 0;
+    padding : 0;
+    text-indent : 0;
+    list-style-type : none;
+}
+
+.OrganizerWorkspaceBodyTabContent li {
+    float : left;
+    margin-top : 5px;
+    margin-right : 20px;
+    margin-bottom : 5px;
+    margin-left : 5px;
+}
+
+.OrganizerWorkspaceThumbnail {
+    background : #eeeeee;
+    padding-top : 5px;
+    padding-right : 5px;
+    padding-bottom : 10px;
+    padding-left : 5px;
+    border-top : 1px;
+    border-right : 1px;
+    border-bottom : 1px;
+    border-left : 1px;
+    border-style : solid;
+    border-color : #cccccc;
+    margin : 0px;
+}
+
+.OrganizerWorkspaceBodyTabContentListItemDelete {
+    position: relative;
+    top: 0px;
+    left: 2px;
+    border : 0px;
+}
+
