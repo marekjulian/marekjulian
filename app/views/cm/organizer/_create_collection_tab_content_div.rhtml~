@@ -1,7 +1,0 @@
-<div id="<%=tab_content_id%>" class="OrganizerWorkspaceBodyTabContent">
-    <% collection.images.each do |image| %>
-        <% imageTagId = "organizer-workspace-image-#{album.id}-#{photo.id}" %>
-        <%= image_tag photo.file.url( :thumb ), :id => imageTagId, :class => "thumb" %>
-        <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
-    <% end %>
-</div>

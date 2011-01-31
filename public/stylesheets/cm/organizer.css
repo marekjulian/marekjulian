@@ -1,12 +1,13 @@
-#OrganizerBody {
+#organizer-body {
     position : static;
-    height : 75%;
-    max-height : none;
+    display : block;
+    overflow : auto;
+    height : 100%;
     margin-left : 0%;
     margin-right : 0%;
 }
 
-#OrganizerPreview {
+#organizer-preview {
     position : static;
     padding-top : 5px;
     padding-right : 5px;
@@ -18,11 +19,12 @@
     margin-top : 5px;
     margin-bottom : 5px;
     overflow : auto;
+    height : 25%;
     white-space : nowrap;
     background : white;
 }
 
-.OrganizerPreviewImage {
+.organizer-preview-image {
     display : inline-block;
     margin-top : 5px;
     margin-right : 2px;
@@ -31,7 +33,7 @@
     cursor : move;
 }
 
-#OrganizerWorkspace {
+#organizer-workspace {
     position : static;
     height : 75%;
     width : auto;
@@ -43,7 +45,7 @@
     margin-right : 0%;
 }
 
-#OrganizerWorkspaceTabs {
+#organizer-workspace-tabs {
     position : relative;
     height : 50px;
     width : auto;
@@ -54,10 +56,10 @@
     background : white;
 }
 
-#OrganizerWorkspaceBody {
+#organizer-workspace-body {
     display : block;
     position : static;
-    height : auto;
+    height : 100%;
     min-height : 400px;
     padding : 0px;
     border-width : 1px;
@@ -67,12 +69,12 @@
     background-color : #ebf099;
 }
 
-ul#OrganizerWorkspaceTabsList {
+ul#organizer-workspace-tabs-list {
     display : block;
     position : absolute;
     bottom : 0px;
     left : 0px;
-    height 40px;
+    height : 40px;
     padding-right : 0px;
     padding-bottom : 0px;
     padding-left : 0px;
@@ -82,7 +84,7 @@ ul#OrganizerWorkspaceTabsList {
     margin-left : 0px;
 }
 
-li.OrganizerWorkspaceTab {
+li.organizer-workspace-tab {
     display : block;
     float : left;
     height : 40px;
@@ -93,12 +95,12 @@ li.OrganizerWorkspaceTab {
     text-align : center;
 }
 
-li.OrganizerWorkspaceTab div.OrganizerWorkspaceTabContent {
+li.organizer-workspace-tab div.organizer-workspace-tab-content {
     display : block;
     position : relative;
 }
 
-li.OrganizerWorkspaceTab a {
+li.organizer-workspace-tab a {
     display : block;
     position : static;
     height : 26px;
@@ -109,22 +111,22 @@ li.OrganizerWorkspaceTab a {
     color : #666666;
 }
 
-li.OrganizerWorkspaceTab a {
+li.organizer-workspace-tab a {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
     font-style: normal;
     text-decoration : none;
 }
 
-li.OrganizerWorkspaceTab a.OrganizerWorkspaceTabInactiveLink {
+li.organizer-workspace-tab a.organizer-workspace-tab-inactive-link {
     background-color : #FFFFFF;
 }
 
-li.OrganizerWorkspaceTab a.OrganizerWorkspaceTabActiveLink {
+li.organizer-workspace-tab a.organizer-workspace-tab-active-link {
     background-color : #DDDDDD;
 }
 
-li.OrganizerWorkspaceTab img.OrganizerWorkspaceTabClose {
+li.organizer-workspace-tab img.organizer-workspace-tab-close {
     display : block;
     position : absolute;
     top : 6px;
@@ -136,9 +138,11 @@ li.OrganizerWorkspaceTab img.OrganizerWorkspaceTabClose {
     margin : 0px;
 }
 
-.OrganizerWorkspaceBodyTabContent {
+.organizer-workspace-body-tab-content {
+    display : block;
     position : static;
-    height : auto;
+    overflow : auto;
+    height : 100%;
     padding : 0px;
     margin-top : 0px;
     margin-bottom : 0px;
@@ -147,14 +151,14 @@ li.OrganizerWorkspaceTab img.OrganizerWorkspaceTabClose {
     font-size : 0.9em;
 }
 
-.OrganizerWorkspaceBodyTabContent ul {
+.organizer-workspace-body-tab-content ul {
     margin : 0;
     padding : 0;
     text-indent : 0;
     list-style-type : none;
 }
 
-.OrganizerWorkspaceBodyTabContent li {
+.organizer-workspace-body-tab-content li {
     float : left;
     margin-top : 5px;
     margin-right : 20px;
@@ -162,7 +166,8 @@ li.OrganizerWorkspaceTab img.OrganizerWorkspaceTabClose {
     margin-left : 5px;
 }
 
-.OrganizerWorkspaceThumbnail {
+.organizer-workspace-thumbnail {
+    display : inline;
     background : #eeeeee;
     padding-top : 5px;
     padding-right : 5px;
@@ -177,10 +182,17 @@ li.OrganizerWorkspaceTab img.OrganizerWorkspaceTabClose {
     margin : 0px;
 }
 
-.OrganizerWorkspaceBodyTabContentListItemDelete {
+.organizer-workspace-body-tab-content-list-item-delete {
     position: relative;
     top: 0px;
     left: 2px;
     border : 0px;
 }
 
+.organizer-workspace-trash {
+    display : block;
+    position : absolute;
+    right : 6px;
+    bottom : 6px;
+    height : 60px;
+}

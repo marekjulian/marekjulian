@@ -26,4 +26,28 @@ module Cm::OrganizerHelper
         thumbnailElem
     end
 
+    def organizer_portfolio_thumbnail_tag( portfolio, imageTagId, imageClass )
+        thumbnailElem = ""
+        showView = ImageShowView.find( portfolio.default_show_view_id )
+        if showView
+            showVariant = ImageVariant.find( showView.thumbnail_variant_id )
+            if showVariant
+                thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+            end
+        end
+        thumbnailElem
+    end
+
+    def organizer_portfolio_collection_thumbnail_tag( portfolioCollection, imageTagId, imageClass )
+        thumbnailElem = ""
+        showView = ImageShowView.find( portfolioCollection.default_show_view_id )
+        if showView
+            showVariant = ImageVariant.find( showView.thumbnail_variant_id )
+            if showVariant
+                thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+            end
+        end
+        thumbnailElem
+    end
+
 end

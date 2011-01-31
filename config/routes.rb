@@ -1,48 +1,62 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  map.signup '/signup', :controller => 'user/profiles', :action => 'new'
-  map.activate '/activate/:activation_code', :controller => 'user/activations',
-      :action => 'activate', :activation_code => nil
-  map.forgot_password '/forgot_password', :controller => 'user/passwords', :action => 'new'
-  map.reset_password '/reset_password/:id', :controller => 'user/passwords', :action => 'edit', :id => nil
-  map.resend_activation '/resend_activation', :controller => 'user/activations', :action => 'new'
+    map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+    map.login '/login', :controller => 'sessions', :action => 'new'
+    map.signup '/signup', :controller => 'user/profiles', :action => 'new'
+    map.activate '/activate/:activation_code',
+                 :controller => 'user/activations',
+                 :action => 'activate', :activation_code => nil
+    map.forgot_password '/forgot_password', :controller => 'user/passwords', :action => 'new'
+    map.reset_password '/reset_password/:id', :controller => 'user/passwords', :action => 'edit', :id => nil
+    map.resend_activation '/resend_activation', :controller => 'user/activations', :action => 'new'
 
-  map.resource :user
+    map.resource :user
 
-  map.namespace :user do |user|
-      user.resources :activations
-      user.resources :invitations
-      user.resources :passwords
-      user.resources :profiles do |profiles|
-          profiles.resources :password_settings
-      end
-  end
-
-  map.resource  :session
-
-  map.namespace :port do |port|
-      port.root :controller => 'portfolios', :action => "show", :id => 1
-      port.resources :portfolios, :only => :show do |portfolio|
-          portfolio.resources :portfolio_collections, :only => :show
-      end
-  end
-
-  map.namespace :cm do |cm|
-    cm.root :controller => "root", :action => "index"
-    cm.resources :archives do |archive|
-      archive.resources :collections do |collection|
-        collection.resources :images
-        collection.resource :uploader, :controller => 'uploaders'
-      end
-      archive.resources :portfolios
-      archive.resources :images
-      archive.resource  :organizer, :controller => 'organizer', :member => { :show => :get }
-      archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_collection_tab => :get }
-      archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_collection_tab => :get }
+    map.namespace :user do |user|
+        user.resources :activations
+        user.resources :invitations
+        user.resources :passwords
+        user.resources :profiles do |profiles|
+            profiles.resources :password_settings
+        end
     end
-  end
+
+    map.resource  :session
+
+    map.namespace :port do |port|
+        port.root :controller => 'portfolios', :action => "show", :id => 1
+        port.resources :portfolios, :only => :show do |portfolio|
+            portfolio.resources :portfolio_collections, :only => :show
+        end
+    end
+
+    map.namespace :cm do |cm|
+        cm.root :controller => "root", :action => "index"
+        cm.resources :archives do |archive|
+            archive.resources :collections do |collection|
+                collection.resources :images
+                collection.resource :uploader, :controller => 'uploaders'
+            end
+            archive.resources :portfolios do |portfolio|
+                portfolio.resources :portfolio_collections
+            end
+            archive.resources :images
+            archive.resource  :organizer, :controller => 'organizer', :member => { :show => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_collections_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_portfolios_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_collection_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_portfolio_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_portfolio_collection_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_collections_tab => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_portfolios_tab => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_collection_instance_tab => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_portfolio_instance_tab => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_portfolio_collection_instance_tab => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_collection_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_collection_instance_tab => :get }
+        end
+    end
 
   map.resources :image_variants
 

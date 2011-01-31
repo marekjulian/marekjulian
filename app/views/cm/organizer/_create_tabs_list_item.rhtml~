@@ -1,8 +1,0 @@
-<li id="<%=tabs_list_item_id%>" class="organizer-workspace-tab">
-    <div class="organizer-workspace-tab-content">
-        <a class="organizer-workspace-tab-inactive-link" href="<%=tab_content_id%>"><%=tab_name%></a>
-        <%= image_tag "close.gif", 
-                      :id => tabs_list_item_close_id,
-                      :class => "organizer-workspace-tab-close" %>
-    </div>
-</li>

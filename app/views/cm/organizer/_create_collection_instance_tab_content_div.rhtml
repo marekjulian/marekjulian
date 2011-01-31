@@ -1,0 +1,8 @@
+<div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
+    <% collection.images.each do |image| %>
+        <% imageTagId = "organizer-workspace-image-#{collection.id}-#{image.id}" %>
+        <%= organizer_image_tag( image, imageTagId, "organizer-workspace-thumbnail") %>
+        <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
+    <% end %>
+    <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
+</div>

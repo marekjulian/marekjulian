@@ -1,52 +1,40 @@
-<div id="OrganizerBody">
-    <div id="OrganizerPreview">
-        <div id="OrganizerPreviewSelection">
-            <form>
-                <select>
-                    <option value="all">All your images</option>
-                    <% @archive.collections.each do |collection| %>
-                        <option value="<%=collection.id%>"><%="Collection: " + collection.tag_line%></option>
-                    <% end %>
-                </select>
-            </form>
+<div id="organizer-body">
+    <div id="organizer-preview">
+        <div id="organizer-preview-selection">
+            <%= render :partial => 'preview_selection_for_collections_tab', :locals => { :archive => @archive } %>
         </div>
-        <div id="OrganizerPreviewContent">
-            <% @archive.images.each do | image | %>
-                <% imageTagId = "OrganizerPreviewImage-#{image.id}" %>
-                <%= organizer_image_tag image, imageTagId, "OrganizerPreviewImage" %>
-                <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
-            <% end %>
+        <div id="organizer-preview-content">
+            <%= render :partial => 'preview_content_for_collections_tab', :locals => { :images => @archive.images } %>
         </div>
     </div>
     <% if true %>
-        <!-- BEGIN OF COMMWENT -->
-    <div id="OrganizerWorkspace">
-        <div id="OrganizerWorkspaceTabs">
-            <ul id="OrganizerWorkspaceTabsList">
-                <li id="OrganizerWorkspaceBodyCollectionsTab" class="OrganizerWorkspaceTab">
-                    <div class="OrganizerWorkspaceTabContent">
-                        <a class="OrganizerWorkspaceTabInactiveLink" href="#OrganizerWorkspaceBodyCollections">Collections</a>
+    <div id="organizer-workspace">
+        <div id="organizer-workspace-tabs">
+            <ul id="organizer-workspace-tabs-list">
+                <li id="organizer-workspace-body-collections-tab" class="organizer-workspace-tab">
+                    <div class="organizer-workspace-tab-content">
+                        <a class="organizer-workspace-tab-inactive-link" href="#organizer-workspace-body-collections">Collections</a>
                     </div>
                 </li>
-                <li id="OrganizerWorkspaceBodyPortfoliosTab" class="OrganizerWorkspaceTab">
-                    <div class="OrganizerWorkspaceTabContent">
-                        <a class="OrganizerWorkspaceTabInactiveLink" href="#OrganizerWorkspaceBodyPortfolios">Portfolios</a>
+                <li id="organizer-workspace-body-portfolios-tab" class="organizer-workspace-tab">
+                    <div class="organizer-workspace-tab-content">
+                        <a class="organizer-workspace-tab-inactive-link" href="#organizer-workspace-body-portfolios">Portfolios</a>
                     </div>
                 </li>
             </ul>
         </div>
-        <div id="OrganizerWorkspaceBody">
-            <div id="OrganizerWorkspaceBodyCollections" class="OrganizerWorkspaceBodyTabContent">
+        <div id="organizer-workspace-body">
+            <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content">
                 <% if @archive.collections.any? %>
-                    <ul id="OrganizerWorkspaceBodyCollectionsList">
+                    <ul id="organizer-workspace-body-collections-list">
                         <% @archive.collections.each do |collection| %>
                             <li>
                                 <% if collection.images.first %>
-                                    <% imageTagId = "OrganizerWorkspaceBodyCollectionsItem-#{collection.id}" %>
-                                    <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "OrganizerWorkspaceThumbnail") %><br/>
+                                    <% imageTagId = "organizer-workspace-body-collections-item-#{collection.id}" %>
+                                    <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
                                     <% createNewTabLink = url_for( :controller => 'cm/organizer',
                                                                    :archive_id => @archive.id,
-                                                                   :action => :create_new_collection_tab,
+                                                                   :action => :create_new_collection_instance_tab,
                                                                    :collection_id => collection.id ) %>
                                     <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
                                         req = new Ajax.Request( '#{createNewTabLink}', {
@@ -57,49 +45,47 @@
                                 <%= link_to collection.tag_line, archive_collection_gallery_path(@archive, collection.id), :class => "NavLink" %>
                                 <%= pluralize collection.images.count, 'image' %>
                                 <% if logged_in? %>
-                                    <%= link_to image_tag("delete.png", :class => 'OrganizerWorkspaceBodyTabContentListItemDelete'), cm_archive_collection_path(@archive, collection.id), :method => :delete %>
+                                    <%= link_to image_tag("delete.png",
+                                                          :class => 'organizer-workspace-body-tab-content-list-item-delete'),
+                                                          cm_archive_collection_path(@archive, collection.id),
+                                                          :method => :delete %>
                                 <% end %><br/>
                             </li>
                         <% end %>
                     </ul>
                 <% end %>
             </div>
-            <div id="OrganizerWorkspaceBodyPortfolios" class="OrganizerWorkspaceBodyTabContent">
+            <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
                 <% if @archive.portfolios.any? %>
-                    <ul id="OrganizerWorkspaceBodyPortfoliosList">
+                    <ul id="organizer-workspace-body-portfolios-list">
                         <% @archive.portfolios.each do |portfolio| %>
-                            <% portfolio.portfolio_collections.each do |portfolio_collection| %>
-                                <li>
-                                    <% if portfolio_collection.collection.images.first %>
-                                        <% collection = portfolio_collection.collection %>
-                                        <% imageTagId = "OrganizerWorkspaceBodyPortfoliosItem-#{collection.id}" %>
-                                        <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "OrganizerWorkspaceThumbnail") %><br/>
-                                        <% createNewTabLink = url_for( :controller => 'cm/organizer',
-                                                                       :archive_id => @archive.id,
-                                                                       :action => :create_new_portfolio_collection_tab,
-                                                                       :portfolio_collection_id => portfolio_collection.id ) %>
-                                        <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                            req = new Ajax.Request( '#{createNewTabLink}', {
-                                                                     method :  'get' } )
-                                            });"
-                                        %>
-                                    <% end %>
-                                    <%= link_to collection.tag_line, archive_collection_gallery_path(@archive, collection.id), :class => "NavLink" %>
-                                    <%= pluralize collection.images.count, 'image' %>
-                                    <% if logged_in? %>
-                                        <%= link_to image_tag("delete.png", :class => 'OrganizerWorkspaceBodyTabContentListItemDelete'), port_portfolio_portfolio_collection_path(portfolio, portfolio_collection.id), :method => :delete %>
-                                    <% end %><br/>
-                                </li>
-                            <% end %>
+                            <li>
+
+                                <% imageTagId = "organizer-workspace-body-portfolios-item-#{portfolio.id}" %>
+                                <%= organizer_portfolio_thumbnail_tag( portfolio, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                                <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                                               :archive_id => @archive.id,
+                                                               :action => :create_new_portfolio_instance_tab,
+                                                               :portfolio_id => portfolio.id ) %>
+                                <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                                                   req = new Ajax.Request( '#{createNewTabLink}', {
+                                                   method :  'get' } )
+                                                   });"
+                                 %>
+                                <%= link_to portfolio.description, port_portfolio_path(portfolio), :class => 'NavLink' %>
+                                <%= pluralize portfolio.portfolio_collections.count, 'portfolio collection' %>
+                                <% if logged_in? %>
+                                    <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'), port_portfolio_path(portfolio), :method => :delete %>
+                                <% end %><br/>
+                            </li>
                         <% end %>
                     </ul>
                 <% end %>
             </div>
-            <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'OrganizerWorkspaceTabsList',
-                                                                   { activeClassName : 'OrganizerWorkspaceTabActiveLink',
-                                                                     inactiveClassName : 'OrganizerWorkspaceTabInactiveLink' } );" %>
+            <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
+                                                                   { activeClassName : 'organizer-workspace-tab-active-link',
+                                                                     inactiveClassName : 'organizer-workspace-tab-inactive-link' } );" %>
         </div>
     </div>
-        <!-- END OF COMMENT -->
     <% end %>
 </div>
