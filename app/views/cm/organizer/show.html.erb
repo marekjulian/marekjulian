@@ -25,6 +25,7 @@
         </div>
         <div id="organizer-workspace-body">
             <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content">
+                <div class="organizer-workspace-body-image-area">
                 <% if @archive.collections.any? %>
                     <ul id="organizer-workspace-body-collections-list">
                         <% @archive.collections.each do |collection| %>
@@ -54,8 +55,10 @@
                         <% end %>
                     </ul>
                 <% end %>
+                </div>
             </div>
             <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
+                <div class="organizer-workspace-body-image-area">
                 <% if @archive.portfolios.any? %>
                     <ul id="organizer-workspace-body-portfolios-list">
                         <% @archive.portfolios.each do |portfolio| %>
@@ -81,6 +84,7 @@
                         <% end %>
                     </ul>
                 <% end %>
+                </div>
             </div>
             <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
                                                                    { activeClassName : 'organizer-workspace-tab-active-link',

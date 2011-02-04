@@ -1,8 +1,26 @@
 <div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
+    <div class="organizer-workspace-body-form">
+        <% form_id = "organizer-workspace-body-form-collection-#{collection.id}" %>
+        <% form_for :collection, 
+                    collection, 
+                    :html => { :id => form_id,
+                               :class => "organizer-workspace-body-form-form" } do |collection_form| %>
+            <%= collection_form.label :tag_line, "Tag Line:" %>
+            <%= collection_form.text_field :tag_line %><br/>
+            <%= collection_form.label :description, "Description:" %>
+            <%= collection_form.text_field :description %><br/>
+            <%= collection_form.submit "Save", :class => "organizer-form-disabled-button" %>
+            <%= collection_form.submit "Cancel", :class => "organizer-form-enabled-button" %>
+        <% end %>
+    </div>    
+    <div class="organizer-workspace-body-with-form-image-area">
     <% collection.images.each do |image| %>
         <% imageTagId = "organizer-workspace-image-#{collection.id}-#{image.id}" %>
         <%= organizer_image_tag( image, imageTagId, "organizer-workspace-thumbnail") %>
         <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
     <% end %>
-    <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
+    <div class="organizer-workspace-trash-container">
+        <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
+    </div>
+    </div>
 </div>

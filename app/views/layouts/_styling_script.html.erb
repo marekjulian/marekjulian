@@ -2,5 +2,7 @@
     var viewportHeight = document.viewport.getHeight();
     $$('html').invoke('setStyle', 'height: ' + viewportHeight + 'px');
     $$('body').invoke('setStyle', 'height: ' + (viewportHeight - 20) + 'px');
-    $$('.PageBody').invoke('setStyle', 'max-height: ' + (viewportHeight - 170) + 'px');
+    $$('.PageBody').invoke('setStyle', 'height: ' + (viewportHeight - 170) + 'px');
+    $$('#organizer-workspace').invoke('setStyle', 'height: ' + (viewportHeight - 170 - 154) + 'px');
+    $$('#organizer-workspace-body').invoke('setStyle', 'height: ' + (viewportHeight - 170 - 154 - 53) + 'px');
 </script>

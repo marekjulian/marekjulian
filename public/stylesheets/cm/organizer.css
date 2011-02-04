@@ -3,6 +3,7 @@
     display : block;
     overflow : auto;
     height : 100%;
+    min-height : 700px;
     margin-left : 0%;
     margin-right : 0%;
 }
@@ -19,7 +20,7 @@
     margin-top : 5px;
     margin-bottom : 5px;
     overflow : auto;
-    height : 25%;
+    height : 130px;
     white-space : nowrap;
     background : white;
 }
@@ -35,7 +36,6 @@
 
 #organizer-workspace {
     position : static;
-    height : 75%;
     width : auto;
     background : white;
     border-width : 1px;
@@ -59,14 +59,12 @@
 #organizer-workspace-body {
     display : block;
     position : static;
-    height : 100%;
-    min-height : 400px;
+    height : auto;
     padding : 0px;
     border-width : 1px;
     border-color : black;
     border-style : solid;
     margin : 0px;
-    background-color : #ebf099;
 }
 
 ul#organizer-workspace-tabs-list {
@@ -119,11 +117,11 @@ li.organizer-workspace-tab a {
 }
 
 li.organizer-workspace-tab a.organizer-workspace-tab-inactive-link {
-    background-color : #FFFFFF;
+    background-color : #DDDDDD;
 }
 
 li.organizer-workspace-tab a.organizer-workspace-tab-active-link {
-    background-color : #DDDDDD;
+    background-color : #FFFFFF;
 }
 
 li.organizer-workspace-tab img.organizer-workspace-tab-close {
@@ -166,6 +164,68 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     margin-left : 5px;
 }
 
+.organizer-workspace-body-image-area {
+    display : block;
+    position : static;
+    height : 100%;
+    width : 100%;
+    background-color : #ebf099;
+}
+
+.organizer-workspace-body-form {
+    float : left;
+    height : 100%;
+    width : 20%;
+}
+
+.organizer-workspace-body-form-form {
+    display : block;
+    position : static;
+    height : auto;
+    width : auto;
+    margin : 10px;
+    border : 0px;
+    padding : 0px;
+}
+
+.organizer-workspace-body-form-form label {
+    display : inline-block;
+    margin-bottom : 5px;
+}
+
+.organizer-workspace-body-form-form input {
+    display : inline-block;
+    margin-bottom : 10px;
+}
+
+.organizer-workspace-body-form-form p {
+    display : inline-block;
+    margin-bottom : 10px;
+}
+
+.organizer-form-enabled-button {
+    display : inline-block;
+    background: none repeat scroll 0 0 #DDDDDD;
+    color : #666666;
+    -moz-border-radius: 4px 4px;
+}
+
+.organizer-form-disabled-button {
+    display : inline-block;
+    background: none repeat scroll 0 0 #E6E6E6;
+    color : #bbbbbb;
+    -moz-border-radius: 4px 4px;
+}
+
+.organizer-workspace-body-with-form-image-area {
+    float : right;
+    top : 0px;
+    right : 0px;
+    height : 100%;
+    width : 80%;
+    background-color : #ebf099;
+}
+
 .organizer-workspace-thumbnail {
     display : inline;
     background : #eeeeee;
@@ -189,10 +249,22 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     border : 0px;
 }
 
+.organizer-workspace-trash-container {
+    display : block;
+    position : absolute;
+    right : 0px;
+    bottom : 0px;
+    height : 140px;
+    width : 100%;
+    padding : 0px;
+    border : 0px;
+    margin : 0px;
+}
+
 .organizer-workspace-trash {
     display : block;
     position : absolute;
-    right : 6px;
-    bottom : 6px;
+    right : 40px;
+    bottom : 40px;
     height : 60px;
 }
