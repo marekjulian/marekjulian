@@ -1,0 +1,57 @@
+<div id="organizer-workspace-body-collections-image-area" class="organizer-workspace-body-image-area">
+    <% if archive.collections.any? %>
+        <ul id="organizer-workspace-body-collections-list">
+            <% archive.collections.each do |collection| %>
+                <li>
+                    <% imageTagId = "organizer-workspace-body-collections-item-#{collection.id}" %>
+                    <% if collection.images.first %>
+                        <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                    <% else %>
+                        <%= organizer_missing_image_thumbnail_tag("#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                    <% end %>
+                    <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                                   :archive_id => archive.id,
+                                                   :action => :create_new_collection_instance_tab,
+                                                   :collection_id => collection.id ) %>
+                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                        req = new Ajax.Request( '#{createNewTabLink}', {
+                                                method :  'get' } )
+                        });"
+                     %>
+                    <%= link_to collection.tag_line, archive_collection_gallery_path(archive, collection.id), :class => "NavLink" %>
+                    <%= pluralize collection.images.count, 'image' %>
+                    <% if logged_in? %>
+                        <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'),
+                                    url_for( :controller => 'cm/organizer',
+                                             :archive_id => archive.id,
+                                             :action => :delete_collection_form,
+                                             :collection_id => collection.id ),
+                                   :method => :get,
+                                   :class => "lbOn" %>
+                    <% end %><br/>
+                </li>
+            <% end %>
+        </ul>
+    <% end %>
+    <% createCollectionFormUrl = url_for( :controller => 'cm/organizer',
+                                          :archive_id => archive.id,
+                                          :action => :create_collection_form ) %>
+    <%= link_to "",
+                createCollectionFormUrl,
+                :method => :get,
+                :id => 'organizer-workspace-body-collection-create',
+                :class => 'lbOn' %>
+    <%= javascript_tag "document.observe('dom:loaded', function() {
+            Droppables.add( 'organizer-workspace-body-collections-image-area', {
+                            accept : 'organizer-preview-image',
+                            onDrop : function(image) { 
+                                newHRef = '#{createCollectionFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                $('organizer-workspace-body-collection-create').writeAttribute('href', newHRef );
+                                $('organizer-workspace-body-collection-create').fire('lb:setContent', { content : newHRef } );
+                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                $('organizer-workspace-body-collection-create').fire('lb:activate');
+                            }
+            } );
+        });"
+     %>
+</div>

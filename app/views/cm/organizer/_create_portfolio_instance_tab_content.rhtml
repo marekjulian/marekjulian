@@ -1,0 +1,47 @@
+<div id="organizer-workspace-body-portfolio-instance-image-area" class="organizer-workspace-body-image-area">
+    <ul id="organizer-workspace-body-portfolio-collections-list">
+            <% portfolio.portfolio_collections.each do |portfolio_collection| %>
+                <li>
+                    <% imageTagId = "organizer-workspace-portfolio-collection-#{portfolio_collection.id}" %>
+                    <%= organizer_portfolio_collection_thumbnail_tag( portfolio_collection, imageTagId, "organizer-workspace-thumbnail") %>
+                    <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
+                    <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                                   :archive_id => portfolio.archive_id,
+                                                   :action => :create_new_portfolio_collection_instance_tab,
+                                                   :portfolio_collection_id => portfolio_collection.collection_id ) %>
+                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                                        req = new Ajax.Request( '#{createNewTabLink}', {
+                                                                method :  'get' } )
+                                        });"
+                     %>
+                    <%= link_to portfolio_collection.collection.tag_line, port_portfolio_portfolio_collection_path(portfolio, portfolio_collection), :class => "NavLink" %>
+                    <%= pluralize portfolio_collection.image_show_views.count, 'image show view' %>
+                    <%= link_to image_tag("delete.png",
+                                           :class => 'organizer-workspace-body-tab-content-list-item-delete'),
+                                           cm_archive_portfolio_portfolio_collection_path(@archive, portfolio, portfolio_collection),
+                                           :method => :delete %>
+                </li>
+            <% end %>
+    </ul>
+    <% createPortfolioCollectionFormUrl = url_for( :controller => 'cm/organizer',
+                                                   :archive_id => archive.id,
+                                                   :action => :create_portfolio_collection_form ) %>
+    <%= link_to "",
+                createPortfolioCollectionFormUrl,
+                :method => :get,
+                :id => 'organizer-workspace-body-portfolio-collection-create',
+                :class => 'lbOn' %>
+    <%= javascript_tag "document.observe('dom:loaded', function() {
+            Droppables.add( 'organizer-workspace-body-portfolio-instance-image-area', {
+                            accept : 'organizer-preview-image',
+                            onDrop : function(image) { 
+                                newHRef = '#{createPortfolioCollectionFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                $('organizer-workspace-body-portfolio-collection-create').writeAttribute('href', newHRef );
+                                $('organizer-workspace-body-portfolio-collection-create').fire('lb:setContent', { content : newHRef } );
+                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                $('organizer-workspace-body-portfolio-collection-create').fire('lb:activate');
+                            }
+            } );
+        });"
+     %>
+</div>

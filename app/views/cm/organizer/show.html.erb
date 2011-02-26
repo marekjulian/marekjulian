@@ -7,7 +7,6 @@
             <%= render :partial => 'preview_content_for_collections_tab', :locals => { :images => @archive.images } %>
         </div>
     </div>
-    <% if true %>
     <div id="organizer-workspace">
         <div id="organizer-workspace-tabs">
             <ul id="organizer-workspace-tabs-list">
@@ -25,71 +24,14 @@
         </div>
         <div id="organizer-workspace-body">
             <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content">
-                <div class="organizer-workspace-body-image-area">
-                <% if @archive.collections.any? %>
-                    <ul id="organizer-workspace-body-collections-list">
-                        <% @archive.collections.each do |collection| %>
-                            <li>
-                                <% if collection.images.first %>
-                                    <% imageTagId = "organizer-workspace-body-collections-item-#{collection.id}" %>
-                                    <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
-                                    <% createNewTabLink = url_for( :controller => 'cm/organizer',
-                                                                   :archive_id => @archive.id,
-                                                                   :action => :create_new_collection_instance_tab,
-                                                                   :collection_id => collection.id ) %>
-                                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                        req = new Ajax.Request( '#{createNewTabLink}', {
-                                                                method :  'get' } )
-                                        });"
-                                    %>
-                                <% end %>
-                                <%= link_to collection.tag_line, archive_collection_gallery_path(@archive, collection.id), :class => "NavLink" %>
-                                <%= pluralize collection.images.count, 'image' %>
-                                <% if logged_in? %>
-                                    <%= link_to image_tag("delete.png",
-                                                          :class => 'organizer-workspace-body-tab-content-list-item-delete'),
-                                                          cm_archive_collection_path(@archive, collection.id),
-                                                          :method => :delete %>
-                                <% end %><br/>
-                            </li>
-                        <% end %>
-                    </ul>
-                <% end %>
-                </div>
+                <%= render :partial => 'create_collections_tab_content', :locals => { :archive => @archive } %>
             </div>
             <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
-                <div class="organizer-workspace-body-image-area">
-                <% if @archive.portfolios.any? %>
-                    <ul id="organizer-workspace-body-portfolios-list">
-                        <% @archive.portfolios.each do |portfolio| %>
-                            <li>
-
-                                <% imageTagId = "organizer-workspace-body-portfolios-item-#{portfolio.id}" %>
-                                <%= organizer_portfolio_thumbnail_tag( portfolio, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
-                                <% createNewTabLink = url_for( :controller => 'cm/organizer',
-                                                               :archive_id => @archive.id,
-                                                               :action => :create_new_portfolio_instance_tab,
-                                                               :portfolio_id => portfolio.id ) %>
-                                <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                                   req = new Ajax.Request( '#{createNewTabLink}', {
-                                                   method :  'get' } )
-                                                   });"
-                                 %>
-                                <%= link_to portfolio.description, port_portfolio_path(portfolio), :class => 'NavLink' %>
-                                <%= pluralize portfolio.portfolio_collections.count, 'portfolio collection' %>
-                                <% if logged_in? %>
-                                    <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'), port_portfolio_path(portfolio), :method => :delete %>
-                                <% end %><br/>
-                            </li>
-                        <% end %>
-                    </ul>
-                <% end %>
-                </div>
+                <%= render :partial => 'create_portfolios_tab_content', :locals => { :archive => @archive } %>
             </div>
             <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
                                                                    { activeClassName : 'organizer-workspace-tab-active-link',
                                                                      inactiveClassName : 'organizer-workspace-tab-inactive-link' } );" %>
         </div>
     </div>
-    <% end %>
 </div>

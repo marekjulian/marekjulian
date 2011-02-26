@@ -1,2 +1,0 @@
-class PortfolioCollection < ActiveRecord::Base
-end

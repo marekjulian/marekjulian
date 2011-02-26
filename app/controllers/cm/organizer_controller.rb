@@ -2,6 +2,8 @@ class Cm::OrganizerController < ApplicationController
 
     before_filter :login_required
 
+    skip_before_filter :verify_authenticity_token, :only => [:create_collection_form, :delete_collection_form]
+
     layout "cm/organizer"
 
     def show
@@ -115,6 +117,7 @@ class Cm::OrganizerController < ApplicationController
                                                                                              :tab_name => "Portfolio: " + @portfolio.description }
         tab_content_div = render_to_string :partial => "create_portfolio_instance_tab_content_div",
                                            :locals => {  :tab_content_id => tab_content_id,
+                                                         :archive => @archive,
                                                          :portfolio => @portfolio }
 
         render :update do |page|
@@ -149,6 +152,64 @@ class Cm::OrganizerController < ApplicationController
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
+    end
+
+    def create_collection_form
+        logger.debug "cm/organizer_controlloer/create_collection_form - inspecting  params:"
+        logger.debug  params.inspect
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.new
+        @collection.tag_line = "your tag line"
+        @collection.description = "new collection"
+        @image = Image.find params[:image_id]
+        render :layout => false
+    end
+
+    def create_collection
+        logger.debug "cm/organizer_controlloer/create_collection - inspecting  params:"
+        logger.debug  params.inspect
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.new
+        @collection.archive_id = @archive.id
+        @collection.tag_line = params[:tag_line]
+        @collection.description = params[:description]
+        @image = Image.find params[:image_id]
+        @collection.images << @image
+        @collection.save
+        response_body = render_to_string :partial => "organizer_workspace_body_collections_tab_content", :locals => { :archive => @archive }
+        render :inline => response_body
+    end
+
+    def delete_collection_form
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.find params[:collection_id]
+        render :layout => false
+    end
+
+    def delete_collection
+        logger.debug "cm/organizer_controller/delete_collection - inspecting params:"
+        logger.debug params.inspect
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.find params[:collection_id]
+        @collection.destroy
+        response_body = render_to_string :partial => "organizer_workspace_body_collections_tab_content", :locals => { :archive => @archive }
+        render :inline => response_body
+    end
+
+    def create_portfolio_collection_form
+        logger.debug "cm/organizer_controlloer/create_portfolio_collection_form - inspecting  params:"
+        logger.debug  params.inspect
+        @archive = Archive.find params[:archive_id]
+        @image = Image.find params[:image_id]
+        render :layout => false
+    end
+
+    def create_collection
+        logger.debug "cm/organizer_controlloer/create_portfolio_collection - inspecting  params:"
+        logger.debug  params.inspect
+        @archive = Archive.find params[:archive_id]
+        response_body = render_to_string :partial => "create_portfolio_instance_tab_content_div", :locals => { :archive => @archive }
+        render :inline => response_body
     end
 
 end

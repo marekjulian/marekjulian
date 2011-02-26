@@ -1,0 +1,26 @@
+<div class="organizer-workspace-body-image-area">
+    <% if @archive.portfolios.any? %>
+        <ul id="organizer-workspace-body-portfolios-list">
+            <% @archive.portfolios.each do |portfolio| %>
+                <li>
+                    <% imageTagId = "organizer-workspace-body-portfolios-item-#{portfolio.id}" %>
+                    <%= organizer_portfolio_thumbnail_tag( portfolio, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                    <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                                   :archive_id => @archive.id,
+                                                   :action => :create_new_portfolio_instance_tab,
+                                                   :portfolio_id => portfolio.id ) %>
+                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                                       req = new Ajax.Request( '#{createNewTabLink}', {
+                                       method :  'get' } )
+                                       });"
+                     %>
+                    <%= link_to portfolio.description, port_portfolio_path(portfolio), :class => 'NavLink' %>
+                    <%= pluralize portfolio.portfolio_collections.count, 'portfolio collection' %>
+                    <% if logged_in? %>
+                        <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'), port_portfolio_path(portfolio), :method => :delete %>
+                    <% end %><br/>
+                </li>
+            <% end %>
+        </ul>
+    <% end %>
+</div>

@@ -1,0 +1,26 @@
+<% deactivate_link_id = "organizer-dialog-form-response-deactivate-%s" % @collection.id%>
+<% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
+                                     :action => :delete_collection,
+                                     :archive_id => @archive.id,
+                                     :collection_id => @collection.id ),
+                    :update => "organizer-workspace-body-collections",
+                    :success => "$('#{deactivate_link_id}').fire('lb:deactivate')",
+                    :html => { :id => 'organizer-dialog-form' } ) do %>
+    <%= render :partial => "/cm/collections/heading", :locals => {  :label => "Delete collection" } %>
+    <ul>
+        <li>
+            <div class="organizer-dialog-form-thumbnail-container" >
+                <% imageTagId = "organizer-dialog-form-thumbnail-#{@collection.id}" %>
+                <% if @collection.images.first %>
+                    <%= organizer_image_tag( @collection.images.first, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                <% else %>
+                    <%= organizer_missing_image_thumbnail_tag( "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                <% end %>
+            <div>
+        </li>
+        <li>
+            <a><%= submit_tag "Delete" %></a>
+            <a id="<%=deactivate_link_id%>" href="#" class="lbAction" rel="deactivate"><button>Cancel</button></a>
+        </li>
+    </ul>
+<% end %>

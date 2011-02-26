@@ -2,6 +2,6 @@ class PortfolioCollection < ActiveRecord::Base
 
   belongs_to    :portfolio
   belongs_to    :collection
-  has_many :image_show_views
+  has_many :image_show_views, :dependent => :destroy
 
 end

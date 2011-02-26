@@ -1,4 +1,6 @@
 <div id="MainImage" class="MainImage">
-    <%= image_variant_tag @mainImageVariant %>
+    <% if @mainImageVariant %>
+        <%= image_variant_tag @mainImageVariant %>
+    <% end %>
 </div>
 

@@ -1,3 +1,0 @@
-<div class="ArchiveLowerNavigation">
-  <%= link_to "Show Archive", cm_archive_path(@archive), :class => "NavLink" %>
-</div>

@@ -1,0 +1,43 @@
+<% deactivate_link_id = "organizer-dialog-form-response-deactivate" %>
+<% if @image %>
+    <% imageId = @image.id %>
+<% else %>
+    <% imageId = "" %>
+<% end %>
+<% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
+                                     :action => :create_collection,
+                                     :archive_id => @archive.id,
+                                     :image_id => imageId ),
+                    :update => "organizer-workspace-body-collections",
+                    :success => "$('#{deactivate_link_id}').fire('lb:deactivate')",
+                    :html => { :id => 'organizer-dialog-form' } ) do %>
+    <div id="ArchiveCollectionHeading">
+      <p>New Collection:</p>
+    </div>
+    <ul>
+        <li>
+            <%= label_tag :tag_line, "Tag Line:" %>
+            <%= text_field_tag :tag_line %>
+            <br/>
+        </li>
+        <lil>
+            <%= label_tag :description, "Description:" %>
+            <%= text_field_tag :description %>
+            <br/>
+        </li>
+        <li>
+            <div class="organizer-dialog-form-thumbnail-container" >
+                <% imageTagId = "organizer-dialog-form-thumbnail" %>
+                <% if @image %>
+                    <%= organizer_image_tag( @image, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                <% else %>
+                    <%= organizer_missing_image_thumbnail_tag( "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                <% end %>
+            <div>
+        </li>
+        <li>
+            <a><%= submit_tag "Create" %></a>
+            <a id="<%=deactivate_link_id%>" href="#" class="lbAction" rel="deactivate"><button>Cancel</button></a>
+        </li>
+    </ul>
+<% end %>

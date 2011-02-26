@@ -268,3 +268,24 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     bottom : 40px;
     height : 60px;
 }
+
+#organizer-dialog-form {
+    margin : 25px;
+    text-align : left;
+}
+
+#organizer-dialog-form ul {
+    list-style : none;
+}
+
+#organizer-dialog-form li {
+    margin : 0 0 2em 0;
+}
+
+.organizer-dialog-form-thumbnail-container {
+    display : block;
+    position : static;
+    height : 80px;
+    width : 80px;
+    margin : 10px;
+}
