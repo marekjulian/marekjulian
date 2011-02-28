@@ -176,7 +176,7 @@ class Cm::OrganizerController < ApplicationController
         @image = Image.find params[:image_id]
         @collection.images << @image
         @collection.save
-        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive }
+        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive, :initialRender => false }
         render :inline => response_body
     end
 
@@ -192,7 +192,7 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @collection = Collection.find params[:collection_id]
         @collection.destroy
-        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive }
+        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive, :initialRender => false }
         render :inline => response_body
     end
 

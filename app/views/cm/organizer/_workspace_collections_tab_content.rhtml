@@ -41,6 +41,8 @@
                 :method => :get,
                 :id => 'organizer-workspace-body-collection-create',
                 :class => 'lbOn' %>
+</div>
+<% if initialRender %>
     <%= javascript_tag "document.observe('dom:loaded', function() {
             Droppables.add( 'organizer-workspace-body-collections-image-area', {
                             accept : 'organizer-preview-image',
@@ -54,4 +56,16 @@
             } );
         });"
      %>
-</div>
+<% else %>
+    <%= javascript_tag "Droppables.add( 'organizer-workspace-body-collections-image-area', {
+                            accept : 'organizer-preview-image',
+                            onDrop : function(image) { 
+                                newHRef = '#{createCollectionFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                $('organizer-workspace-body-collection-create').writeAttribute('href', newHRef );
+                                $('organizer-workspace-body-collection-create').fire('lb:setContent', { content : newHRef } );
+                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                $('organizer-workspace-body-collection-create').fire('lb:activate');
+                            } } );"
+     %>
+    <%= javascript_tag "MJ_UI_LIGHTBOX.reInitialize();" %>                            
+<% end %>

@@ -24,7 +24,7 @@
         </div>
         <div id="organizer-workspace-body">
             <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content">
-                <%= render :partial => 'workspace_collections_tab_content', :locals => { :archive => @archive } %>
+                <%= render :partial => 'workspace_collections_tab_content', :locals => { :archive => @archive, :initialRender => true } %>
             </div>
             <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
                 <%= render :partial => 'workspace_portfolios_tab_content', :locals => { :archive => @archive } %>
