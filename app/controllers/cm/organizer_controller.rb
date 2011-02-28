@@ -88,13 +88,13 @@ class Cm::OrganizerController < ApplicationController
         tabs_list_item_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-close"
         tab_content_id = "organizer-workspace-body-collection-" + params[:collection_id]
-        tabs_list_item = render_to_string :partial => "create_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
-                                                                                             :tabs_list_item_close_id => tabs_list_item_close_id,
-                                                                                             :tab_content_id => tab_content_id,
-                                                                                             :tab_name => "Collection: " + @collection.tag_line }
-        tab_content_div = render_to_string :partial => "create_collection_instance_tab_content_div",
-                                           :locals => {  :tab_content_id => tab_content_id,
-                                                         :collection => @collection }
+        tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
+                                                                                                :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                                                                :tab_content_id => tab_content_id,
+                                                                                                :tab_name => "Collection: " + @collection.tag_line }
+        tab_content_div = render_to_string :partial => "workspace_collection_instance_tab_content_div",
+                                               :locals => {  :tab_content_id => tab_content_id,
+                                                             :collection => @collection }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
@@ -111,11 +111,11 @@ class Cm::OrganizerController < ApplicationController
         tabs_list_item_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id] + "-close"
         tab_content_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id]
-        tabs_list_item = render_to_string :partial => "create_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
-                                                                                             :tabs_list_item_close_id => tabs_list_item_close_id,
-                                                                                             :tab_content_id => tab_content_id,
-                                                                                             :tab_name => "Portfolio: " + @portfolio.description }
-        tab_content_div = render_to_string :partial => "create_portfolio_instance_tab_content_div",
+        tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
+                                                                                                :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                                                                :tab_content_id => tab_content_id,
+                                                                                                :tab_name => "Portfolio: " + @portfolio.description }
+        tab_content_div = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
                                            :locals => {  :tab_content_id => tab_content_id,
                                                          :archive => @archive,
                                                          :portfolio => @portfolio }
@@ -138,13 +138,13 @@ class Cm::OrganizerController < ApplicationController
         tabs_list_item_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-Collection-" + params[:portfolio_collection_id] + "-close"
         tab_content_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id]
-        tabs_list_item = render_to_string :partial => "create_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
-                                                                                             :tabs_list_item_close_id => tabs_list_item_close_id,
-                                                                                             :tab_content_id => tab_content_id,
-                                                                                             :tab_name => "Portfolio collection: " + @portfolio_collection.collection.tag_line }
-        tab_content_div = render_to_string :partial => "create_portfolio_collection_instance_tab_content_div",
-                                           :locals => {  :tab_content_id => tab_content_id,
-                                           :portfolio_collection => @portfolio_collection }
+        tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
+                                                                                                :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                                                                :tab_content_id => tab_content_id,
+                                                                                                :tab_name => "Portfolio collection: " + @portfolio_collection.collection.tag_line }
+        tab_content_div = render_to_string :partial => "workspace_portfolio_collection_instance_tab_content_div",
+                                               :locals => {  :tab_content_id => tab_content_id,
+                                               :portfolio_collection => @portfolio_collection }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
@@ -176,7 +176,7 @@ class Cm::OrganizerController < ApplicationController
         @image = Image.find params[:image_id]
         @collection.images << @image
         @collection.save
-        response_body = render_to_string :partial => "organizer_workspace_body_collections_tab_content", :locals => { :archive => @archive }
+        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive }
         render :inline => response_body
     end
 
@@ -192,7 +192,7 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @collection = Collection.find params[:collection_id]
         @collection.destroy
-        response_body = render_to_string :partial => "organizer_workspace_body_collections_tab_content", :locals => { :archive => @archive }
+        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive }
         render :inline => response_body
     end
 
@@ -204,11 +204,11 @@ class Cm::OrganizerController < ApplicationController
         render :layout => false
     end
 
-    def create_collection
+    def create_portfolio_collection
         logger.debug "cm/organizer_controlloer/create_portfolio_collection - inspecting  params:"
         logger.debug  params.inspect
         @archive = Archive.find params[:archive_id]
-        response_body = render_to_string :partial => "create_portfolio_instance_tab_content_div", :locals => { :archive => @archive }
+        response_body = render_to_string :partial => "workspace_portfolio_collection_tab_content_div", :locals => { :archive => @archive }
         render :inline => response_body
     end
 
