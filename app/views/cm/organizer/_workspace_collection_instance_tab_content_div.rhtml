@@ -13,14 +13,20 @@
             <%= collection_form.submit "Cancel", :class => "organizer-form-enabled-button" %>
         <% end %>
     </div>    
-    <div class="organizer-workspace-body-with-form-image-area">
-    <% collection.images.each do |image| %>
-        <% imageTagId = "organizer-workspace-image-#{collection.id}-#{image.id}" %>
-        <%= organizer_image_tag( image, imageTagId, "organizer-workspace-thumbnail") %>
-        <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
-    <% end %>
-    <div class="organizer-workspace-trash-container">
-        <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
-    </div>
+    <div id="organizer-workspace-body-with-form-image-area" class="organizer-workspace-body-with-form-image-area">
+        <% collection.images.each do |image| %>
+            <% imageTagId = "organizer-workspace-image-#{collection.id}-#{image.id}" %>
+            <%= organizer_image_tag( image, imageTagId, "organizer-workspace-thumbnail") %>
+            <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
+        <% end %>
+        <div class="organizer-workspace-trash-container">
+            <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
+        </div>
+        <%= javascript_tag "Droppables.add( 'organizer-workspace-body-with-form-image-area', {
+                                accept : 'organizer-preview-image',
+                                onDrop : function(image) { 
+                                   alert('you dropped it: ' + image.readAttribute('id') );
+                                } } );"
+         %>
     </div>
 </div>

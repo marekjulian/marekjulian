@@ -1,0 +1,24 @@
+<% deactivate_link_id = "organizer-dialog-form-response-deactivate-%s" % @portfolio.id%>
+<% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
+                                     :action => :delete_portfolio,
+                                     :archive_id => @archive.id,
+                                     :portfolio_id => @portfolio.id ),
+                    :update => "organizer-workspace-body-portfolios",
+                    :success => "$('#{deactivate_link_id}').fire('lb:deactivate')",
+                    :html => { :id => 'organizer-dialog-form' } ) do %>
+    <div id="ArchivePortfolioHeading">
+        <p>Delete portfolio: <%= @portfolio.description %></p>
+    </div>
+    <ul>
+        <li>
+            <div class="organizer-dialog-form-thumbnail-container" >
+                <% imageTagId = "organizer-dialog-form-thumbnail-#{@portfolio.id}" %>
+                <%= organizer_portfolio_thumbnail_tag( @portfolio, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+            <div>
+        </li>
+        <li>
+            <a><%= submit_tag "Delete" %></a>
+            <a id="<%=deactivate_link_id%>" href="#" class="lbAction" rel="deactivate"><button>Cancel</button></a>
+        </li>
+    </ul>
+<% end %>

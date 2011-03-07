@@ -1,26 +1,67 @@
-<div class="organizer-workspace-body-image-area">
-    <% if @archive.portfolios.any? %>
+<div id="organizer-workspace-body-portfolios-image-area" class="organizer-workspace-body-image-area">
+    <% if archive.portfolios.any? %>
         <ul id="organizer-workspace-body-portfolios-list">
-            <% @archive.portfolios.each do |portfolio| %>
+            <% archive.portfolios.each do |portfolio| %>
                 <li>
                     <% imageTagId = "organizer-workspace-body-portfolios-item-#{portfolio.id}" %>
                     <%= organizer_portfolio_thumbnail_tag( portfolio, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
                     <% createNewTabLink = url_for( :controller => 'cm/organizer',
-                                                   :archive_id => @archive.id,
+                                                   :archive_id => archive.id,
                                                    :action => :create_new_portfolio_instance_tab,
                                                    :portfolio_id => portfolio.id ) %>
                     <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                       req = new Ajax.Request( '#{createNewTabLink}', {
-                                       method :  'get' } )
+                                                                                req = new Ajax.Request( '#{createNewTabLink}', {
+                                                                                    method :  'get' } )
                                        });"
                      %>
                     <%= link_to portfolio.description, port_portfolio_path(portfolio), :class => 'NavLink' %>
                     <%= pluralize portfolio.portfolio_collections.count, 'portfolio collection' %>
                     <% if logged_in? %>
-                        <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'), port_portfolio_path(portfolio), :method => :delete %>
+                        <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'), 
+                                    url_for( :controller => 'cm/organizer',
+                                             :archive_id => archive.id,
+                                             :action => :delete_portfolio_form,
+                                             :portfolio_id => portfolio.id ),
+                                    :method => :get,
+                                    :class => "lbOn" %>
                     <% end %><br/>
                 </li>
             <% end %>
         </ul>
     <% end %>
+    <% createPortfolioFormUrl = url_for( :controller => 'cm/organizer',
+                                         :archive_id => archive.id,
+                                         :action => :create_portfolio_form ) %>
+    <%= link_to "",
+                createPortfolioFormUrl,
+                :method => :get,
+                :id => 'organizer-workspace-body-portfolio-create',
+                :class => 'lbOn' %>
 </div>
+<% if initial_render %>
+    <%= javascript_tag "document.observe('dom:loaded', function() {
+            Droppables.add( 'organizer-workspace-body-portfolios-image-area', {
+                            accept : 'organizer-preview-image',
+                            onDrop : function(image) { 
+                                newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                $('organizer-workspace-body-portfolio-create').writeAttribute('href', newHRef );
+                                $('organizer-workspace-body-portfolio-create').fire('lb:setContent', { content : newHRef } );
+                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                $('organizer-workspace-body-portfolio-create').fire('lb:activate');
+                            }
+            } );
+        });"
+     %>
+<% else %>
+    <%= javascript_tag "Droppables.add( 'organizer-workspace-body-portfolios-image-area', {
+                            accept : 'organizer-preview-image',
+                            onDrop : function(image) { 
+                                newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                $('organizer-workspace-body-portfolio-create').writeAttribute('href', newHRef );
+                                $('organizer-workspace-body-portfolio-create').fire('lb:setContent', { content : newHRef } );
+                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                $('organizer-workspace-body-portfolio-create').fire('lb:activate');
+                            } } );"
+     %>
+    <%= javascript_tag "MJ_UI_LIGHTBOX.reInitialize();" %>                            
+<% end %>

@@ -59,8 +59,14 @@ ActionController::Routing::Routes.draw do |map|
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_collection => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_collection_form => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_collection => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :create_portfolio_form => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :create_portfolio => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_form => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_portfolio_collection_form => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_portfolio_collection => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_collection_form => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_collection => :post }
         end
     end
 

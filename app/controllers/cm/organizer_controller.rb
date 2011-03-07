@@ -2,7 +2,13 @@ class Cm::OrganizerController < ApplicationController
 
     before_filter :login_required
 
-    skip_before_filter :verify_authenticity_token, :only => [:create_collection_form, :delete_collection_form]
+    skip_before_filter :verify_authenticity_token,
+                       :only => [:create_collection_form,
+                                 :delete_collection_form,
+                                 :create_portfolio_form,
+                                 :delete_portfolio_form,
+                                 :create_portfolio_collection_form,
+                                 :delete_portfolio_collection_form]
 
     layout "cm/organizer"
 
@@ -105,6 +111,9 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def create_new_portfolio_instance_tab
+        logger.debug "cm/organizer_controller/create_new_portfolio_instance_tab"
+        logger.debug params.inspect
+
         @archive = Archive.find params[:archive_id]
         @portfolio = Portfolio.find params[:portfolio_id]
 
@@ -116,9 +125,10 @@ class Cm::OrganizerController < ApplicationController
                                                                                                 :tab_content_id => tab_content_id,
                                                                                                 :tab_name => "Portfolio: " + @portfolio.description }
         tab_content_div = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
-                                           :locals => {  :tab_content_id => tab_content_id,
-                                                         :archive => @archive,
-                                                         :portfolio => @portfolio }
+                                           :locals => { :archive => @archive,
+                                                        :portfolio => @portfolio,
+                                                        :tab_content_id => tab_content_id,
+                                                        :initial_render => false }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
@@ -129,7 +139,7 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def create_new_portfolio_collection_instance_tab
-        logger.debug "cm/organizer_controller/create_new_portfolio_instance_tag - inspecting params:"
+        logger.debug "cm/organizer_controller/create_new_portfolio_collection_instance_tab - inspecting params:"
         logger.debug params.inspect
 
         @archive = Archive.find params[:archive_id]
@@ -176,7 +186,7 @@ class Cm::OrganizerController < ApplicationController
         @image = Image.find params[:image_id]
         @collection.images << @image
         @collection.save
-        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive, :initialRender => false }
+        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive, :initial_render => false }
         render :inline => response_body
     end
 
@@ -192,7 +202,80 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @collection = Collection.find params[:collection_id]
         @collection.destroy
-        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive, :initialRender => false }
+        response_body = render_to_string :partial => "workspace_collections_tab_content", :locals => { :archive => @archive, :initial_render => false }
+        render :inline => response_body
+    end
+
+    def create_portfolio_form
+        logger.debug "cm/organizer_controlloer/create_portfolio_form - inspecting  params:"
+        logger.debug  params.inspect
+        @archive = Archive.find params[:archive_id]
+        @portfolio = Portfolio.new
+        @portfolio.description = "new collection"
+        @image = Image.find params[:image_id]
+        render :layout => false
+    end
+
+    def create_portfolio
+        logger.debug "cm/organizer_controlloer/create_portfolio - inspecting  params:"
+        logger.debug  params.inspect
+
+        @archive = Archive.find params[:archive_id]
+
+        portfolio = Portfolio.create( :archive_id => @archive.id,
+                                      :description => params[:description] )
+
+        logger.debug "cm/organizer_controller/create_portfolio - created portfolio:"
+        logger.debug portfolio.inspect
+
+        image = Image.find params[:image_id]
+        collection = image.collections[0]
+
+        portfolio_collection = PortfolioCollection.create( :portfolio => portfolio,
+                                                           :collection => collection,
+                                                           :show_seq => 1 )
+
+        portfolio.portfolio_collections << portfolio_collection
+
+        image_show_view = ImageShowView.new
+        image_show_view.image = image
+        image_show_view.portfolio_collection = portfolio_collection
+        image_show_view.show_seq = 1
+
+        image.image_variants.each do |iv|
+            if iv.is_web_default
+                image_show_view.show_variant_id = iv.id
+            end
+            if iv.is_thumbnail_default
+                image_show_view.thumbnail_variant_id = iv.id
+            end
+        end
+
+        image_show_view.save
+
+        portfolio_collection.default_show_view_id = image_show_view.id
+        portfolio.default_show_view_id = image_show_view.id
+
+        portfolio_collection.save
+        portfolio.save
+
+        response_body = render_to_string :partial => "workspace_portfolios_tab_content", :locals => { :archive => @archive, :initial_render => false }
+        render :inline => response_body
+    end
+
+    def delete_portfolio_form
+        @archive = Archive.find params[:archive_id]
+        @portfolio = Portfolio.find params[:portfolio_id]
+        render :layout => false
+    end
+
+    def delete_portfolio
+        logger.debug "cm/organizer_controller/delete_portfolio - inspecting params:"
+        logger.debug params.inspect
+        @archive = Archive.find params[:archive_id]
+        @portfolio = Portfolio.find params[:portfolio_id]
+        @portfolio.destroy
+        response_body = render_to_string :partial => "workspace_portfolios_tab_content", :locals => { :archive => @archive, :initial_render => false }
         render :inline => response_body
     end
 
@@ -200,7 +283,15 @@ class Cm::OrganizerController < ApplicationController
         logger.debug "cm/organizer_controlloer/create_portfolio_collection_form - inspecting  params:"
         logger.debug  params.inspect
         @archive = Archive.find params[:archive_id]
+        @portfolio = Portfolio.find params[:portfolio_id]
         @image = Image.find params[:image_id]
+        @collections = []
+        @archive.collections.each do |collection|
+            if collection.images.include? @image
+                @collections.push( collection )
+            end
+        end
+        @tab_content_id = params[:tab_content_id]
         render :layout => false
     end
 
@@ -208,7 +299,69 @@ class Cm::OrganizerController < ApplicationController
         logger.debug "cm/organizer_controlloer/create_portfolio_collection - inspecting  params:"
         logger.debug  params.inspect
         @archive = Archive.find params[:archive_id]
-        response_body = render_to_string :partial => "workspace_portfolio_collection_tab_content_div", :locals => { :archive => @archive }
+        @portfolio = Portfolio.find params[:portfolio_id]
+        @collection = Collection.find params[:selected_collection_id]
+        @image = Image.find params[:image_id]
+
+        portfolio_collection = PortfolioCollection.create( :portfolio => @portfolio,
+                                                           :collection => @collection,
+                                                           :show_seq => @portfolio.portfolio_collections.length+1 )
+
+        @portfolio.portfolio_collections << portfolio_collection
+
+        image_show_view = ImageShowView.new
+        image_show_view.image = @image
+        image_show_view.portfolio_collection = portfolio_collection
+        image_show_view.show_seq = 1
+
+        @image.image_variants.each do |iv|
+            if iv.is_web_default
+                image_show_view.show_variant_id = iv.id
+            end
+            if iv.is_thumbnail_default
+                image_show_view.thumbnail_variant_id = iv.id
+            end
+        end
+
+        image_show_view.save
+
+        portfolio_collection.default_show_view_id = image_show_view.id
+        if not @portfolio.default_show_view_id
+            @portfolio.default_show_view_id = image_show_view.id
+        end
+
+        portfolio_collection.save
+        @portfolio.save
+
+        response_body = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
+                                         :locals => { :archive => @archive,
+                                                      :portfolio => @portfolio,
+                                                      :initial_render => false,
+                                                      :tab_content_id => params[:tab_content_id] }
+        render :inline => response_body
+    end
+
+    def delete_portfolio_collection_form
+        logger.debug "cm/organizer_controller/delete_portfolio_collection_form - inspecting params:"
+        logger.debug params.inspect
+        @archive = Archive.find params[:archive_id]
+        @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
+        @tab_content_id = params[:tab_content_id]
+        render :layout => false
+    end
+
+    def delete_portfolio_collection
+        logger.debug "cm/organizer_controller/delete_portfolio_collection - inspecting params:"
+        logger.debug params.inspect
+        @archive = Archive.find params[:archive_id]
+        @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
+        @portfolio = @portfolio_collection.portfolio
+        @portfolio_collection.destroy
+        response_body = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
+                                         :locals => { :archive => @archive,
+                                                      :portfolio => @portfolio,
+                                                      :initial_render => false,
+                                                      :tab_content_id => params[:tab_content_id] }
         render :inline => response_body
     end
 

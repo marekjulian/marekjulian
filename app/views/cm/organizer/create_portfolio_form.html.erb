@@ -5,21 +5,16 @@
     <% imageId = "" %>
 <% end %>
 <% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
-                                     :action => :create_collection,
+                                     :action => :create_portfolio,
                                      :archive_id => @archive.id,
                                      :image_id => imageId ),
-                    :update => "organizer-workspace-body-collections",
+                    :update => "organizer-workspace-body-portfolios",
                     :success => "$('#{deactivate_link_id}').fire('lb:deactivate')",
                     :html => { :id => 'organizer-dialog-form' } ) do %>
-    <div id="ArchiveCollectionHeading">
-      <p>New Collection:</p>
+    <div id="ArchivePortfolioHeading">
+      <p>New Portfolio:</p>
     </div>
     <ul>
-        <li>
-            <%= label_tag :tag_line, "Tag Line:" %>
-            <%= text_field_tag :tag_line %>
-            <br/>
-        </li>
         <li>
             <%= label_tag :description, "Description:" %>
             <%= text_field_tag :description %>

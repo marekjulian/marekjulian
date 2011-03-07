@@ -42,7 +42,7 @@
                 :id => 'organizer-workspace-body-collection-create',
                 :class => 'lbOn' %>
 </div>
-<% if initialRender %>
+<% if initial_render %>
     <%= javascript_tag "document.observe('dom:loaded', function() {
             Droppables.add( 'organizer-workspace-body-collections-image-area', {
                             accept : 'organizer-preview-image',

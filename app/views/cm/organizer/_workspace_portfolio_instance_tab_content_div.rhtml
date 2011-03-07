@@ -1,4 +1,6 @@
 <div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
     <%= render :partial => 'workspace_portfolio_instance_tab_content', :locals => { :archive => archive,
-                                                                                    :portfolio => portfolio } %>
+                                                                                    :portfolio => portfolio,
+                                                                                    :initial_render => initial_render,
+                                                                                    :tab_content_id => tab_content_id } %>
 </div>

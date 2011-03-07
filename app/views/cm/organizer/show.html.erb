@@ -24,10 +24,10 @@
         </div>
         <div id="organizer-workspace-body">
             <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content">
-                <%= render :partial => 'workspace_collections_tab_content', :locals => { :archive => @archive, :initialRender => true } %>
+                <%= render :partial => 'workspace_collections_tab_content', :locals => { :archive => @archive, :initial_render => true } %>
             </div>
             <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
-                <%= render :partial => 'workspace_portfolios_tab_content', :locals => { :archive => @archive } %>
+                <%= render :partial => 'workspace_portfolios_tab_content', :locals => { :archive => @archive, :initial_render => true } %>
             </div>
             <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
                                                                    { activeClassName : 'organizer-workspace-tab-active-link',

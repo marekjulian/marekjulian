@@ -1,0 +1,58 @@
+<% deactivate_link_id = "organizer-dialog-form-response-deactivate" %>
+<% if @image %>
+    <% imageId = @image.id %>
+<% else %>
+    <% imageId = "" %>
+<% end %>
+<% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
+                                     :action => :create_portfolio_collection,
+                                     :archive_id => @archive.id,
+                                     :portfolio_id => @portfolio.id,
+                                     :image_id => imageId,
+                                     :tab_content_id => @tab_content_id ),
+                    :update => "#{@tab_content_id}",
+                    :success => "$('#{deactivate_link_id}').fire('lb:deactivate')",
+                    :html => { :id => 'organizer-dialog-form' } ) do %>
+    <div id="ArchivePortfolioHeading">
+        <% if @collections.length == 1 %>
+            <p>New Portfolio Collection: <%=@collections[0].tag_line%></p>
+        <% else %>
+            <p>New Portfolio Collection:</p>
+        <% end %>
+    </div>
+    <ul>
+        <li>
+            <% if @collections.length > 0 %>
+                <% if @collections.length == 1 %>
+                    <% select_options = "<option selected value=\"#{@collections[0].id}\">#{@collections[0].tag_line}</option>"%>
+                    <% select_style = "display:none" %>
+                <% else %>
+                    <p>Select collection for portfolio:</p>
+                    <% select_options = "" %>
+                    <% @collections.each do |collection| %>
+                        <% select_options = select_options + "<option value=\"#{collection.id}\">#{collection.tag_line}</option>"%>
+                    <% end %>
+                    <% select_style = "" %>
+                <% end %>
+                <%= select_tag "selected_collection_id",
+                               select_options,
+                               :style => select_style
+                 %>
+            <% end %>
+        </li>
+        <li>
+            <div class="organizer-dialog-form-thumbnail-container" >
+                <% imageTagId = "organizer-dialog-form-thumbnail" %>
+                <% if @image %>
+                    <%= organizer_image_tag( @image, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                <% else %>
+                    <%= organizer_missing_image_thumbnail_tag( "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                <% end %>
+            <div>
+        </li>
+        <li>
+            <a><%= submit_tag "Create" %></a>
+            <a id="<%=deactivate_link_id%>" href="#" class="lbAction" rel="deactivate"><button>Cancel</button></a>
+        </li>
+    </ul>
+<% end %>
