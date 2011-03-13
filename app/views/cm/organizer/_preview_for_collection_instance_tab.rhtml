@@ -1,0 +1,9 @@
+<div id="<%=preview_div_id%>">
+    <div id="organizer-preview-selection-for-<%=tab_id%>-tab">
+        <%= render :partial => 'preview_selection_for_collections_tab', :locals => { :archive => @archive } %>
+    </div>
+    <div id="organizer-preview-content-for-collections-tab">
+        <%= render :partial => 'preview_content_for_collections_tab', :locals => { :images => @archive.images,
+                                                                                   :tab_id => tab_id } %>
+    </div>
+</div>

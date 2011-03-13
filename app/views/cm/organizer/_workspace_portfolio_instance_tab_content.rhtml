@@ -8,7 +8,7 @@
                     <% createNewTabLink = url_for( :controller => 'cm/organizer',
                                                    :archive_id => portfolio.archive_id,
                                                    :action => :create_new_portfolio_collection_instance_tab,
-                                                   :portfolio_collection_id => portfolio_collection.collection_id ) %>
+                                                   :portfolio_collection_id => portfolio_collection.id ) %>
                     <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
                                         req = new Ajax.Request( '#{createNewTabLink}', {
                                                                 method :  'get' } )

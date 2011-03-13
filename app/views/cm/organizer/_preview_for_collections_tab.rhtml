@@ -1,0 +1,17 @@
+<div id="organizer-preview-collections-tab">
+    <div id="organizer-preview-selection-for-collections-tab">
+        <form id="organizer-preview-selection-form-for-collections-tab">
+            <% select_options = "<option value=\"all\" selected=\"selected\">All your images</option>" %>
+            <% archive.collections.each do |collection| %>
+                <% select_options = select_options + "<option value=\"#{collection.id}\">Collection: #{collection.tag_line}</option>" %>
+            <% end %>
+            <%= select_tag "selected-collection-id",
+                           select_options,
+                           :onchange => remote_function( :submit => 'organizer-preview-selection-form-for-collections-tab',
+                           :url => {  :action => :update_preview_content_for_collections_tab } ) %>
+        </form>
+    </div>
+    <div id="organizer-preview-content-for-collections-tab">
+        <%= render :partial => 'preview_content_for_collections_tab', :locals => { :images => archive.images } %>
+    </div>
+</div>

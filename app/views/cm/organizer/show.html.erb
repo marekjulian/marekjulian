@@ -1,23 +1,21 @@
 <div id="organizer-body">
     <div id="organizer-preview">
-        <div id="organizer-preview-selection">
-            <%= render :partial => 'preview_selection_for_collections_tab', :locals => { :archive => @archive } %>
-        </div>
-        <div id="organizer-preview-content">
-            <%= render :partial => 'preview_content_for_collections_tab', :locals => { :images => @archive.images } %>
-        </div>
+        <%= render :partial => 'preview_for_collections_tab',
+                   :locals => { :archive => @archive } %>
+        <%= render :partial => 'preview_for_portfolios_tab',
+                   :locals => { :archive => @archive } %>
     </div>
     <div id="organizer-workspace">
         <div id="organizer-workspace-tabs">
             <ul id="organizer-workspace-tabs-list">
                 <li id="organizer-workspace-body-collections-tab" class="organizer-workspace-tab">
                     <div class="organizer-workspace-tab-content">
-                        <a class="organizer-workspace-tab-inactive-link" href="#organizer-workspace-body-collections">Collections</a>
+                        <a id="organizer-workspace-body-collections-tab-link" class="organizer-workspace-tab-inactive-link" href="#organizer-workspace-body-collections">Collections</a>
                     </div>
                 </li>
                 <li id="organizer-workspace-body-portfolios-tab" class="organizer-workspace-tab">
                     <div class="organizer-workspace-tab-content">
-                        <a class="organizer-workspace-tab-inactive-link" href="#organizer-workspace-body-portfolios">Portfolios</a>
+                        <a id="organizer-workspace-body-portfolios-tab-link" class="organizer-workspace-tab-inactive-link" href="#organizer-workspace-body-portfolios">Portfolios</a>
                     </div>
                 </li>
             </ul>
@@ -29,9 +27,13 @@
             <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
                 <%= render :partial => 'workspace_portfolios_tab_content', :locals => { :archive => @archive, :initial_render => true } %>
             </div>
-            <%= javascript_tag "var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
+            <%= javascript_tag "var previewControl = new CM_ORGANIZER.PreviewControl();
+                                previewControl.addPreview( $('organizer-workspace-body-collections-tab-link'), 'organizer-preview-collections-tab' );
+                                previewControl.addPreview( $('organizer-workspace-body-portfolios-tab-link'), 'organizer-preview-portfolios-tab' );
+                                var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
                                                                    { activeClassName : 'organizer-workspace-tab-active-link',
-                                                                     inactiveClassName : 'organizer-workspace-tab-inactive-link' } );" %>
+                                                                     inactiveClassName : 'organizer-workspace-tab-inactive-link',
+                                                                     preShowCallback : previewControl.setActivePreview.bind(previewControl) } );" %>
         </div>
     </div>
 </div>

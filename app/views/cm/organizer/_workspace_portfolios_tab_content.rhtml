@@ -43,7 +43,7 @@
             Droppables.add( 'organizer-workspace-body-portfolios-image-area', {
                             accept : 'organizer-preview-image',
                             onDrop : function(image) { 
-                                newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-portfolio-create').writeAttribute('href', newHRef );
                                 $('organizer-workspace-body-portfolio-create').fire('lb:setContent', { content : newHRef } );
                                 alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
@@ -56,7 +56,7 @@
     <%= javascript_tag "Droppables.add( 'organizer-workspace-body-portfolios-image-area', {
                             accept : 'organizer-preview-image',
                             onDrop : function(image) { 
-                                newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-portfolio-create').writeAttribute('href', newHRef );
                                 $('organizer-workspace-body-portfolio-create').fire('lb:setContent', { content : newHRef } );
                                 alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 

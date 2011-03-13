@@ -29,7 +29,6 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def update_preview_for_collections_tab
-
     end
 
     def update_preview_for_portfolios_tab
@@ -45,27 +44,32 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def update_preview_content_for_collections_tab
-        logger.debug "update_preview_content: params - "
+        logger.debug "update_preview_content_for_collections_tab: params - "
         logger.debug params.inspect
         @archive = Archive.find( params[:archive_id] )
         if params['selected-collection-id'] == 'all'
-            images = []
-            @archive.collections.each do |collection|
-                collection.images.each do |image|
-                    images.push(image)
-                end
-            end
+            images = @archive.images
         else
             collection = Collection.find( params['selected-collection-id'] )
             images = collection.images
         end
         render :update do |page|
-            page.replace_html 'organizer-preview-content', :partial => 'preview_content_for_collections_tab', :locals => { :images => images }
+            page.replace_html 'organizer-preview-content-for-collections-tab', :partial => 'preview_content_for_collections_tab', :locals => { :images => images }
         end
     end
 
     def update_preview_content_for_portfolios_tab
+        logger.debug "update_preview_content_for_portfolios_tab: params - "
+        logger.debug params.inspect
+        @archive = Archive.find( params[:archive_id] )
+        if params['selected-collection-id'] == 'all'
+            images = @archive.images
+        else
+            collection = Collection.find( params['selected-collection-id'] )
+            images = collection.images
+        end
         render :update do |page|
+            page.replace_html 'organizer-preview-content-for-portfolios-tab', :partial => 'preview_content_for_portfolios_tab', :locals => { :images => images }
         end
     end
 
@@ -85,26 +89,35 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def create_new_collection_instance_tab
-        logger.debug "cm/organizer_controller/create_new_collection_instance_tag - inspecting params:"
+        logger.debug "cm/organizer_controller/create_new_collection_instance_tab - inspecting params:"
         logger.debug params.inspect
 
         @archive = Archive.find params[:archive_id]
         @collection = Collection.find params[:collection_id]
 
+        preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
+        preview_div = render_to_string :partial => "preview_for_collection_instance_tab",
+                                       :locals => { :div_id => preview_div_id,
+                                                    :tab_id => "t#{params[:next_tab_id]}" }
         tabs_list_item_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-close"
+        tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
         tab_content_id = "organizer-workspace-body-collection-" + params[:collection_id]
-        tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
-                                                                                                :tabs_list_item_close_id => tabs_list_item_close_id,
-                                                                                                :tab_content_id => tab_content_id,
-                                                                                                :tab_name => "Collection: " + @collection.tag_line }
+        tabs_list_item = render_to_string :partial => "workspace_tabs_list_item",
+                                          :locals => {  :tabs_list_item_id => tabs_list_item_id,
+                                                        :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                        :tabs_list_item_link_id => tabs_list_item_link_id,
+                                                        :tab_content_id => tab_content_id,
+                                                        :tab_name => "Collection: " + @collection.tag_line }
         tab_content_div = render_to_string :partial => "workspace_collection_instance_tab_content_div",
                                                :locals => {  :tab_content_id => tab_content_id,
                                                              :collection => @collection }
 
         render :update do |page|
+            page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
+            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}}'), '' )"
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
@@ -119,9 +132,11 @@ class Cm::OrganizerController < ApplicationController
 
         tabs_list_item_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id] + "-close"
+        tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
         tab_content_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id]
         tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
                                                                                                 :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                                                                :tabs_list_item_link_id => tabs_list_item_link_id,
                                                                                                 :tab_content_id => tab_content_id,
                                                                                                 :tab_name => "Portfolio: " + @portfolio.description }
         tab_content_div = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
@@ -133,6 +148,7 @@ class Cm::OrganizerController < ApplicationController
         render :update do |page|
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
+
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
@@ -147,9 +163,11 @@ class Cm::OrganizerController < ApplicationController
 
         tabs_list_item_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-Collection-" + params[:portfolio_collection_id] + "-close"
+        tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
         tab_content_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id]
         tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
                                                                                                 :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                                                                :tabs_list_item_link_id => tabs_list_item_link_id,
                                                                                                 :tab_content_id => tab_content_id,
                                                                                                 :tab_name => "Portfolio collection: " + @portfolio_collection.collection.tag_line }
         tab_content_div = render_to_string :partial => "workspace_portfolio_collection_instance_tab_content_div",
