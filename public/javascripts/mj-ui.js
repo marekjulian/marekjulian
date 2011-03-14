@@ -15,11 +15,11 @@ if(typeof(MJ_UI) == "undefined") {
 MJ_UI.Tab = Class.create( {
 
     initialize: function( id, link ) {
-        alert("MJ_UI.Tab.intialize...");
+        // alert("MJ_UI.Tab.intialize...");
         this.id = id;
         this.link = link;
         this.containerId = link.getAttribute('href').replace(window.location.href.split('#')[0],'').split('#').last().replace(/#/,'');
-        alert("MJ_UI.Tab.intialize - completed!");
+        // alert("MJ_UI.Tab.intialize - completed!");
     }
 
 } );
@@ -42,7 +42,7 @@ MJ_UI.Tab = Class.create( {
 MJ_UI.Tabs = Class.create( {
 
     initialize: function(tab_list_container,options){
-        alert("MJ_UI.Tabs.initialize...");
+        // alert("MJ_UI.Tabs.initialize...");
         if(!$(tab_list_container)) {
             throw "MJ_UI.Tabs could not find the element: " + tab_list_container; }
         this.activeContainer = false;
@@ -70,7 +70,7 @@ MJ_UI.Tabs = Class.create( {
         }.bind(this));
         this.containers.values().each(Element.hide);
         this.setActiveTab(this.links.first());
-        alert("MJ_UI.Tabs.initialize - completed!");
+        // alert("MJ_UI.Tabs.initialize - completed!");
     },
 
     addTab : function( link ) {
@@ -112,7 +112,7 @@ MJ_UI.Tabs = Class.create( {
     },
 
     setActiveTab : function( link ) {
-        alert("mj-ui.Tabs.setActiveTab - for link: " + link);
+        // alert("mj-ui.Tabs.setActiveTab - for link: " + link);
         if(!link && typeof(link) == 'undefined') {
             return; 
         }
@@ -126,11 +126,11 @@ MJ_UI.Tabs = Class.create( {
         link.addClassName(this.options.activeClassName);
         this.activeContainer = this.containers.get(link.key);
         this.activeLink = link;
-        alert("mj-ui.Tabs.setActiveTab - checking for preShowCallback...");        
+        // alert("mj-ui.Tabs.setActiveTab - checking for preShowCallback...");        
         if (this.options.preShowCallback) {
-            alert("mj-ui.Tabs.setActiveTab - About to call preShowCallback...");        
+            // alert("mj-ui.Tabs.setActiveTab - About to call preShowCallback...");        
             this.options.preShowCallback( link );
-            alert("mj-ui.Tabs.setActiveTab - Called preShowCallback...");
+            // alert("mj-ui.Tabs.setActiveTab - Called preShowCallback...");
         }
         this.options.showFunction(this.containers.get(link.key));
     },

@@ -65,9 +65,20 @@ module Cm::OrganizerHelper
             showView = nil
         end
         if showView
-            showVariant = ImageVariant.find( showView.thumbnail_variant_id )
-            if showVariant
-                thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+            if showView.thumbnail_variant_id
+                showVariant = ImageVariant.find( showView.thumbnail_variant_id )
+                if showVariant
+                    thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+                end
+            else
+                image = Image.find( showView.image_id )
+                if image
+                    image.image_variants.each do |imageVariant|
+                        if imageVariant.is_master
+                            thumbnailElem = image_tag imageVariant.file.url(:default_thumb), :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+                        end
+                    end
+                end
             end
         end
         if thumbnailElem == ""

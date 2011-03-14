@@ -1,0 +1,5 @@
+<% images.each do | image | %>
+    <% image_tag_id = "organizer-preview-image-#{tab_id}-tab-#{image.id}" %>
+    <%= organizer_image_tag image, image_tag_id, "organizer-preview-image" %>
+    <%= draggable_element "#{image_tag_id}", :ghosting => true, :revert => true %>
+<% end %>

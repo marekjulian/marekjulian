@@ -1,0 +1,11 @@
+<div id="<%=preview_div_id%>">
+    <div id="organizer-preview-content-for-<%=tab_id%>-tab">
+        <% portfolio_collection_images = [] %>
+        <% portfolio_collection.image_show_views.each do |image_show_view| %>
+            <% portfolio_collection_images.push( image_show_view.image ) %>
+        <% end %>
+        <% preview_images = portfolio_collection.collection.images.select { |c_image| ! portfolio_collection_images.include?(c_image) } %>
+        <%= render :partial => 'preview_content_for_portfolio_collection_instance_tab', :locals => { :images => preview_images,
+                                                                                                     :tab_id => tab_id } %>
+    </div>
+</div>

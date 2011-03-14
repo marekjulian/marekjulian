@@ -10,9 +10,10 @@
                                                    :action => :create_new_portfolio_collection_instance_tab,
                                                    :portfolio_collection_id => portfolio_collection.id ) %>
                     <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                        req = new Ajax.Request( '#{createNewTabLink}', {
-                                                                method :  'get' } )
-                                        });"
+                                       reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
+                                       req = new Ajax.Request( reqUrl, {
+                                                               method :  'get' } )
+                                       });"
                      %>
                     <%= link_to portfolio_collection.collection.tag_line, port_portfolio_portfolio_collection_path(portfolio, portfolio_collection), :class => "NavLink" %>
                     <%= pluralize portfolio_collection.image_show_views.count, 'image show view' %>
@@ -43,7 +44,7 @@
             Droppables.add( 'organizer-workspace-body-portfolio-instance-image-area', {
                             accept : 'organizer-preview-image',
                             onDrop : function(image) { 
-                                newHRef = '#{createPortfolioCollectionFormUrl}&image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                newHRef = '#{createPortfolioCollectionFormUrl}&image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-portfolio-collection-create').writeAttribute('href', newHRef );
                                 $('organizer-workspace-body-portfolio-collection-create').fire('lb:setContent', { content : newHRef } );
                                 alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
@@ -56,7 +57,7 @@
     <%= javascript_tag "Droppables.add( 'organizer-workspace-body-portfolio-instance-image-area', {
                             accept : 'organizer-preview-image',
                             onDrop : function(image) { 
-                                newHRef = '#{createPortfolioCollectionFormUrl}&image_id=' + image.readAttribute('id').replace(/^organizer-preview-image-/, '');
+                                newHRef = '#{createPortfolioCollectionFormUrl}&image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-portfolio-collection-create').writeAttribute('href', newHRef );
                                 $('organizer-workspace-body-portfolio-collection-create').fire('lb:setContent', { content : newHRef } );
                                 alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 

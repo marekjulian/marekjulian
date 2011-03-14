@@ -10,8 +10,9 @@
                                                    :action => :create_new_portfolio_instance_tab,
                                                    :portfolio_id => portfolio.id ) %>
                     <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                                                                req = new Ajax.Request( '#{createNewTabLink}', {
-                                                                                    method :  'get' } )
+                                       reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
+                                       req = new Ajax.Request( reqUrl, {
+                                                               method :  'get' } )
                                        });"
                      %>
                     <%= link_to portfolio.description, port_portfolio_path(portfolio), :class => 'NavLink' %>

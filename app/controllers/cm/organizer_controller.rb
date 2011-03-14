@@ -74,12 +74,43 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def update_preview_content_for_collection_instance_tab
+        logger.debug "update_preview_content_for_collection_instance_tab: params - "
+        logger.debug params.inspect
+        @archive = Archive.find( params[:archive_id] )
+        if params['selected-collection-id'] == 'all'
+            images = @archive.images
+        else
+            collection = Collection.find( params['selected-collection-id'] )
+            images = collection.images
+        end
         render :update do |page|
+            tab_id = params[:tab_id]
+            page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_collection_instance_tab',
+                                                                             :locals => { :images => images,
+                                                                                          :tab_id => tab_id }
         end
     end
 
     def update_preview_content_for_portfolio_instance_tab
+        logger.debug "update_preview_content_for_portfolio_instance_tab: params - "
+        logger.debug params.inspect
+        @archive = Archive.find( params[:archive_id] )
+        @portfolio = Portfolio.find( params[:portfolio_id] )
+        tab_id = params[:tab_id]
+        if params['selected-collection-id'] == 'all'
+            preview_collections = @archive.collections.select { |archive_collection| ! @portfolio.collections.include?(archive_collection) }
+            preview_images = []
+            preview_collections.each do |preview_collection|
+                preview_images.concat( preview_collection.images )
+            end
+        else
+            collection = Collection.find( params['selected-collection-id'] )
+            preview_images = collection.images
+        end
         render :update do |page|
+            page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_portfolio_instance_tab',
+                                                                             :locals => { :images => preview_images,
+                                                                                          :tab_id => tab_id }
         end
     end
 
@@ -97,7 +128,8 @@ class Cm::OrganizerController < ApplicationController
 
         preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
         preview_div = render_to_string :partial => "preview_for_collection_instance_tab",
-                                       :locals => { :div_id => preview_div_id,
+                                       :locals => { :archive => @archive,
+                                                    :preview_div_id => preview_div_id,
                                                     :tab_id => "t#{params[:next_tab_id]}" }
         tabs_list_item_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-close"
@@ -117,9 +149,9 @@ class Cm::OrganizerController < ApplicationController
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
-            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}}'), '' )"
-            page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
-            page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
+            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            page << "tabsControl.addTab( $('#{tabs_list_item_id}').down().down() )"
+            page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
     end
 
@@ -130,6 +162,12 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @portfolio = Portfolio.find params[:portfolio_id]
 
+        preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
+        preview_div = render_to_string :partial => "preview_for_portfolio_instance_tab",
+                                       :locals => { :archive => @archive,
+                                                    :portfolio => @portfolio,
+                                                    :preview_div_id => preview_div_id,
+                                                    :tab_id => "t#{params[:next_tab_id]}" }
         tabs_list_item_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-" + params[:portfolio_id] + "-close"
         tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
@@ -146,11 +184,12 @@ class Cm::OrganizerController < ApplicationController
                                                         :initial_render => false }
 
         render :update do |page|
+            page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
-
-            page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
-            page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
+            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}')"
+            page << "tabsControl.addTab( $('#{ tabs_list_item_id}').down().down() )"
+            page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
     end
 
@@ -161,6 +200,11 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
 
+        preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
+        preview_div = render_to_string :partial => "preview_for_portfolio_collection_instance_tab",
+                                       :locals => { :portfolio_collection => @portfolio_collection,
+                                                    :preview_div_id => preview_div_id,
+                                                    :tab_id => "t#{params[:next_tab_id]}" }
         tabs_list_item_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-Collection-" + params[:portfolio_collection_id] + "-close"
         tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
@@ -175,8 +219,10 @@ class Cm::OrganizerController < ApplicationController
                                                :portfolio_collection => @portfolio_collection }
 
         render :update do |page|
+            page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
+            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
@@ -382,5 +428,7 @@ class Cm::OrganizerController < ApplicationController
                                                       :tab_content_id => params[:tab_content_id] }
         render :inline => response_body
     end
+
+
 
 end

@@ -1,0 +1,26 @@
+<div id="<%=preview_div_id%>">
+    <div id="organizer-preview-selection-for-<%=tab_id%>-tab">
+        <% preview_collections = archive.collections.select { |archive_collection| ! portfolio.collections.include?(archive_collection) } %>
+        <% preview_images = [] %>
+        <% preview_collections.each do |preview_collection| %>
+            <% preview_images.concat( preview_collection.images ) if preview_collection.images.count > 0 %>
+        <% end %>
+        <% form_id = "organizer-preview-selection-form-for-#{tab_id}-tab" %>
+        <form id="<%=form_id%>">
+            <% select_options = "<option value=\"all\" selected=\"selected\">All images</option>" %>
+            <% preview_collections.each do |preview_collection| %>
+                <% select_options = select_options + "<option value=\"#{preview_collection.id}\">Collection: #{preview_collection.tag_line}</option>" %>
+            <% end %>
+            <%= select_tag "selected-collection-id",
+                           select_options,
+                           :onchange => remote_function( :submit => form_id,
+                           :url => {  :action => :update_preview_content_for_portfolio_instance_tab,
+                                      :portfolio_id => portfolio.id,
+                                      :tab_id => tab_id } ) %>
+        </form>
+    </div>
+    <div id="organizer-preview-content-for-<%=tab_id%>-tab">
+        <%= render :partial => 'preview_content_for_portfolio_instance_tab', :locals => { :images => preview_images,
+                                                                                          :tab_id => tab_id } %>
+    </div>
+</div>
