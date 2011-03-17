@@ -61,7 +61,8 @@ class Cm::UploadersController < ApplicationController
         #                "Filedata"=>#<File:/var/folders/V4/V4JcaXFsFKmV34DlZ-UtF++++TM/-Tmp-/RackMultipart20101204-10545-fcx921-0>}
         #
         fakeParamsHash = { :description => params[:Filename],
-                           :image_variants_attributes => { 0 => { :properties_mode => "user",
+                           :image_variants_attributes => { 0 => { :update_type => "add_image_variant",
+                                                                  :attributes_mode => "user",
                                                                   :is_web_default => "0",
                                                                   :is_thumbnail => "0",
                                                                   :is_master => "1",
