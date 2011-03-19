@@ -311,11 +311,15 @@ class Cm::ImagesController < ApplicationController
                         logger.info "resolve_variants - assigned m."
                     elsif m != iv and m.attributes_mode == 'auto'
                         logger.info "resolve_variants - Getting geometries."
-                        m_geom = Paperclip::Geometry.from_file m.file.path
-                        iv_geom = Paperclip::Geometry.from_file iv.file.path
+                        m_geom = m.dimensions
+                        m_geom_height = m_geom[0]
+                        m_geom_width = m_geom[1]
+                        iv_geom = iv.dimensions
+                        iv_geom_height = iv_geom[0]
+                        iv_geom_width = iv_geom[1]
                         logger.info "resolve_variants - Got geometries."
-                        if iv_geom.height > m_geom.height and iv_geom.width >= m_geom.width or \
-                            iv_geom.height >= m_geom.height and iv_geom.width > m_geom.width
+                        if iv_geom_height > m_geom_height and iv_geom_width >= m_geom_width or \
+                            iv_geom_height >= m_geom_height and iv_geom_width > m_geom_width
                             m.is_master = false
                             m = iv
                         end
@@ -694,10 +698,16 @@ class Cm::ImagesController < ApplicationController
                 if not master_iv
                     master_iv = iv
                 elsif master_iv != iv
-                    master_iv_geom = Paperclip::Geometry.from_file master_iv.file.path
-                    iv_geom = Paperclip::Geometry.from_file iv.file.path
-                    if iv_geom.height > master_iv_geom.height and iv_geom.width >= master_iv_geom.width or \
-                        iv_geom.height >= master_iv_geom.height and iv_geom.width > master_iv_geom.width
+                    master_iv_geom = master_iv.dimensions
+                    master_iv_height = master_iv_geom[0]
+                    master_iv_width = master_iv_geom[1]
+                    logger.info "process_post_additions_and_updates - master image variant dimentions (%d, %d)." % [master_iv_width, master_iv_height]
+                    iv_geom = iv.dimensions
+                    iv_height = iv_geom[0]
+                    iv_width = iv_geom[1]
+                    logger.info "process_post_additions_and_updates - image variant dimentions (%d, %d)." % [iv_width, iv_height]
+                    if iv_height > master_iv_height and iv_width >= master_iv_width or \
+                        iv_height >= master_iv_height and iv_width > master_iv_width
                         master_iv.is_master = false
                         master_iv = iv
                     end
@@ -707,7 +717,7 @@ class Cm::ImagesController < ApplicationController
                 logger.info "process_post_additions_and_updates - Updating auto properties: web default - " + wd_ok.to_s + ", can be thumbnail - " + td_ok.to_s
                 web_default_iv = iv if not web_default_iv and iv.can_be_web_default
                 iv.is_thumbnail = true if iv.can_be_thumbnail
-                thumbnail_default_iv = iv if not thumbnail_defalut_iv and iv.is_thumbnail
+                thumbnail_default_iv = iv if not thumbnail_default_iv and iv.is_thumbnail
                 logger.info "process_post_additions_and_updates - Updated auto properties: %s, %s, %s, %s, %s (filename, is_master, is_web_default, is_thumbnail, is_thumbnail_default)." % \
                     [iv.file_file_name, iv.is_master, iv.is_web_default, iv.is_thumbnail, iv.is_thumbnail_default]
             end

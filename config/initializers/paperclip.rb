@@ -10,4 +10,3 @@ end
 Paperclip::Attachment.interpolations[:image_id] = proc do |attachment, style|
   attachment.instance.image_id
 end
-
