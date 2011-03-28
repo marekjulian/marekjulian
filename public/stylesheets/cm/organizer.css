@@ -34,6 +34,18 @@
     cursor : move;
 }
 
+.organizer-preview-content-for-collection-image-list {
+    list-style-type : none;						     
+}
+
+.organizer-preview-content-for-collection-image-list li {
+    float : left;
+    margin-top : 5px;
+    margin-right : 20px;
+    margin-bottom : 5px;
+    margin-left : 5px;
+}
+
 #organizer-workspace {
     position : static;
     width : auto;

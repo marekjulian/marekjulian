@@ -27,6 +27,19 @@ module Cm::OrganizerHelper
         thumbnailElem
     end
 
+    def organizer_image_variant_tag( imageVariant, tagId, tagClass )
+        thumbnailElem = ""
+        if imageVariant.is_thumbnail
+            thumbnailElem = image_tag imageVariant.file.url, :id => tagId, :class => tagClass, :alt => "", :border => 0
+        elsif imageVariant.is_master
+            thumbnailElem = image_tag imageVariant.file.url(:default_thumb), :id => tagId, :class => tagClass, :alt => "", :border => 0
+        end
+        if thumbnailElem == ""
+            thumbnailElem = image_tag 'camera_60x60px.gif', :id => tagId, :class => tagClass, :alt => "", :border => 0
+        end
+        thumbnailElem
+    end
+
     def organizer_portfolio_thumbnail_tag( portfolio, imageTagId, imageClass )
         thumbnailElem = ""
         if portfolio.default_show_view_id

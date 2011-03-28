@@ -51,7 +51,7 @@
                                 newHRef = '#{createCollectionFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-collection-create').writeAttribute('href', newHRef );
                                 $('organizer-workspace-body-collection-create').fire('lb:setContent', { content : newHRef } );
-                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                // alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
                                 $('organizer-workspace-body-collection-create').fire('lb:activate');
                             }
             } );
@@ -64,7 +64,7 @@
                                 newHRef = '#{createCollectionFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-collection-create').writeAttribute('href', newHRef );
                                 $('organizer-workspace-body-collection-create').fire('lb:setContent', { content : newHRef } );
-                                alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
+                                // alert('you dropped it: ' + image.readAttribute('id') + ', new href: ' + newHRef ); 
                                 $('organizer-workspace-body-collection-create').fire('lb:activate');
                             } } );"
      %>

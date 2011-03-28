@@ -45,14 +45,17 @@ ActionController::Routing::Routes.draw do |map|
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_collections_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_portfolios_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_collection_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_collection_image_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_portfolio_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_for_portfolio_collection_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_collections_tab => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_portfolios_tab => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_collection_instance_tab => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_collection_image_instance_tab => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_portfolio_instance_tab => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :update_preview_content_for_portfolio_collection_instance_tab => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_collection_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_collection_image_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_collection_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_collection_form => :post }
@@ -67,6 +70,8 @@ ActionController::Routing::Routes.draw do |map|
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_portfolio_collection => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_collection_form => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_collection => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :add_image_variant_to_collection_image => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :workspace_save_collection_image => :post }
         end
     end
 

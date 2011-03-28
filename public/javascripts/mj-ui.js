@@ -74,6 +74,7 @@ MJ_UI.Tabs = Class.create( {
     },
 
     addTab : function( link ) {
+        // alert("MJ_UI.Tabs.addTab - ...");
         tab = new MJ_UI.Tab( this.nextTabId, link );
         this.nextTabId = this.nextTabId + 1;
         this.links.push(link);

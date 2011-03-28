@@ -1,0 +1,52 @@
+<div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
+    <div class="organizer-workspace-body-form">
+        <% form_id = "organizer-workspace-body-form-#{tab_id}-#{collection.id}-#{image.id}" %>
+        <% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
+                                             :action => 'workspace_save_collection_image' ),
+                            :html => { :id => form_id,
+                                       :class => "organizer-workspace-body-form-form" } ) do %>
+            <ul>
+                <li>
+                    <%= label_tag :description, "Description:" %>
+                    <%= text_field_tag :description %>
+                    <br/>
+                </li>
+                <li>
+                    <%= submit_tag "Save", 
+                                   :id => "#{form_id}-save", 
+                                   :class => "organizer-form-disabled-button" %>
+                </li>
+            </ul>
+        <% end %>          
+    </div>    
+    <% image_area_id = "organizer-workspace-body-image-area-collection-image-instance-#{collection.id}-#{image.id}" %>
+    <div id="<%=image_area_id%>" class="organizer-workspace-body-with-form-image-area">
+        <% image_area_list_id = "organizer-workspace-body-collection-image-instance-list-#{collection.id}-#{image.id}" %>
+        <ul id="<%=image_area_list_id%>">
+            <% image.image_variants.each do |image_variant| %>
+                <% image_li_tag_id = "organizer-workspace-image_variant-li-#{collection.id}-#{image.id}-#{image_variant.id}" %>
+                <% image_li_tag_class = "organizer-workspace-image_variant-li" %>
+                <li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+                    <% image_tag_id = "organizer-workspace-image_variant-#{collection.id}-#{image.id}-#{image_variant.id}" %>
+                    <%= organizer_image_variant_tag( image_variant, image_tag_id, "organizer-workspace-thumbnail") %>
+                    <%= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
+                                                                                                  revert: 'failure' } );
+                                        CM_ORGANIZER.workspaceControl.addDraggable( newDraggable, '#{tab_id}', '#{image_li_tag_id}');"  %>
+                    <p><%=image_variant.file_file_name%></p>
+                </li>
+            <% end %>
+        </ul>
+        <div class="organizer-workspace-trash-container">
+            <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
+        </div>
+    </div>
+    <%= javascript_tag "Droppables.add( '#{image_area_id}', {
+                            accept : 'organizer-preview-image_variant-li',
+                            onDrop : function( previewLi ) { 
+                               var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
+                               tabControl.droppedPreviewToWorkspace( previewLi );
+                            } } );
+                        CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{image_area_id}' );"
+     %>
+</div>
+

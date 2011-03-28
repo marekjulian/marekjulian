@@ -1,0 +1,16 @@
+<ul class="organizer-preview-content-for-collection-image-list">
+    <% image_variants.each do | image_variant | %>
+        <% li_tag_id = "organizer-preview-image_variant-li-#{tab_id}-#{image_variant.image_id}-#{image_variant.id}" %>
+        <% li_tag_class = "organizer-preview-image_variant-li" %>
+        <li id="<%=li_tag_id%>" class="<%=li_tag_class%>">
+            <% image_tag_id = "organizer-preview-image_variant-#{tab_id}-#{image_variant.image_id}-#{image_variant.id}" %>
+            <%= organizer_image_variant_tag image_variant, image_tag_id, "organizer-preview-image" %>
+            <p><%=image_variant.file_file_name%></p>
+
+        </li>
+        <%= javascript_tag "var newDraggable = new Draggable( '#{li_tag_id}', { ghosting: true,
+                                                                                revert: 'failure' } );
+                            CM_ORGANIZER.previewControl.addDraggable( newDraggable, '#{tab_id}', '#{li_tag_id}' );"
+         %>
+    <% end %>
+</ul>

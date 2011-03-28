@@ -1,0 +1,21 @@
+<!-- workspace_collection_image_iv_li:
+
+    DESCRIPTION: image variant in the workspace body of a collection image instance tab.
+
+    LOCALS:
+        collection
+        image
+        image_variant
+        tab_id
+
+ -->
+<% image_li_tag_id = "organizer-workspace-image_variant-li-#{collection.id}-#{image.id}-#{image_variant.id}" %>
+<% image_li_tag_class = "organizer-workspace-image_variant-li" %>
+<li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+    <% image_tag_id = "organizer-workspace-image_variant-#{collection.id}-#{image.id}-#{image_variant.id}" %>
+    <%= organizer_image_variant_tag( image_variant, image_tag_id, "organizer-workspace-thumbnail") %>
+    <%= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
+                                                                                  revert: 'failure' } );
+                        CM_ORGANIZER.workspaceControl.addDraggable( newDraggable, '#{tab_id}', '#{image_li_tag_id}');"  %>
+    <p><%=image_variant.file_file_name%></p>
+</li>

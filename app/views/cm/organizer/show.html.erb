@@ -27,13 +27,14 @@
             <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
                 <%= render :partial => 'workspace_portfolios_tab_content', :locals => { :archive => @archive, :initial_render => true } %>
             </div>
-            <%= javascript_tag "var previewControl = new CM_ORGANIZER.PreviewControl();
-                                previewControl.addPreview( $('organizer-workspace-body-collections-tab-link'), 'organizer-preview-collections-tab' );
-                                previewControl.addPreview( $('organizer-workspace-body-portfolios-tab-link'), 'organizer-preview-portfolios-tab' );
+            <%= javascript_tag "CM_ORGANIZER.newPreviewControl();
+                                CM_ORGANIZER.previewControl.addPreview( $('organizer-workspace-body-collections-tab-link'), 'organizer-preview-collections-tab' );
+                                CM_ORGANIZER.previewControl.addPreview( $('organizer-workspace-body-portfolios-tab-link'), 'organizer-preview-portfolios-tab' );
+                                CM_ORGANIZER.newWorkspaceControl();
                                 var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
                                                                    { activeClassName : 'organizer-workspace-tab-active-link',
                                                                      inactiveClassName : 'organizer-workspace-tab-inactive-link',
-                                                                     preShowCallback : previewControl.setActivePreview.bind(previewControl) } );" %>
+                                                                     preShowCallback : CM_ORGANIZER.previewControl.setActivePreview.bind(CM_ORGANIZER.previewControl) } );" %>
         </div>
     </div>
 </div>

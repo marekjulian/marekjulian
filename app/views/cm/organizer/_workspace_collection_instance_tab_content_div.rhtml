@@ -12,17 +12,29 @@
             <%= collection_form.submit "Save", :class => "organizer-form-disabled-button" %>
             <%= collection_form.submit "Cancel", :class => "organizer-form-enabled-button" %>
         <% end %>
-    </div>    
-    <div id="organizer-workspace-body-with-form-image-area" class="organizer-workspace-body-with-form-image-area">
+    </div>
+    <% image_area_id = "organizer-workspace-body-image-area-collection-instance-#{collection.id}" %>
+    <div id="<%=image_area_id%>" class="organizer-workspace-body-with-form-image-area">
         <% collection.images.each do |image| %>
             <% imageTagId = "organizer-workspace-image-#{collection.id}-#{image.id}" %>
             <%= organizer_image_tag( image, imageTagId, "organizer-workspace-thumbnail") %>
             <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
+            <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                           :archive_id => collection.archive_id,
+                                           :action => :create_new_collection_image_instance_tab,
+                                           :collection_id => collection.id,
+                                           :image_id => image.id ) %>
+            <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                                   reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
+                                   req = new Ajax.Request( reqUrl, {
+                                                          method :  'get' } )
+                                   });"
+                 %>
         <% end %>
         <div class="organizer-workspace-trash-container">
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
         </div>
-        <%= javascript_tag "Droppables.add( 'organizer-workspace-body-with-form-image-area', {
+        <%= javascript_tag "Droppables.add( '#{image_area_id}', {
                                 accept : 'organizer-preview-image',
                                 onDrop : function(image) { 
                                    alert('you dropped it: ' + image.readAttribute('id') );

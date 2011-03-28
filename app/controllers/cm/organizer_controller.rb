@@ -149,7 +149,62 @@ class Cm::OrganizerController < ApplicationController
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
-            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            page << "tabsControl.addTab( $('#{tabs_list_item_id}').down().down() )"
+            page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
+        end
+    end
+
+    def create_new_collection_image_instance_tab
+        logger.debug "cm/organizer_controller/create_new_collection_image_instance_tab"
+        logger.debug params.inspect
+
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.find params[:collection_id]
+        @image = Image.find params[:image_id]
+
+        tab_id = "t#{params[:next_tab_id]}"
+
+        preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
+        preview_div = render_to_string :partial => "preview_for_collection_image_instance_tab",
+                                       :locals => { :preview_div_id => preview_div_id,
+                                                    :tab_id => tab_id }
+
+        tabs_list_item_id = "organizer-workspace-body-collection-image-" + params[:collection_id] + "-" + params[:image_id] + "-tab"
+        tabs_list_item_close_id = "organizer-workspace-body-collection-image-" + params[:collection_id] + "-" + params[:image_id] + "-close"
+        tabs_list_item_link_id = "organizer-workspace-body-#{tab_id}-tab-link"
+        tab_content_id = "organizer-workspace-body-collection-image-" + params[:collection_id] + "-" + params[:image_id]
+        tab_name = "Unnamed Image"
+        @image.image_variants.each do |iv|
+            if iv.is_master
+                tab_name = iv.file_file_name
+            end
+        end
+        tabs_list_item = render_to_string :partial => "workspace_tabs_list_item",
+                                          :locals => {  :tabs_list_item_id => tabs_list_item_id,
+                                                        :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                        :tabs_list_item_link_id => tabs_list_item_link_id,
+                                                        :tab_content_id => tab_content_id,
+                                                        :tab_name => tab_name }
+
+        tab_content_div = render_to_string :partial => "workspace_collection_image_instance_tab_content_div",
+                                           :locals => { :collection => @collection,
+                                                        :image => @image,
+                                                        :tab_content_id => tab_content_id,
+                                                        :tab_id => tab_id }
+
+        render :update do |page|
+            page.insert_html :bottom, 'organizer-preview', preview_div
+            page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
+            page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
+            page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            add_image_variant_url = url_for( :controller => 'cm/organizer',
+                                             :archive_id => params[:archive_id],
+                                             :action => :add_image_variant_to_collection_image,
+                                             :collection_id => @collection.id,
+                                             :image_id => @image.id,
+                                             :tab_id => tab_id )
+            page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'collection-image', '#{params[:collection_id]}', '#{params[:image_id]}', '#{add_image_variant_url}' )"
             page << "tabsControl.addTab( $('#{tabs_list_item_id}').down().down() )"
             page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
@@ -187,7 +242,7 @@ class Cm::OrganizerController < ApplicationController
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
-            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}')"
+            page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}')"
             page << "tabsControl.addTab( $('#{ tabs_list_item_id}').down().down() )"
             page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
@@ -206,7 +261,7 @@ class Cm::OrganizerController < ApplicationController
                                                     :preview_div_id => preview_div_id,
                                                     :tab_id => "t#{params[:next_tab_id]}" }
         tabs_list_item_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-tab"
-        tabs_list_item_close_id = "organizer-workspace-body-portfolio-Collection-" + params[:portfolio_collection_id] + "-close"
+        tabs_list_item_close_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-close"
         tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
         tab_content_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id]
         tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
@@ -215,14 +270,14 @@ class Cm::OrganizerController < ApplicationController
                                                                                                 :tab_content_id => tab_content_id,
                                                                                                 :tab_name => "Portfolio collection: " + @portfolio_collection.collection.tag_line }
         tab_content_div = render_to_string :partial => "workspace_portfolio_collection_instance_tab_content_div",
-                                               :locals => {  :tab_content_id => tab_content_id,
-                                               :portfolio_collection => @portfolio_collection }
+                                           :locals => {  :tab_content_id => tab_content_id,
+                                           :portfolio_collection => @portfolio_collection }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
-            page << "previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
@@ -429,6 +484,33 @@ class Cm::OrganizerController < ApplicationController
         render :inline => response_body
     end
 
+    def add_image_variant_to_collection_image
+        logger.debug "cm/organizer_controller/add_image_variant_to_collection"
+        logger.debug params.inspect
 
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.find params[:collection_id]
+        @image = Image.find params[:image_id]
+        @image_variant = ImageVariant.find params[:image_variant_id]
+
+        image_area_list_item = render_to_string :partial => "workspace_collection_image_iv_li",
+                                                :locals => { :collection => @collection,
+                                                             :image => @image,
+                                                             :image_variant => @image_variant,
+                                                             :tab_id => params[:tab_id] }
+
+        render :update do |page|
+            image_area_list_id = "organizer-workspace-body-collection-image-instance-list-" + params[:collection_id] + "-" + params[:image_id]
+
+            page.insert_html :bottom, image_area_list_id, image_area_list_item
+        end
+    end
+
+    def workspace_save_collection_image
+        logger.debug "cm/organizer_controller/workspace_save_collection_image"
+        logger.debug params.inspect
+
+        render :nothing => true
+    end
 
 end
