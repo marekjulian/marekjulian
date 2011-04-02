@@ -140,7 +140,7 @@ CM_ORGANIZER.WorkspaceCollectionImageTabInstanceControl = Class.create( {
         previewElementIdParts = previewElementId.split('-');
         imageVariantId = previewElementIdParts.pop();
         fromImageId = previewElementIdParts.pop();
-        var change = new CM_ORGANIZER.WorkspaceCollectionImageTabAddImageVariantChange( imageVariantId, fromImageId, this.imageId );
+        var change = new CM_ORGANIZER.WorkspaceCollectionImageTabImageVariantChange( imageVariantId, fromImageId, this.imageId );
         this.changes.push( change );
         //
         //  Delete the droppable, and also its previewLi.
@@ -157,10 +157,10 @@ CM_ORGANIZER.WorkspaceCollectionImageTabInstanceControl = Class.create( {
         var req = new Ajax.Request( reqUrl,
                                     { method : 'get' } );
 
-        formId = "organizer-workspace-body-form-" + this.tabId + "-" + this.collectionId + "-" + this.imageId;
-        formSaveId = formId + "-save";
-        enableClass = "organizer-form-enabled-button";
-        disableClass = "organizer-form-disabled-button";
+        var formId = "organizer-workspace-body-form-" + this.tabId + "-" + this.collectionId + "-" + this.imageId;
+        var formSaveId = formId + "-save";
+        var enableClass = "organizer-form-enabled-button";
+        var disableClass = "organizer-form-disabled-button";
         $( formSaveId ).removeClassName( disableClass );
         $( formSaveId ).addClassName( enableClass );
     },
@@ -173,8 +173,33 @@ CM_ORGANIZER.WorkspaceCollectionImageTabInstanceControl = Class.create( {
         this.droppables.push( droppableId );
     },
 
-    save : function() {
-        alert("CM_ORGANIZER.TabInstanceControl.save - ...");
+    save : function( formId, saveUrl ) {
+        // alert("CM_ORGANIZER.TabInstanceControl.save - formId = " + formId + ", saveUrl = " + saveUrl );
+        var formData = $( formId ).serialize( true );
+        // alert("CM_ORGANIZER.TabInstanceControl.save - type of formData = " + typeof(formData) );
+        formData[ 'collection_id' ] = this.collectionId;
+        formData[ 'image_id' ] = this.imageId;
+        formData[ 'changes' ] = $A();
+        this.changes.each( function( change ) { formData['changes'].push( { image_variant_id : change.imageVariantId,
+                                                                            from_image_id : change.fromImageId,
+                                                                            to_image_id : change.toImageId } ); } );
+        jsonPayload = Object.toJSON( formData );
+
+        var self = this;
+
+        var req = new Ajax.Request( saveUrl,
+                                    { method : 'post',
+                                      contentType : 'application/json',
+                                      parameters : { format : 'json' },
+                                      postBody : jsonPayload,
+                                      onSuccess : function( response ) { self.changes = $A();
+                                                                         var formSaveId = formId + '-save';
+                                                                         var enableClass = "organizer-form-enabled-button";
+                                                                         var disableClass = "organizer-form-disabled-button";
+                                                                         $( formSaveId ).removeClassName( enableClass );
+                                                                         $( formSaveId ).addClassName( enableClass ); }  
+                                    } );
+        return false;
     },
 
     deleteTab : function() {
@@ -183,10 +208,10 @@ CM_ORGANIZER.WorkspaceCollectionImageTabInstanceControl = Class.create( {
     
 } );
 
-CM_ORGANIZER.WorkspaceCollectionImageTabAddImageVariantChange = Class.create( {
+CM_ORGANIZER.WorkspaceCollectionImageTabImageVariantChange = Class.create( {
 
     initialize : function( imageVariantId, fromImageId, toImageId ) {
-        // alert("CM_ORGANIZER.WorkspaceCollectionImageTabAddImageVariantChange - " + imageVariantId + ", " + fromImageId + ", " + toImageId);
+        // alert("CM_ORGANIZER.WorkspaceCollectionImageTabImageVariantChange - " + imageVariantId + ", " + fromImageId + ", " + toImageId);
         this.imageVariantId = imageVariantId;
         this.fromImageId = fromImageId;
         this.toImageId = toImageId;

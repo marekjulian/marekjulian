@@ -31,7 +31,7 @@ module Cm::OrganizerHelper
         thumbnailElem = ""
         if imageVariant.is_thumbnail
             thumbnailElem = image_tag imageVariant.file.url, :id => tagId, :class => tagClass, :alt => "", :border => 0
-        elsif imageVariant.is_master
+        elsif imageVariant.file.exists? :default_thumb
             thumbnailElem = image_tag imageVariant.file.url(:default_thumb), :id => tagId, :class => tagClass, :alt => "", :border => 0
         end
         if thumbnailElem == ""

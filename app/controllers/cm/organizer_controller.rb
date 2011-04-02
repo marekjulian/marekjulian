@@ -507,10 +507,123 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def workspace_save_collection_image
+        #
+        #   Description: Processes a save of a 'collection image' tab. The payload MUST be json, as well as the response. A sample
+        #       payload is as follows:
+        #
+        #       {"commit"=>"Save",
+        #        "authenticity_token"=>"+4HmK6g2j4VT++JXi5U171E4702FFTAKI8eitg3hhUo=",
+        #        "archive_id"=>"1",
+        #        "controller"=>"cm/organizer",
+        #        "action"=>"workspace_save_collection_image",
+        #        "collection_id" => <collection id of image in the workspace>,
+        #        "image_id" => <the image id of the image in the workspace>,
+        #        "description"=>"chair",
+        #        "changes"=>[{"from_image_id"=>"268", "image_variant_id"=>"435", "to_image_id"=>"267"}] }
+        #
+        #       The tab's focus is a particular image which is opened in the workspace, as identified by "collection_id" and
+        #       "image_id". "changes" contains a list of changes which were made by the user, this is either image_variants
+        #       being removed or added to the image opened in the workspace.
+        #
         logger.debug "cm/organizer_controller/workspace_save_collection_image"
         logger.debug params.inspect
 
-        render :nothing => true
+        image = Image.find params[:image_id]
+        image.description = params[:description]
+
+        #
+        # Other images which are affected as image_variants are either moved to them, or removed from them.
+        # If an image results in have NO image_variants, it is destroyed.
+        #
+        other_affected_images = { }
+
+        #
+        # Process the items in params[:changes]
+        #
+        params[:changes].each do |change|
+            from_image = Image.find change["from_image_id"]
+            to_image = Image.find change["to_image_id"]
+            iv = ImageVariant.find change["image_variant_id"]
+            logger.debug "cm/organizer_controller/workspace_save_collection_image - bucket = " + iv.file.bucket_name + ", key = " + iv.file.path
+            if from_image and to_image and iv
+                if from_image.id != image.id
+                    if iv.is_master
+                        from_image.master_variant_id = nil
+                    end
+                    if iv.is_web_default
+                        from_image.web_default_variant_id = nil
+                    end
+                    if iv.is_thumbnail_default
+                        from_image.thumbnail_default_variant_id = nil
+                    end
+                    other_affected_images[ from_image.id ] = from_image
+                end
+                if to_image.id != image.id
+                    other_affected_iamges[ to_image.id ] = to_image
+                end
+                #
+                # key is like the following: 1/images/272/original/157_200305_30_350x500.jpg
+                #
+                original_from_key = iv.file.path( :original )
+                if original_from_key
+                    iv.file.s3_bucket.key( original_from_key ).grantees().each do |grantee|
+                        logger.debug "cm/organizer_controller/workspace_save_collection_image - original from grantee, name = #{grantee.name}, id = #{grantee.id}"
+                        grantee.perms.each do |perm|
+                            logger.debug "    has perm: #{perm}}"
+                        end
+                    end
+                    from_grantees = iv.file.s3_bucket.key( original_from_key ).grantees()
+                    original_to_key = original_from_key.sub( "images/#{from_image.id}", "images/#{to_image.id}" )
+                    logger.debug "cm/organizer_controller/workspace_save_collection_image - bucket = " + iv.file.bucket_name + ", from id = #{from_image.id}, to id = #{to_image.id}, moving from key = " + original_from_key + ", to key = " + original_to_key
+                    new_key = iv.file.s3_bucket.rename_key( original_from_key, original_to_key )
+
+                    aws_to_key = iv.file.s3_bucket.key( original_to_key )
+                    RightAws::S3::Grantee.new( aws_to_key, 'http://acs.amazonaws.com/groups/global/AllUsers', 'READ', :apply, 'AllUsers' )
+
+                    iv.file.s3_bucket.key( original_to_key ).grantees().each do |grantee|
+                        logger.debug "cm/organizer_controller/workspace_save_collection_image - original to grantee, name = #{grantee.name}, id = #{grantee.id}"
+                        grantee.perms.each do |perm|
+                            logger.debug "    has perm: #{perm}}"
+                        end
+                    end
+                end
+                default_thumb_from_key = iv.file.path( :default_thumb )
+                if default_thumb_from_key
+                    default_thumb_to_key = default_thumb_from_key.sub( "images/#{from_image.id}", "images/#{to_image.id}" )
+                    logger.debug "cm/organizer_controller/workspace_save_collection_image - bucket = " + iv.file.bucket_name + ", from id = #{from_image.id}, to id = #{to_image.id}, moving from key = " + default_thumb_from_key + ", to key = " + default_thumb_to_key
+                    new_key = iv.file.s3_bucket.rename_key( default_thumb_from_key, default_thumb_to_key )
+
+                    aws_to_key = iv.file.s3_bucket.key( default_thumb_to_key )
+                    RightAws::S3::Grantee.new( aws_to_key, 'http://acs.amazonaws.com/groups/global/AllUsers', 'READ', :apply, 'AllUsers' )
+                end
+                web_from_key = iv.file.path( :web )
+                if web_from_key
+                    web_to_key = web_from_key.sub( "images/#{from_image.id}", "images/#{to_image.id}" )
+                    logger.debug "cm/organizer_controller/workspace_save_collection_image - bucket = " + iv.file.bucket_name + ", from id = #{from_image.id}, to id = #{to_image.id}, moving from key = " + web_from_key + ", to key = " + web_to_key
+                    new_key = iv.file.s3_bucket.rename_key( web_from_key, web_to_key )
+
+                    aws_to_key = iv.file.s3_bucket.key( web_to_key )
+                    RightAws::S3::Grantee.new( aws_to_key, 'http://acs.amazonaws.com/groups/global/AllUsers', 'READ', :apply, 'AllUsers' )
+                end
+                to_image.image_variants << iv
+            end
+        end
+
+        #
+        # Save all the images... We delete an affected image if it has NO image_variants.
+        # However, we never delete the image which is the focus of the tab.
+        #
+        image.save
+        other_affected_images.each_value do |affected_image|
+            if affected_image.image_variants.count > 0
+                affected_image.save
+            else
+                affected_image.destroy
+            end
+        end
+
+        response = {  'status' => '0' }
+        render :json => response
     end
 
 end
