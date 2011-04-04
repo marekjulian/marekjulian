@@ -49,9 +49,13 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find( params[:archive_id] )
         if params['selected-collection-id'] == 'all'
             images = @archive.images
-        else
+        elsif params['selected-collection-id'] == 'prompt'
+            images = nil
+        elsif params['selected-collection-id']
             collection = Collection.find( params['selected-collection-id'] )
             images = collection.images
+        else
+            images = nil
         end
         render :update do |page|
             page.replace_html 'organizer-preview-content-for-collections-tab', :partial => 'preview_content_for_collections_tab', :locals => { :images => images }
@@ -77,17 +81,19 @@ class Cm::OrganizerController < ApplicationController
         logger.debug "update_preview_content_for_collection_instance_tab: params - "
         logger.debug params.inspect
         @archive = Archive.find( params[:archive_id] )
+        collection_id = params['selected-collection-id']
         if params['selected-collection-id'] == 'all'
             images = @archive.images
         else
-            collection = Collection.find( params['selected-collection-id'] )
+            collection = Collection.find( collection_id )
             images = collection.images
         end
         render :update do |page|
             tab_id = params[:tab_id]
             page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_collection_instance_tab',
                                                                              :locals => { :images => images,
-                                                                                          :tab_id => tab_id }
+                                                                                          :tab_id => tab_id,
+                                                                                          :collection_id => collection_id }
         end
     end
 
@@ -126,30 +132,39 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @collection = Collection.find params[:collection_id]
 
+        tab_id = "t#{params[:next_tab_id]}"
+
         preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
         preview_div = render_to_string :partial => "preview_for_collection_instance_tab",
                                        :locals => { :archive => @archive,
                                                     :preview_div_id => preview_div_id,
-                                                    :tab_id => "t#{params[:next_tab_id]}" }
+                                                    :tab_id => tab_id }
         tabs_list_item_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-collection-" + params[:collection_id] + "-close"
-        tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
+        tabs_list_item_link_id = "organizer-workspace-body-#{tab_id}-tab-link"
         tab_content_id = "organizer-workspace-body-collection-" + params[:collection_id]
         tabs_list_item = render_to_string :partial => "workspace_tabs_list_item",
-                                          :locals => {  :tabs_list_item_id => tabs_list_item_id,
-                                                        :tabs_list_item_close_id => tabs_list_item_close_id,
-                                                        :tabs_list_item_link_id => tabs_list_item_link_id,
-                                                        :tab_content_id => tab_content_id,
-                                                        :tab_name => "Collection: " + @collection.tag_line }
+                                          :locals => { :tabs_list_item_id => tabs_list_item_id,
+                                                       :tabs_list_item_close_id => tabs_list_item_close_id,
+                                                       :tabs_list_item_link_id => tabs_list_item_link_id,
+                                                       :tab_content_id => tab_content_id,
+                                                       :tab_name => "Collection: " + @collection.tag_line }
         tab_content_div = render_to_string :partial => "workspace_collection_instance_tab_content_div",
-                                               :locals => {  :tab_content_id => tab_content_id,
-                                                             :collection => @collection }
+                                           :locals => { :tab_content_id => tab_content_id,
+                                                        :collection => @collection,
+                                                        :tab_id => tab_id }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
             page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            add_image_url = url_for( :controller => 'cm/organizer',
+                                     :archive_id => params[:archive_id],
+                                     :action => :add_image_to_collection,
+                                     :collection_id => @collection.id,
+                                     :tab_id => tab_id )
+            page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'collection', '#{params[:collection_id]}', '#{add_image_url}' )"
             page << "tabsControl.addTab( $('#{tabs_list_item_id}').down().down() )"
             page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
@@ -484,8 +499,28 @@ class Cm::OrganizerController < ApplicationController
         render :inline => response_body
     end
 
+    def add_image_to_collection
+        logger.debug "cm/organizer_controller/add_image_to_collection"
+        logger.debug params.inspect
+
+        @archive = Archive.find params[:archive_id]
+        @collection = Collection.find params[:collection_id]
+        @image = Image.find params[:image_id]
+
+        image_area_item = render_to_string :partial => "workspace_collection_image",
+                                           :locals => { :collection => @collection,
+                                                        :image => @image,
+                                                        :tab_id => params[:tab_id] }
+
+        render :update do |page|
+            image_area_id = "organizer-workspace-body-image-area-collection-instance-" + params[:collection_id]
+
+            page.insert_html :bottom, image_area_id, image_area_item
+        end
+    end
+
     def add_image_variant_to_collection_image
-        logger.debug "cm/organizer_controller/add_image_variant_to_collection"
+        logger.debug "cm/organizer_controller/add_image_variant_to_collection_image"
         logger.debug params.inspect
 
         @archive = Archive.find params[:archive_id]
@@ -549,12 +584,15 @@ class Cm::OrganizerController < ApplicationController
                 if from_image.id != image.id
                     if iv.is_master
                         from_image.master_variant_id = nil
+                        iv.is_master = false
                     end
                     if iv.is_web_default
                         from_image.web_default_variant_id = nil
+                        iv.is_web_default = false
                     end
                     if iv.is_thumbnail_default
                         from_image.thumbnail_default_variant_id = nil
+                        iv.is_thumbnail_default = false
                     end
                     other_affected_images[ from_image.id ] = from_image
                 end
@@ -616,6 +654,12 @@ class Cm::OrganizerController < ApplicationController
         image.save
         other_affected_images.each_value do |affected_image|
             if affected_image.image_variants.count > 0
+                if affected_image.master_variant_id == nil
+                    affected_image.master_variant_id = affected_image.image_variants.first.id
+                end
+                if affected_image.web_default_variant_id == nil
+                    affected_image.web_default_variant_id = affected_image.image_variants.first.id
+                end
                 affected_image.save
             else
                 affected_image.destroy

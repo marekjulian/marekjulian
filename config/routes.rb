@@ -70,8 +70,10 @@ ActionController::Routing::Routes.draw do |map|
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_portfolio_collection => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_collection_form => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_portfolio_collection => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :add_image_to_collection => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :add_image_variant_to_collection_image => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :workspace_save_collection_image => :post }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :workspace_save_collection => :post }
         end
     end
 

@@ -25,6 +25,12 @@
     background : white;
 }
 
+.organizer-preview-loading {
+    display : block;
+    margin-right : auto;
+    margin-left : auto;
+}
+
 .organizer-preview-image {
     display : inline-block;
     margin-top : 5px;
@@ -77,6 +83,12 @@
     border-color : black;
     border-style : solid;
     margin : 0px;
+}
+
+#organizer-workspace-body-loading img {
+    display : block;
+    margin-right : auto;
+    margin-left : auto;
 }
 
 ul#organizer-workspace-tabs-list {

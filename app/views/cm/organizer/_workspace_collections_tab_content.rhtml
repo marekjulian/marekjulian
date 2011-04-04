@@ -14,6 +14,7 @@
                                                    :action => :create_new_collection_instance_tab,
                                                    :collection_id => collection.id ) %>
                     <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                        tabsControl.showLoading();
                         reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
                         req = new Ajax.Request( reqUrl, {
                                                 method :  'get' } )

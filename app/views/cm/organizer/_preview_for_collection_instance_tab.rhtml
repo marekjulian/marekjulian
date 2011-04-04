@@ -14,6 +14,7 @@
     </div>
     <div id="organizer-preview-content-for-<%=tab_id%>-tab">
         <%= render :partial => 'preview_content_for_collection_instance_tab', :locals => { :images => @archive.images,
-                                                                                           :tab_id => tab_id } %>
+                                                                                           :tab_id => tab_id,
+                                                                                           :collection_id => 'all' } %>
     </div>
 </div>

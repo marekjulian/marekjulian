@@ -60,7 +60,8 @@ MJ_UI.Tabs = Class.create( {
             showFunction: Element.show,
             hideFunction: Element.hide,
             closeTabFunction: Element.remove,
-            closeContainerFunction: Element.remove
+            closeContainerFunction: Element.remove,
+            loadingId : null
         };
         Object.extend( this.options, options || {} );
         $(tab_list_container).select(this.options.linkSelector).findAll(function(link){
@@ -71,6 +72,15 @@ MJ_UI.Tabs = Class.create( {
         this.containers.values().each(Element.hide);
         this.setActiveTab(this.links.first());
         // alert("MJ_UI.Tabs.initialize - completed!");
+    },
+
+    showLoading : function( ) {
+        if ( this.options.loadingId ) {
+            if (this.activeContainer) {
+                this.options.hideFunction(this.activeContainer);
+            }
+            $(this.options.loadingId).show();
+        }
     },
 
     addTab : function( link ) {
@@ -132,6 +142,9 @@ MJ_UI.Tabs = Class.create( {
             // alert("mj-ui.Tabs.setActiveTab - About to call preShowCallback...");        
             this.options.preShowCallback( link );
             // alert("mj-ui.Tabs.setActiveTab - Called preShowCallback...");
+        }
+        if ( this.options.loadingId ) {
+            $( this.options.loadingId ).hide();
         }
         this.options.showFunction(this.containers.get(link.key));
     },

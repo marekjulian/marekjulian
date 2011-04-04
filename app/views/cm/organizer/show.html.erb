@@ -21,10 +21,13 @@
             </ul>
         </div>
         <div id="organizer-workspace-body">
-            <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content">
+            <div id="organizer-workspace-body-loading" class="organizer-workspace-body-tab-content">
+                <%= image_tag "loading-circle-text-grey.gif" %>
+            </div>
+            <div id="organizer-workspace-body-collections" class="organizer-workspace-body-tab-content" style="display:none">
                 <%= render :partial => 'workspace_collections_tab_content', :locals => { :archive => @archive, :initial_render => true } %>
             </div>
-            <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content">
+            <div id="organizer-workspace-body-portfolios" class="organizer-workspace-body-tab-content" style="display:none">
                 <%= render :partial => 'workspace_portfolios_tab_content', :locals => { :archive => @archive, :initial_render => true } %>
             </div>
             <%= javascript_tag "CM_ORGANIZER.newPreviewControl();
@@ -32,7 +35,8 @@
                                 CM_ORGANIZER.previewControl.addPreview( $('organizer-workspace-body-portfolios-tab-link'), 'organizer-preview-portfolios-tab' );
                                 CM_ORGANIZER.newWorkspaceControl();
                                 var tabsControl =  new MJ_UI.Tabs( 'organizer-workspace-tabs-list',
-                                                                   { activeClassName : 'organizer-workspace-tab-active-link',
+                                                                   { loadingId : 'organizer-workspace-body-loading',
+                                                                     activeClassName : 'organizer-workspace-tab-active-link',
                                                                      inactiveClassName : 'organizer-workspace-tab-inactive-link',
                                                                      preShowCallback : CM_ORGANIZER.previewControl.setActivePreview.bind(CM_ORGANIZER.previewControl) } );" %>
         </div>

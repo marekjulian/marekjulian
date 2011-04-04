@@ -1,44 +1,58 @@
 <div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
     <div class="organizer-workspace-body-form">
-        <% form_id = "organizer-workspace-body-form-collection-#{collection.id}" %>
-        <% form_for :collection, 
-                    collection, 
-                    :html => { :id => form_id,
-                               :class => "organizer-workspace-body-form-form" } do |collection_form| %>
-            <%= collection_form.label :tag_line, "Tag Line:" %>
-            <%= collection_form.text_field :tag_line %><br/>
-            <%= collection_form.label :description, "Description:" %>
-            <%= collection_form.text_field :description %><br/>
-            <%= collection_form.submit "Save", :class => "organizer-form-disabled-button" %>
-            <%= collection_form.submit "Cancel", :class => "organizer-form-enabled-button" %>
-        <% end %>
+        <% form_id = "organizer-workspace-body-form-#{tab_id}-#{collection.id}" %>
+        <% save_url = url_for( :controller => 'cm/organizer',
+                               :action => 'workspace_save_collection' ) %>
+        <% form_tag( { :controller => 'cm/organizer',
+                       :action => 'workspace_save_collection' },
+                     { :id => form_id,
+                       :class => "organizer-workspace-body-form-form",
+                       :onSubmit => "var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
+                                     if (tabControl) {
+                                         alert('workspace_collection_instance_tab.save - Got tab control...');
+                                         return tabControl.save( '#{form_id}', '#{save_url}' );
+                                     }
+                                     else {
+                                         alert('workspace_collection_instance_tab.save - Failed to get tab control!');
+                                         return false;
+                                     } " } ) do %>
+            <ul>
+                <li>
+                    <%= label_tag :description, "Tag Line:" %>
+                    <%= text_field_tag :tag_line, collection.tag_line %>
+                    <br/>
+                </li>
+                <li>
+                    <%= label_tag :description, "Description:" %>
+                    <%= text_field_tag :description, collection.description %>
+                    <br/>
+                </li>
+                <li>
+                    <%= submit_tag "Save", 
+                                   :id => "#{form_id}-save", 
+                                   :class => "organizer-form-disabled-button" %>
+                </li>
+            </ul>
+        <% end %>          
     </div>
     <% image_area_id = "organizer-workspace-body-image-area-collection-instance-#{collection.id}" %>
     <div id="<%=image_area_id%>" class="organizer-workspace-body-with-form-image-area">
         <% collection.images.each do |image| %>
-            <% imageTagId = "organizer-workspace-image-#{collection.id}-#{image.id}" %>
-            <%= organizer_image_tag( image, imageTagId, "organizer-workspace-thumbnail") %>
-            <%= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
-            <% createNewTabLink = url_for( :controller => 'cm/organizer',
-                                           :archive_id => collection.archive_id,
-                                           :action => :create_new_collection_image_instance_tab,
-                                           :collection_id => collection.id,
-                                           :image_id => image.id ) %>
-            <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
-                                   reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
-                                   req = new Ajax.Request( reqUrl, {
-                                                          method :  'get' } )
-                                   });"
-                 %>
+            <%= render :partial => "workspace_collection_image",
+                       :locals => { :tab_id => tab_id,
+                                    :collection => collection,
+                                    :image => image } %>
         <% end %>
         <div class="organizer-workspace-trash-container">
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
         </div>
         <%= javascript_tag "Droppables.add( '#{image_area_id}', {
                                 accept : 'organizer-preview-image',
-                                onDrop : function(image) { 
-                                   alert('you dropped it: ' + image.readAttribute('id') );
-                                } } );"
+                                onDrop : function( previewImage ) { 
+                                    var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
+                                    tabControl.droppedPreviewToWorkspace( previewImage );
+                                } } );
+                            CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{image_area_id}' );"
          %>
     </div>
 </div>
