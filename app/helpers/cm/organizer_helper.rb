@@ -48,16 +48,14 @@ module Cm::OrganizerHelper
             showView = nil
         end
         if showView
-            if showView.thumbnail_variant_id
+            if showView.thumbnail_variant_id and ImageVariant.exists?( showView.thumbnail_variant_id )
                 showVariant = ImageVariant.find( showView.thumbnail_variant_id )
-                if showVariant
-                    thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
-                end
+                thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
             else
                 image = Image.find( showView.image_id )
                 if image
                     image.image_variants.each do | imageVariant |
-                        if imageVariant.is_master
+                        if imageVariant.is_master and imageVariant.file.exists? :default_thumb
                             thumbnailElem = image_tag imageVariant.file.url(:default_thumb), :id => imageTagId, :class => imageClass, :alt => "", :border => 0
                         end
                     end
@@ -72,13 +70,13 @@ module Cm::OrganizerHelper
 
     def organizer_portfolio_collection_thumbnail_tag( portfolioCollection, imageTagId, imageClass )
         thumbnailElem = ""
-        if portfolioCollection.default_show_view_id
+        if portfolioCollection.default_show_view_id and ImageShowView.exists?( portfolioCollection.default_show_view_id )
             showView = ImageShowView.find( portfolioCollection.default_show_view_id )
         else
             showView = nil
         end
         if showView
-            if showView.thumbnail_variant_id
+            if showView.thumbnail_variant_id and ImageVariant.exists?( showView.thumbnail_variant_id )
                 showVariant = ImageVariant.find( showView.thumbnail_variant_id )
                 if showVariant
                     thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0

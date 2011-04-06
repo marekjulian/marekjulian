@@ -1,5 +1,8 @@
 <% images.each do | image | %>
-    <% image_tag_id = "organizer-preview-image-#{tab_id}-tab-#{image.id}" %>
+    <% image_tag_id = "organizer-preview-image-#{tab_id}-#{image.id}" %>
     <%= organizer_image_tag image, image_tag_id, "organizer-preview-image" %>
-    <%= draggable_element "#{image_tag_id}", :ghosting => true, :revert => true %>
+    <%= javascript_tag "var newDraggable = new Draggable( '#{image_tag_id}', { ghosting: true,
+                                                                               revert: 'failure' } );
+                        CM_ORGANIZER.previewControl.addDraggable( newDraggable, '#{tab_id}', '#{image_tag_id}' );"
+     %>
 <% end %>

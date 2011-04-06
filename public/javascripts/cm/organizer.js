@@ -84,15 +84,22 @@ CM_ORGANIZER.WorkspaceControl = Class.create( {
 
     addTab : function( tabId, tabType ) {
         // alert("CM_ORGANIZER.WorkspaceControl.addTab - tabId = " + tabId + ", " + tabType );
-        if ( tabType == 'collection-image' ) {
+        if ( tabType == 'collection' ) {
+            var newControl = new CM_ORGANIZER.WorkspaceCollectionTabInstanceControl( tabId, arguments[2], arguments[3] );
+
+            this.tabIdToTabInstanceControl.set( tabId, newControl );
+            // alert("CM_ORGANIZER.WorkspaceControl.addTab - done");
+            return newControl;
+        }
+        else if ( tabType == 'collection-image' ) {
             var newControl = new CM_ORGANIZER.WorkspaceCollectionImageTabInstanceControl( tabId, arguments[2], arguments[3], arguments[4] );
 
             this.tabIdToTabInstanceControl.set( tabId, newControl );
             // alert("CM_ORGANIZER.WorkspaceControl.addTab - done");
             return newControl;
         }
-        else if ( tabType == 'collection' ) {
-            var newControl = new CM_ORGANIZER.WorkspaceCollectionTabInstanceControl( tabId, arguments[2], arguments[3] );
+        else if ( tabType == 'portfolio-collection' ) {
+            var newControl = new CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl( tabId, arguments[2], arguments[3] );
 
             this.tabIdToTabInstanceControl.set( tabId, newControl );
             // alert("CM_ORGANIZER.WorkspaceControl.addTab - done");
@@ -133,24 +140,25 @@ CM_ORGANIZER.WorkspaceCollectionTabInstanceControl = Class.create( {
         this.tabId = tabId;
         this.collectionId = collectionId;
         this.addImageUrl = addImageUrl;
+        this.imageAreaContainerId = "organizer-workspace-body-collection-image-instance-list-" + tabId + "-" + collectionId
+        this.draggables = $H({});
+        this.droppables = $A();
+        this.changes = $A();
     },
 
-    droppedPreviewToWorkspace : function( previewImage ) {
+    droppedPreviewToWorkspace : function( previewImageLi ) {
         // alert("CM_ORGANIZER.WorkspaceCollectionTabInstanceControl.droppedPreviewToWorkspace - starting...");
-        previewElementId = previewImage.readAttribute('id');
+        previewElementId = previewImageLi.readAttribute('id');
         previewElementIdParts = previewElementId.split('-');
-        image_id = previewElementIdParts.pop();
-        //
-        //  Delete the droppable, and also its previewLi.
-        //
-        var draggable = CM_ORGANIZER.previewControl.destroyDraggable( this.tabId, previewElementId );
-        // alert("CM_ORGANIZER.TabInstanceControl.droppedPreviewToWorkspace - about to remove preview element with ID = " + previewElementId );
-        $( previewElementId ).remove();
+        imageId = previewElementIdParts.pop();
+
+        var change = new CM_ORGANIZER.WorkspaceCollectionTabInstanceAddChange( imageId );
+        this.changes.push( change );
 
         //
         // Add a new workspace image.
         //
-        reqUrl = this.addImageUrl + "&image_id=" + image_id
+        reqUrl = this.addImageUrl + "&image_id=" + imageId + "&image_area_container_id=" + this.imageAreaContainerId
         // alert("CM_ORGANIZER.TabInstanceControl.droppedPreviewToWorkspace - about to request image content, url = " + reqUrl);
         var req = new Ajax.Request( reqUrl,
                                     { method : 'get' } );
@@ -164,15 +172,49 @@ CM_ORGANIZER.WorkspaceCollectionTabInstanceControl = Class.create( {
     },
 
     addDraggable : function( draggable, draggableId ) {
-        alert("CM_ORGANIZER.WorkspaceCollectionTabInstanceControl.addDraggable - ...");
+        this.draggables.set( draggableId, draggable );
     },
 
     addDroppable : function( droppableId ) {
-        alert("CM_ORGANIZER.WorkspaceCollectionTabInstanceControl.addDraggable - ...");
+        this.droppables.push( droppableId );
     },
 
     save : function( formId, saveUrl ) {
         alert("CM_ORGANIZER.WorkspaceCollectionTabInstanceControl.save - formId = " + formId + ", saveUrl = " + saveUrl );
+
+        var formData = $( formId ).serialize( true );
+
+        formData[ 'collection_id' ] = this.collectionId;
+        formData[ 'changes' ] = $A();
+
+        this.changes.each( function( change ) { formData['changes'].push( { change_type : 'add',
+                                                                            image_id : change.imageId } ); } );
+        jsonPayload = Object.toJSON( formData );
+
+        var self = this;
+
+        var req = new Ajax.Request( saveUrl,
+                                    { method : 'post',
+                                      contentType : 'application/json',
+                                      parameters : { format : 'json' },
+                                      postBody : jsonPayload,
+                                      onSuccess : function( response ) { self.changes = $A();
+                                                                         var formSaveId = formId + '-save';
+                                                                         var enableClass = "organizer-form-enabled-button";
+                                                                         var disableClass = "organizer-form-disabled-button";
+                                                                         $( formSaveId ).removeClassName( enableClass );
+                                                                         $( formSaveId ).addClassName( enableClass ); }  
+                                    } );
+        return false;
+    }
+
+} );
+
+CM_ORGANIZER.WorkspaceCollectionTabInstanceAddChange = Class.create( {
+
+    initialize : function( imageId ) {
+        // alert("CM_ORGANIZER.WorkspaceCollectionTabInstanceAddChange - " + imageId);
+        this.imageId = imageId;
     }
 
 } );
@@ -199,8 +241,10 @@ CM_ORGANIZER.WorkspaceCollectionImageTabInstanceControl = Class.create( {
         previewElementIdParts = previewElementId.split('-');
         imageVariantId = previewElementIdParts.pop();
         fromImageId = previewElementIdParts.pop();
+
         var change = new CM_ORGANIZER.WorkspaceCollectionImageTabImageVariantChange( imageVariantId, fromImageId, this.imageId );
         this.changes.push( change );
+
         //
         //  Delete the droppable, and also its previewLi.
         //
@@ -274,6 +318,67 @@ CM_ORGANIZER.WorkspaceCollectionImageTabImageVariantChange = Class.create( {
         this.imageVariantId = imageVariantId;
         this.fromImageId = fromImageId;
         this.toImageId = toImageId;
+    }
+
+} );
+
+CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl = Class.create( {
+
+    initialize : function( tabId, portfolioCollectionId, addImageShowViewUrl ) {
+        // alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl.initialize - tabId = " + tabId + ", portfolioCollectionId = " + portfolioCollectionId + ", addImageShowViewUrl = " + addImageShowViewUrl );
+        this.tabType = 'portfolio-collection';
+        this.tabId = tabId;
+        this.portfolioCollectionId = portfolioCollectionId;
+        this.addImageShowViewUrl = addImageShowViewUrl;
+        this.imageAreaContainerId = "organizer-workspace-body-portfolio-collection-instance-list-" + tabId + "-" + portfolioCollectionId;
+        this.draggables = $H({});
+        this.droppables = $A();
+        this.changes = $A();
+        // alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl.initialize - end.");
+    },
+
+    droppedPreviewToWorkspace : function( previewLi ) {
+        // alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl.droppedPreviewToWorkspace - starting...");
+
+        previewElementId = previewLi.readAttribute('id');
+        previewElementIdParts = previewElementId.split('-');
+        imageId = previewElementIdParts.pop();
+
+        //
+        //  Delete the droppable, and also its previewLi.
+        //
+        var draggable = CM_ORGANIZER.previewControl.destroyDraggable( this.tabId, previewElementId );
+        // alert("CM_ORGANIZER.TabInstanceControl.droppedPreviewToWorkspace - about to remove preview element with ID = " + previewElementId );
+        $( previewElementId ).remove();
+
+        //
+        // Add a new workspace image show view.
+        //
+        reqUrl = this.addImageShowViewUrl + "&image_id=" + imageId + "&image_area_container_id=" + this.imageAreaContainerId;
+        // alert("CM_ORGANIZER.TabInstanceControl.droppedPreviewToWorkspace - about to request image content, url = " + reqUrl);
+        var req = new Ajax.Request( reqUrl,
+                                    { method : 'get' } );
+
+        var formId = "organizer-workspace-body-form-" + this.tabId + "-" + this.portfolioCollectionId;
+        var formSaveId = formId + "-save";
+        var enableClass = "organizer-form-enabled-button";
+        var disableClass = "organizer-form-disabled-button";
+        $( formSaveId ).removeClassName( disableClass );
+        $( formSaveId ).addClassName( enableClass );
+    },
+
+    addDraggable : function( draggable, draggableId ) {
+        this.draggables.set( draggableId, draggable );
+    },
+
+    addDroppable : function( droppableId ) {
+        this.droppables.push( droppableId );
+    },
+
+    save : function( formId, saveUrl ) {
+        alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl.save - formId = " + formId + ", saveUrl = " + saveUrl );
+
+        return false;
     }
 
 } );

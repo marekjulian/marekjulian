@@ -76,17 +76,16 @@ MJ_UI_LIGHTBOX.lightbox.prototype = {
     },
 
     // Turn everything on - mainly the IE fixes
-    activate: function(){
-                alert("lightbox.activate!");
-		if (MJ_UI_LIGHTBOX.browser == 'Internet Explorer'){
-			this.getScroll();
-			this.prepareIE('100%', 'hidden');
-			this.setScroll(0,0);
-			this.hideSelects('hidden');
-		}
-		this.displayLightbox("block");
+    activate: function() {
+        if (MJ_UI_LIGHTBOX.browser == 'Internet Explorer'){
+            this.getScroll();
+            this.prepareIE('100%', 'hidden');
+            this.setScroll(0,0);
+            this.hideSelects('hidden');
+        }
+        this.displayLightbox("block");
     },
-	
+
     // Ie requires height to 100% and overflow hidden or else you can scroll down past the lightbox
     prepareIE: function(height, overflow){
 		bod = document.getElementsByTagName('body')[0];

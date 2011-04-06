@@ -2,7 +2,7 @@
     <% image_tag_id = "organizer-preview-image-#{tab_id}-#{collection_id}-#{image.id}" %>
     <%= organizer_image_tag image, image_tag_id, "organizer-preview-image" %>
     <%= javascript_tag "var newDraggable = new Draggable( '#{image_tag_id}', { ghosting: true,
-                                                                               revert: 'failure' } );
+                                                                               revert: true } );
                         CM_ORGANIZER.previewControl.addDraggable( newDraggable, '#{tab_id}', '#{image_tag_id}' );"
      %>
 <% end %>

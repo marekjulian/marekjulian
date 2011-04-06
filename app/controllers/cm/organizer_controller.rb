@@ -270,14 +270,16 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
 
-        preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
+        tab_id = "t#{params[:next_tab_id]}"
+
+        preview_div_id = "organizer-preview-#{tab_id}-tab"
         preview_div = render_to_string :partial => "preview_for_portfolio_collection_instance_tab",
                                        :locals => { :portfolio_collection => @portfolio_collection,
                                                     :preview_div_id => preview_div_id,
-                                                    :tab_id => "t#{params[:next_tab_id]}" }
+                                                    :tab_id => tab_id }
         tabs_list_item_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-tab"
         tabs_list_item_close_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id] + "-close"
-        tabs_list_item_link_id = "organizer-workspace-body-t#{params[:next_tab_id]}-tab-link"
+        tabs_list_item_link_id = "organizer-workspace-body-#{tab_id}-tab-link"
         tab_content_id = "organizer-workspace-body-portfolio-collection-" + params[:portfolio_collection_id]
         tabs_list_item = render_to_string :partial => "workspace_tabs_list_item", :locals => {  :tabs_list_item_id => tabs_list_item_id,
                                                                                                 :tabs_list_item_close_id => tabs_list_item_close_id,
@@ -286,13 +288,20 @@ class Cm::OrganizerController < ApplicationController
                                                                                                 :tab_name => "Portfolio collection: " + @portfolio_collection.collection.tag_line }
         tab_content_div = render_to_string :partial => "workspace_portfolio_collection_instance_tab_content_div",
                                            :locals => {  :tab_content_id => tab_content_id,
-                                           :portfolio_collection => @portfolio_collection }
+                                                         :portfolio_collection => @portfolio_collection,
+                                                         :tab_id => tab_id }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
             page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            add_image_url = url_for( :controller => 'cm/organizer',
+                                     :archive_id => params[:archive_id],
+                                     :action => :add_image_show_view_to_portfolio_collection,
+                                     :portfolio_collection_id => @portfolio_collection.id,
+                                     :tab_id => tab_id )
+            page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'portfolio-collection', '#{params[:portfolio_collection_id]}', '#{add_image_url}' )"
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
@@ -513,9 +522,7 @@ class Cm::OrganizerController < ApplicationController
                                                         :tab_id => params[:tab_id] }
 
         render :update do |page|
-            image_area_id = "organizer-workspace-body-image-area-collection-instance-" + params[:collection_id]
-
-            page.insert_html :bottom, image_area_id, image_area_item
+            page.insert_html :bottom, params[:image_area_container_id], image_area_item
         end
     end
 
@@ -541,9 +548,74 @@ class Cm::OrganizerController < ApplicationController
         end
     end
 
+    def add_image_show_view_to_portfolio_collection
+        @archive = Archive.find params[:archive_id]
+        @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
+        @image = Image.find params[:image_id]
+
+        image_show_view = ImageShowView.new
+        image_show_view.image = @image
+        image_show_view.portfolio_collection = @portfolio_collection
+        image_show_view.show_seq = @portfolio_collection.image_show_views.count + 1
+        image_show_view.save
+
+        image_area_item = render_to_string :partial => "workspace_portfolio_collection_image_show_view",
+                                           :locals => { :portfolio_collection => @portfolio_collection,
+                                                        :image_show_view => image_show_view,
+                                                        :tab_id => params[:tab_id] }
+
+        render :update do |page|
+            page.insert_html :bottom, params[:image_area_container_id], image_area_item
+        end
+    end
+
+    def workspace_save_collection
+        #
+        #   Description: Process of a save of 'collection' instance tab. The payload MUST be json, as well as the response. A saple
+        #       payload is as follows:
+        #
+        #       {"commit"=>"Save",
+        #        "authenticity_token"=>"+4HmK6g2j4VT++JXi5U171E4702FFTAKI8eitg3hhUo=",
+        #        "archive_id"=>"1",
+        #        "controller"=>"cm/organizer",
+        #        "action"=>"workspace_save_collection",
+        #        "collection_id" => <collection id of image in the workspace>,
+        #        "tag_line" => <tag line>,
+        #        "description"=> <descriptioni>,
+        #        "changes"=>[{"change_type" => "add", "image_id"=>"267"}] }
+        #
+        #       The tab's focus is a particular collection which is opened in the workspace, as identified by "collection_id".
+        #       "changes" contains a list of changes which were made by the user. Currently, the only changes supported are
+        #       addition of an image to a collection.
+        #
+        logger.debug "cm/organizer_controller/workspace_save_collection"
+        logger.debug params.inspect
+
+        collection = Collection.find params[:collection_id]
+        collection.tag_line = params[:tag_line]
+        collection.description = params[:description]
+
+        #
+        # Process the items in params[:changes]
+        #
+        params[:changes].each do |change|
+            if change["change_type"] == "add"
+                image = Image.find change["image_id"]
+                if image
+                    collection.images << image
+                end
+            end
+        end
+
+        collection.save
+
+        response = {  'status' => '0' }
+        render :json => response
+    end
+
     def workspace_save_collection_image
         #
-        #   Description: Processes a save of a 'collection image' tab. The payload MUST be json, as well as the response. A sample
+        #   Description: Processes a save of a 'collection image' intance tab. The payload MUST be json, as well as the response. A sample
         #       payload is as follows:
         #
         #       {"commit"=>"Save",
@@ -668,6 +740,9 @@ class Cm::OrganizerController < ApplicationController
 
         response = {  'status' => '0' }
         render :json => response
+    end
+
+    def workspace_save_portfolio_collection
     end
 
 end

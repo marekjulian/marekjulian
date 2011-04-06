@@ -9,11 +9,9 @@
                        :class => "organizer-workspace-body-form-form",
                        :onSubmit => "var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
                                      if (tabControl) {
-                                         alert('workspace_collection_instance_tab.save - Got tab control...');
                                          return tabControl.save( '#{form_id}', '#{save_url}' );
                                      }
                                      else {
-                                         alert('workspace_collection_instance_tab.save - Failed to get tab control!');
                                          return false;
                                      } " } ) do %>
             <ul>
@@ -35,14 +33,17 @@
             </ul>
         <% end %>          
     </div>
-    <% image_area_id = "organizer-workspace-body-image-area-collection-instance-#{collection.id}" %>
+    <% image_area_id = "organizer-workspace-body-image-area-#{tab_id}-#{collection.id}" %>
     <div id="<%=image_area_id%>" class="organizer-workspace-body-with-form-image-area">
-        <% collection.images.each do |image| %>
-            <%= render :partial => "workspace_collection_image",
-                       :locals => { :tab_id => tab_id,
-                                    :collection => collection,
-                                    :image => image } %>
-        <% end %>
+        <% image_area_list_id = "organizer-workspace-body-collection-image-instance-list-#{tab_id}-#{collection.id}" %>
+        <ul id="<%=image_area_list_id%>">
+            <% collection.images.each do |image| %>
+                <%= render :partial => "workspace_collection_image",
+                           :locals => { :tab_id => tab_id,
+                                        :collection => collection,
+                                        :image => image } %>
+            <% end %>
+        </ul>
         <div class="organizer-workspace-trash-container">
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
         </div>
