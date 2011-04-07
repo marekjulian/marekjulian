@@ -351,6 +351,9 @@ CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl = Class.create( {
         // alert("CM_ORGANIZER.TabInstanceControl.droppedPreviewToWorkspace - about to remove preview element with ID = " + previewElementId );
         $( previewElementId ).remove();
 
+        var change = new CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceAddChange( imageId );
+        this.changes.push( change );
+
         //
         // Add a new workspace image show view.
         //
@@ -378,7 +381,40 @@ CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl = Class.create( {
     save : function( formId, saveUrl ) {
         alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl.save - formId = " + formId + ", saveUrl = " + saveUrl );
 
+        var formData = $( formId ).serialize( true );
+
+        formData[ 'portfolio_collection_id' ] = this.portfolioCollectionId;
+        formData[ 'changes' ] = $A();
+        this.changes.each( function( change ) { formData['changes'].push( { change_type : 'add',
+                                                                            image_id : change.imageId } ); } );
+
+        jsonPayload = Object.toJSON( formData );
+
+        var self = this;
+
+        var req = new Ajax.Request( saveUrl,
+                                    { method : 'post',
+                                      contentType : 'application/json',
+                                      parameters : { format : 'json' },
+                                      postBody : jsonPayload,
+                                      onSuccess : function( response ) { self.changes = $A();
+                                                                         var formSaveId = formId + '-save';
+                                                                         var enableClass = "organizer-form-enabled-button";
+                                                                         var disableClass = "organizer-form-disabled-button";
+                                                                         $( formSaveId ).removeClassName( enableClass );
+                                                                         $( formSaveId ).addClassName( enableClass ); }  
+                                    } );
+
         return false;
+    }
+
+} );
+
+CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceAddChange = Class.create( {
+
+    initialize : function( imageId ) {
+        // alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceAddChange - adding image = " + imageId);
+        this.imageId = imageId;
     }
 
 } );

@@ -14,7 +14,7 @@
     <% image_tag_id = "organizer-workspace-image-show-view-#{tab_id}=#{portfolio_collection.id}-#{image_show_view.id}" %>
     <%= organizer_image_tag( image_show_view.image, image_tag_id, "organizer-workspace-thumbnail") %>
 
-    <%= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
-                                                                                  revert: true } );
-                        CM_ORGANIZER.workspaceControl.addDraggable( newDraggable, '#{tab_id}', '#{image_li_tag_id}');"  %>
+    <%#= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
+                                                                                   revert: true } );
+                         CM_ORGANIZER.workspaceControl.addDraggable( newDraggable, '#{tab_id}', '#{image_li_tag_id}');"  %>
 </li>

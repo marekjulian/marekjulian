@@ -557,7 +557,6 @@ class Cm::OrganizerController < ApplicationController
         image_show_view.image = @image
         image_show_view.portfolio_collection = @portfolio_collection
         image_show_view.show_seq = @portfolio_collection.image_show_views.count + 1
-        image_show_view.save
 
         image_area_item = render_to_string :partial => "workspace_portfolio_collection_image_show_view",
                                            :locals => { :portfolio_collection => @portfolio_collection,
@@ -743,6 +742,31 @@ class Cm::OrganizerController < ApplicationController
     end
 
     def workspace_save_portfolio_collection
+        logger.debug "cm/organizer_controller/workspace_save_portfolio_collection"
+        logger.debug params.inspect
+
+        @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
+
+        params[:changes].each do |change|
+            logger.debug "cm/organizer_controller/workspace_save_portfolio_collection - processing change..."
+
+            if change["change_type"] == "add"
+                image = Image.find change["image_id"]
+                if image
+                    image_show_view = ImageShowView.new
+                    image_show_view.image = image
+                    image_show_view.portfolio_collection = @portfolio_collection
+                    image_show_view.show_seq = @portfolio_collection.image_show_views.count + 1
+                    @portfolio_collection.image_show_views << image_show_view
+                    image_show_view.save
+                end
+            end
+        end
+
+        @portfolio_collection.save
+
+        response = {  'status' => '0' }
+        render :json => response
     end
 
 end
