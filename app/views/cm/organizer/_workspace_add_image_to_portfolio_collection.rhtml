@@ -1,0 +1,23 @@
+<!-- workspace_add_image_to_portfolio_collection:
+
+    DESCRIPTION: image added to workspace body of a portfolio collection instance tab.
+
+    LOCALS:
+        tab_id
+        change_id
+        image
+ -->
+<% image_li_tag_id = "org-work-added-img-li-#{tab_id}-#{change_id}-#{image.id}" %>
+<% image_li_tag_class = "org-work-img-li" %>
+<li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+    <% image_tag_id = "org-work-added-img-#{tab_id}-#{change_id}-#{image.id}" %>
+    <%= organizer_image_tag( image, image_tag_id, "org-work-thumb") %>
+</li>
+<%= javascript_tag "Sortable.create( '#{image_area_list_id}', { handles:$$('##{image_area_list_id} img'),
+                                                                format: /^(.*)$/,
+                                                                ghosting: false,
+                                                                overlap: 'horizontal',
+                                                                constraint: '',
+                                                                onUpdate: function( container ) { $( '#{form_id}-save' ).removeClassName( 'organizer-form-disabled-button' );
+                                                                                                  $( '#{form_id}-save' ).addClassName( 'organizer-form-enabled-button' ); }
+                                                              } );" %>

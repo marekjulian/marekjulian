@@ -1,0 +1,32 @@
+<!-- workspace_collection_image:
+
+    DESCRIPTION: image in the workspace body of a collection instance tab.
+
+    LOCALS:
+        collection
+        image
+        tab_id
+
+ -->
+<% image_li_tag_id = "org-work-img-li-#{tab_id}-#{collection.id}-#{image.id}" %>
+<% image_li_tag_class = "org-work-img-li" %>
+<li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+    <% image_tag_id = "org-work-img-#{tab_id}-#{collection.id}-#{image.id}" %>
+    <%= organizer_image_tag( image, image_tag_id, "org-work-thumb") %>
+
+    <%= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
+                                                                                  revert: true } );
+                        CM_ORGANIZER.workspaceControl.addDraggable( newDraggable, '#{tab_id}', '#{image_li_tag_id}');"  %>
+
+    <% createNewTabLink = url_for( :controller => 'cm/organizer',
+                                   :archive_id => collection.archive_id,
+                                   :action => :create_new_collection_image_instance_tab,
+                                   :collection_id => collection.id,
+                                   :image_id => image.id ) %>
+    <%= javascript_tag "$('#{image_tag_id}').observe('dblclick', function (event) {
+                            tabsControl.showLoading();
+                            reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
+                            req = new Ajax.Request( reqUrl, {
+                                                    method :  'get' } )
+                         });" %>
+</li>

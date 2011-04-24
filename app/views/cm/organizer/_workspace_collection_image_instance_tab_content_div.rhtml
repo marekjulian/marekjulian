@@ -37,7 +37,7 @@
                 <% image_li_tag_class = "organizer-workspace-image_variant-li" %>
                 <li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
                     <% image_tag_id = "organizer-workspace-image_variant-#{collection.id}-#{image.id}-#{image_variant.id}" %>
-                    <%= organizer_image_variant_tag( image_variant, image_tag_id, "organizer-workspace-thumbnail") %>
+                    <%= organizer_image_variant_tag( image_variant, image_tag_id, "org-work-thumb") %>
                     <%= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
                                                                                                   revert: 'failure' } );
                                         CM_ORGANIZER.workspaceControl.addDraggable( newDraggable, '#{tab_id}', '#{image_li_tag_id}');"  %>
@@ -50,7 +50,7 @@
         </div>
     </div>
     <%= javascript_tag "Droppables.add( '#{image_area_id}', {
-                            accept : 'organizer-preview-image_variant-li',
+                            accept : 'org-prev-img_variant-li',
                             onDrop : function( previewLi ) { 
                                var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
                                tabControl.droppedPreviewToWorkspace( previewLi );

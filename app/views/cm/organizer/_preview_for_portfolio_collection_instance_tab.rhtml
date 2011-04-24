@@ -1,5 +1,6 @@
 <div id="<%=preview_div_id%>">
-    <div id="organizer-preview-content-for-<%=tab_id%>-tab">
+    <% preview_content_div_id = "organizer-preview-content-for-#{tab_id}-tab" %>
+    <div id="<%=preview_content_div_id%>">
         <% portfolio_collection_images = [] %>
         <% portfolio_collection.image_show_views.each do |image_show_view| %>
             <% portfolio_collection_images.push( image_show_view.image ) %>
@@ -8,4 +9,14 @@
         <%= render :partial => 'preview_content_for_portfolio_collection_instance_tab', :locals => { :images => preview_images,
                                                                                                      :tab_id => tab_id } %>
     </div>
+    <%= javascript_tag "Droppables.add( '#{preview_content_div_id}', {
+                                            accept: 'org-work-img-li',
+                                            onDrop : function( workspaceListItem ) {
+                                                var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
+                                                if ( tabControl ) {
+                                                    tabControl.droppedWorkspaceToPreview( workspaceListItem );
+                                                }
+                                            }
+                                        } );
+                        CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{preview_content_div_id}' );" %>
 </div>

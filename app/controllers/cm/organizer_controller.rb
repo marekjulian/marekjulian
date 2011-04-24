@@ -68,9 +68,13 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find( params[:archive_id] )
         if params['selected-collection-id'] == 'all'
             images = @archive.images
-        else
+        elsif params['selected-collection-id'] == 'prompt'
+            images = nil
+        elsif params['selected-collection-id']
             collection = Collection.find( params['selected-collection-id'] )
             images = collection.images
+        else
+            images = nil
         end
         render :update do |page|
             page.replace_html 'organizer-preview-content-for-portfolios-tab', :partial => 'preview_content_for_portfolios_tab', :locals => { :images => images }
@@ -109,9 +113,13 @@ class Cm::OrganizerController < ApplicationController
             preview_collections.each do |preview_collection|
                 preview_images.concat( preview_collection.images )
             end
-        else
+        elsif params['selected-collection-id'] == 'prompt'
+            preview_images = nil
+        elsif params['selected-collection-id']
             collection = Collection.find( params['selected-collection-id'] )
             preview_images = collection.images
+        else
+            preview_images = nil
         end
         render :update do |page|
             page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_portfolio_instance_tab',
@@ -232,6 +240,8 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @portfolio = Portfolio.find params[:portfolio_id]
 
+        tab_id = "t#{params[:next_tab_id]}"
+
         preview_div_id = "organizer-preview-t#{params[:next_tab_id]}-tab"
         preview_div = render_to_string :partial => "preview_for_portfolio_instance_tab",
                                        :locals => { :archive => @archive,
@@ -251,13 +261,19 @@ class Cm::OrganizerController < ApplicationController
                                            :locals => { :archive => @archive,
                                                         :portfolio => @portfolio,
                                                         :tab_content_id => tab_content_id,
-                                                        :initial_render => false }
+                                                        :tab_id => tab_id }
 
         render :update do |page|
             page.insert_html :bottom, 'organizer-preview', preview_div
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
             page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}')"
+            replace_default_show_view_url = url_for( :controller => 'cm/organizer',
+                                                     :archive_id => params[:archive_id],
+                                                     :action => :replace_default_show_view_for_portfolio,
+                                                     :portfolio_id => @portfolio.id,
+                                                     :tab_id => tab_id )
+            page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'portfolio', '#{params[:portfolio_id]}', '#{replace_default_show_view_url}' )"
             page << "tabsControl.addTab( $('#{ tabs_list_item_id}').down().down() )"
             page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
@@ -296,12 +312,29 @@ class Cm::OrganizerController < ApplicationController
             page.insert_html :bottom, 'organizer-workspace-tabs-list', tabs_list_item
             page.insert_html :bottom, 'organizer-workspace-body', tab_content_div
             page << "CM_ORGANIZER.previewControl.addPreview( $('#{tabs_list_item_link_id}'), '#{preview_div_id}' )"
+            preview_content_div_id = "organizer-preview-content-for-#{tab_id}-tab"
+            add_preview_image_url = url_for( :controller => 'cm/organizer',
+                                             :archive_id => params[:archive_id],
+                                             :action => :add_image_to_portfolio_collection_preview,
+                                             :portfolio_collection_id => @portfolio_collection.id,
+                                             :tab_id => tab_id,
+                                             :preview_container_id => preview_content_div_id )
+            replace_default_show_view_url = url_for( :controller => 'cm/organizer',
+                                                     :archive_id => params[:archive_id],
+                                                     :action => :replace_default_show_view_for_portfolio_collection,
+                                                     :portfolio_collection_id => @portfolio_collection.id,
+                                                     :tab_id => tab_id )
             add_image_url = url_for( :controller => 'cm/organizer',
                                      :archive_id => params[:archive_id],
-                                     :action => :add_image_show_view_to_portfolio_collection,
+                                     :action => :add_image_to_portfolio_collection,
                                      :portfolio_collection_id => @portfolio_collection.id,
                                      :tab_id => tab_id )
-            page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'portfolio-collection', '#{params[:portfolio_collection_id]}', '#{add_image_url}' )"
+            add_image_show_view_url = url_for( :controller => 'cm/organizer',
+                                               :archive_id => params[:archive_id],
+                                               :action => :add_image_show_view_to_portfolio_collection,
+                                               :portfolio_collection_id => @portfolio_collection.id,
+                                               :tab_id => tab_id )
+            page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'portfolio-collection', '#{params[:portfolio_collection_id]}', '#{add_preview_image_url}', '#{replace_default_show_view_url}', '#{add_image_url}', '#{add_image_show_view_url}' )"
             page << "tabsControl.addTab( $( '#{ tabs_list_item_id}' ).down().down() )"
             page << "tabsControl.setActiveTab( $( '#{tabs_list_item_id}' ).down().down() )"
         end
@@ -445,6 +478,7 @@ class Cm::OrganizerController < ApplicationController
         @portfolio = Portfolio.find params[:portfolio_id]
         @collection = Collection.find params[:selected_collection_id]
         @image = Image.find params[:image_id]
+        tab_id = params[:tab_id]
 
         portfolio_collection = PortfolioCollection.create( :portfolio => @portfolio,
                                                            :collection => @collection,
@@ -479,8 +513,8 @@ class Cm::OrganizerController < ApplicationController
         response_body = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
                                          :locals => { :archive => @archive,
                                                       :portfolio => @portfolio,
-                                                      :initial_render => false,
-                                                      :tab_content_id => params[:tab_content_id] }
+                                                      :tab_content_id => params[:tab_content_id],
+                                                      :tab_id => tab_id }
         render :inline => response_body
     end
 
@@ -490,6 +524,7 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find params[:archive_id]
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
         @tab_content_id = params[:tab_content_id]
+        @tab_id = params[:tab_id]
         render :layout => false
     end
 
@@ -500,11 +535,13 @@ class Cm::OrganizerController < ApplicationController
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
         @portfolio = @portfolio_collection.portfolio
         @portfolio_collection.destroy
+        tab_id = params[:tab_id]
         response_body = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
                                          :locals => { :archive => @archive,
                                                       :portfolio => @portfolio,
                                                       :initial_render => false,
-                                                      :tab_content_id => params[:tab_content_id] }
+                                                      :tab_content_id => params[:tab_content_id],
+                                                      :tab_id => tab_id }
         render :inline => response_body
     end
 
@@ -516,7 +553,7 @@ class Cm::OrganizerController < ApplicationController
         @collection = Collection.find params[:collection_id]
         @image = Image.find params[:image_id]
 
-        image_area_item = render_to_string :partial => "workspace_collection_image",
+        image_area_item = render_to_string :partial => "workspace_image_in_collection",
                                            :locals => { :collection => @collection,
                                                         :image => @image,
                                                         :tab_id => params[:tab_id] }
@@ -548,21 +585,94 @@ class Cm::OrganizerController < ApplicationController
         end
     end
 
-    def add_image_show_view_to_portfolio_collection
+    def replace_default_show_view_for_portfolio
+        logger.debug "cm/organizer_controller/replace_default_show_view_in_portfolio"
+        logger.debug params.inspect
+
+        image_tag = ""
+        portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
+        if portfolio_collection
+            image_tag = render_to_string :partial => "workspace_portfolio_default_show_view",
+                                         :locals => { :portfolio_collection => portfolio_collection,
+                                                      :image_tag_id => "" }
+        end
+
+        render :update do |page|
+            container_id = params[:image_area_container_id]
+            page.replace_html( container_id, image_tag )
+        end
+    end
+
+    def replace_default_show_view_for_portfolio_collection
+        logger.debug "cm/organizer_controller/replace_default_show_view_in_portfolio_collection"
+        logger.debug params.inspect
+
+        image_tag = ""
+
+        if params[:image_show_view_id]
+            image_show_view = ImageShowView.find params[:image_show_view_id]
+            image_tag = render_to_string :partial => "workspace_portfolio_collection_default_show_view",
+                                         :locals => { :image_show_view => image_show_view,
+                                                      :image_tag_id => "" }
+        elsif params[:image_id]
+            image = Image.find params[:image_id]
+            image_tag = render_to_string :partial => "workspace_portfolio_collection_image",
+                                         :locals => { :image => image,
+                                                      :image_tag_id => "" }
+        end
+
+        logger.debug "cm/organizer_controller/replace_default_show_view_in_portfolio_collection - image tag: " + image_tag
+
+        render :update do |page|
+            container_id = params[:image_area_container_id]
+            page.replace_html( container_id, image_tag )
+        end
+    end
+
+    def add_image_to_portfolio_collection_preview
+        if params[:image_id]
+            image = Image.find params[:image_id]
+        elsif params[:image_show_view_id]
+            image_show_view = ImageShowView.find params[:image_show_view_id]
+            image = image_show_view.image
+        end
+
+
+        preview_item = render_to_string :partial => "preview_image_for_portfolio_collection_instance_tab",
+                                        :locals => { :tab_id => params[:tab_id],
+                                                     :image => image }
+        render :update do |page|
+            page.insert_html :bottom, params[:preview_container_id], preview_item
+        end
+    end
+
+    def add_image_to_portfolio_collection
         @archive = Archive.find params[:archive_id]
-        @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
         @image = Image.find params[:image_id]
+        change_id = params[:change_id]
 
-        image_show_view = ImageShowView.new
-        image_show_view.image = @image
-        image_show_view.portfolio_collection = @portfolio_collection
-        image_show_view.show_seq = @portfolio_collection.image_show_views.count + 1
+        image_area_item = render_to_string :partial => "workspace_add_image_to_portfolio_collection",
+                                           :locals => { :image => @image,
+                                                        :tab_id => params[:tab_id],
+                                                        :change_id => change_id,
+                                                        :image_area_list_id => params[:image_area_container_id],
+                                                        :form_id => params[:form_id] }
 
-        image_area_item = render_to_string :partial => "workspace_portfolio_collection_image_show_view",
-                                           :locals => { :portfolio_collection => @portfolio_collection,
-                                                        :image_show_view => image_show_view,
-                                                        :tab_id => params[:tab_id] }
+        render :update do |page|
+            page.insert_html :bottom, params[:image_area_container_id], image_area_item
+        end
+    end
 
+    def add_image_show_view_to_portfolio_collection
+        @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
+        @image_show_view = ImageShowView.find params[:image_show_view_id]
+
+        image_area_item = render_to_string :partial => "workspace_add_image_show_view_to_portfolio_collection",
+                                           :locals => { :tab_id => params[:tab_id],
+                                                        :portfolio_collection => @portfolio_collection,
+                                                        :image_show_view =>  @image_show_view,
+                                                        :image_area_list_id => params[:image_area_container_id],
+                                                        :form_id => params[:form_id] }
         render :update do |page|
             page.insert_html :bottom, params[:image_area_container_id], image_area_item
         end
@@ -607,6 +717,27 @@ class Cm::OrganizerController < ApplicationController
         end
 
         collection.save
+
+        response = {  'status' => '0' }
+        render :json => response
+    end
+
+    def workspace_save_portfolio
+        logger.debug "cm/organizer_controller/workspace_save_collection"
+        logger.debug params.inspect
+
+        portfolio = Portfolio.find params["portfolio_id"]
+
+        portfolio.description = params[:description]
+
+        if params[:default_portfolio_collection_id]
+            default_portfolio_collection = PortfolioCollection.find params[:default_portfolio_collection_id]
+            if default_portfolio_collection
+                portfolio.default_show_view_id = default_portfolio_collection.default_show_view_id
+            end
+        end
+
+        portfolio.save
 
         response = {  'status' => '0' }
         render :json => response
@@ -747,26 +878,139 @@ class Cm::OrganizerController < ApplicationController
 
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
 
+        changed_image_show_views = { }
+
+        initial_portfolio_default_show_view_id = @portfolio_collection.portfolio.default_show_view_id
+        initial_portfolio_collection_default_show_view_id = @portfolio_collection.default_show_view_id
+
         params[:changes].each do |change|
             logger.debug "cm/organizer_controller/workspace_save_portfolio_collection - processing change..."
 
             if change["change_type"] == "add"
                 image = Image.find change["image_id"]
-                if image
-                    image_show_view = ImageShowView.new
-                    image_show_view.image = image
-                    image_show_view.portfolio_collection = @portfolio_collection
-                    image_show_view.show_seq = @portfolio_collection.image_show_views.count + 1
-                    @portfolio_collection.image_show_views << image_show_view
-                    image_show_view.save
+                image_show_view = ImageShowView.new
+                image_show_view.image = image
+                image_show_view.portfolio_collection = @portfolio_collection
+                image_show_view.show_seq = @portfolio_collection.image_show_views.count + 1
+                image_show_view.show_variant_id = nil
+                image_show_view.thumbnail_variant_id = nil
+                image.image_variants.each do |iv|
+                    if iv.is_web_default
+                        image_show_view.show_variant_id = iv.id
+                    end
+                    if iv.is_thumbnail_default
+                        image_show_view.thumbnail_variant_id = iv.id
+                    elsif image_show_view.thumbnail_variant_id == nil and iv.is_thumbnail
+                        image_show_view.thumbnail_variant_id = iv.id
+                    end
+                end
+                @portfolio_collection.image_show_views << image_show_view
+                image_show_view.save
+                changed_image_show_views[change["change_id"].to_s] = image_show_view
+            elsif change["change_type"] == "remove"
+                image_show_view = ImageShowView.find change["image_show_view_id"]
+                image_show_view.destroy
+                changed_image_show_views[change["change_id"].to_s] = image_show_view
+                if @portfolio_collection.default_show_view_id == image_show_view.id
+                    @portfolio_collection.default_show_view_id = nil
+                end
+                portfolio = @portfolio_collection.portfolio
+                if portfolio.default_show_view_id == image_show_view.id
+                    portfolio.default_show_view_id = nil
                 end
             end
         end
 
-        @portfolio_collection.save
+        #
+        # Now, update the order of the image show views. We may get something like this from the client:
+        #
+        # "sortables"=>"images[]=org-work-img-show-view-li-t4-24-34-313&images[]=org-work-img-show-view-li-t4-24-32-312&images[]=org-work-added-img-li-t4-0-311"
+        #
+        # 1. create a hash of image_show_views, image_show_view_hash: image_show_view_id -> image_show_view
+        # 2. have hash of changed image_show_views, changed_image_show_views: change_id -> image_show_view
+        # 3. scan images in params[:sortables], updating 'show_seq' in image_show_view
+        #
+        show_seq = 0
+        image_show_views = { }
+        @portfolio_collection.image_show_views.each do |iv|
+            logger.debug "cm/organizer_controller/workspace_save_portfolio_collection - adding iv.id = #{iv.id} to image_show_views"
+            image_show_views[iv.id.to_s] = iv
+        end
+        params[:sortables].split('&').each do |image|
+            id = image.split('=')[1]
+            id_parts = id.split('-')
+            if id =~ /^org-work-img-show-view-li/
+                #
+                # have an existing image show view
+                #
+                image_show_view_id = id_parts[-2]
+                logger.debug "cm/organizer_controller/workspace_save_portfolio_collection - update iv #{image_show_view_id}.show_seq = #{show_seq}..."
+                iv = image_show_views[image_show_view_id]
+                iv.show_seq = show_seq
+                iv.save
+            else
+                #
+                # must be an added image
+                #
+                change_id = id_parts[-2]
+                iv = changed_image_show_views[change_id]
+                iv.show_seq = show_seq
+                iv.save
+            end
+            show_seq = show_seq + 1
+        end
 
-        response = {  'status' => '0' }
-        render :json => response
+        #
+        # if newDefaultShowView:
+        #   if type(newDefaultShowView) == ExistingImageShowVIew: - set to existing image_show_view
+        #   if type(newDefaultShowView) == AddImageRef: - set to ImageShowView.find changedImageShowViews[AddImageRef.changeId]
+        #
+        if params[:new_default_show_view]
+            new_default = params[:new_default_show_view]
+            logger.debug "cm/organizer_controller/workspace_save_portfolio_collection - new default"
+            logger.debug new_default.inspect
+            if new_default[:type] === 'image_show_view'
+                @portfolio_collection.default_show_view_id = new_default[:image_show_view_id]
+            elsif new_default[:type] === 'image'
+                image_show_view = changed_image_show_views[new_default[:change_id]]
+                @portfolio_collection.default_show_view_id = image_show_view.id
+            end
+        end
+
+        if @portfolio_collection.default_show_view_id == nil
+            @portfolio_collection.default_show_view_id = @portfolio_collection.image_show_views.first.id
+        end
+
+        @portfolio_collection.save
+        if @portfolio_collection.portfolio.default_show_view_id != initial_portfolio_default_show_view_id
+            @portfolio_collection.portfolio.save
+        end
+
+        @portfolio_collection.image_show_views.reload
+
+        if @portfolio_collection.default_show_view_id != initial_portfolio_collection_default_show_view_id
+            default_thumbnail = render_to_string :partial => "workspace_portfolio_collection_default_thumbnail",
+                                                 :locals => { :portfolio_collection => @portfolio_collection }
+        else
+            default_thumbnail = nil
+        end
+        image_area_list = render_to_string :partial => "workspace_portfolio_collection_instance_image_area_list",
+                                           :locals => { :tab_id => params[:tab_id],
+                                                        :portfolio_collection => @portfolio_collection }
+        render :update do |page|
+            if default_thumbnail
+                page.replace_html( "#{params[:form_id]}-show-view", default_thumbnail )
+            end
+            page.replace_html( params[:image_area_container_id], image_area_list )
+            #
+            # page.insert_html :bottom,
+            # params[:image_area_container_id],
+            # '<script>alert("Inserted new image area list!")</script>'
+            #
+            page.insert_html :after,
+                             params[:image_area_container_id],
+                             "<script>CM_ORGANIZER.workspaceControl.getTabControl( '#{params[:tab_id]}' ).createSortable();</script>"
+        end
     end
 
 end

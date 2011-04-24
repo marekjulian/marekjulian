@@ -1,6 +1,6 @@
 <div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
+    <% form_id = "organizer-workspace-body-form-#{tab_id}-#{portfolio_collection.id}" %>
     <div class="organizer-workspace-body-form">
-        <% form_id = "organizer-workspace-body-form-#{tab_id}-#{portfolio_collection.id}" %>
         <% save_url = url_for( :controller => 'cm/organizer',
                                :action => 'workspace_save_portfolio_collection' ) %>
         <% form_tag( { :controller => 'cm/organizer',
@@ -14,11 +14,26 @@
                                      else {
                                          return false;
                                      } " } ) do %>
-            <ul>
-                <li>
+            <ul class="organizer-workspace-body-form-form-ul">
+                <li class="organizer-workspace-body-form-form-li">
                     <p>Tag Line: <%="#{portfolio_collection.collection.tag_line}"%></p><br/>
                 </li>
-                <li>
+                <% default_show_view_id = "#{form_id}-show-view" %>
+                <li id="<%=default_show_view_id%>" class="organizer-workspace-body-form-form-li">
+                    <%= organizer_portfolio_collection_thumbnail_tag( portfolio_collection, "", "org-work-thumb" ) %>
+                </li>
+                <%= javascript_tag "Droppables.add( '#{default_show_view_id}', {
+                                       accept: 'org-work-img-li',
+                                       onDrop : function( workspaceListItem ) {
+                                           var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
+                                           if ( tabControl ) {
+                                               tabControl.droppedWorkspaceToFormDefaultShowView( workspaceListItem );
+                                           }
+                                       }
+                                    } );
+                                   $( '#{default_show_view_id}' ).setStyle( { display : 'block', position : 'static' } );"
+                 %>
+                <li class="organizer-workspace-body-form-form-li">
                     <%= submit_tag "Save", 
                                    :id => "#{form_id}-save", 
                                    :class => "organizer-form-disabled-button" %>
@@ -30,24 +45,27 @@
     <% image_area_list_id = "organizer-workspace-body-portfolio-collection-instance-list-#{tab_id}-#{portfolio_collection.id}" %>
     <div id="<%=image_area_id%>" class="organizer-workspace-body-with-form-image-area">
         <ul id="<%=image_area_list_id%>">
-            <% portfolio_collection.image_show_views.each do |image_show_view| %>
-                <%= render :partial => "workspace_portfolio_collection_image_show_view",
-                           :locals => { :tab_id => tab_id,
-                                        :portfolio_collection => portfolio_collection,
-                                        :image_show_view => image_show_view } %>
-            <% end %>
-        </ul>
+            <%= render :partial => "workspace_portfolio_collection_instance_image_area_list",
+                       :locals => { :tab_id => tab_id,
+                                    :portfolio_collection => portfolio_collection } %>
+       </ul>
         <div class="organizer-workspace-trash-container">
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
         </div>
     </div>
     <%= javascript_tag "Droppables.add( '#{image_area_id}', {
-                            accept : 'organizer-preview-image',
+                            accept : 'org-prev-img',
                             onDrop : function( previewImage ) { 
                                 var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
                                 tabControl.droppedPreviewToWorkspace( previewImage );
                             } } );
                         CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{image_area_id}' );
-                        Sortable.create( '#{image_area_list_id}' );"
+                        Sortable.create( '#{image_area_list_id}', { handles:$$('##{image_area_list_id} img'),
+                                                                    format: /^(.*)$/,
+                                                                    ghosting: false,
+                                                                    overlap: 'horizontal',
+                                                                    constraint: '',
+                                                                    onUpdate: function( container ) { $( '#{form_id}-save' ).removeClassName( 'organizer-form-disabled-button' );
+                                                                                                      $( '#{form_id}-save' ).addClassName( 'organizer-form-enabled-button' ); } } );"
      %>
 </div>

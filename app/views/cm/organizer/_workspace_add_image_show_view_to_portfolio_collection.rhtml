@@ -1,0 +1,12 @@
+<%= render :partial => "workspace_image_show_view_in_portfolio_collection",
+                       :locals => { :tab_id => tab_id,
+                                    :portfolio_collection => portfolio_collection,
+                                    :image_show_view => image_show_view  } %>
+<%= javascript_tag "Sortable.create( '#{image_area_list_id}', { handles:$$('##{image_area_list_id} img'),
+                                                                format: /^(.*)$/,
+                                                                ghosting: false,
+                                                                overlap: 'horizontal',
+                                                                constraint: '',
+                                                                onUpdate: function( container ) { $( '#{form_id}-save' ).removeClassName( 'organizer-form-disabled-button' );
+                                                                                                  $( '#{form_id}-save' ).addClassName( 'organizer-form-enabled-button' ); }
+                                                               } );" %>

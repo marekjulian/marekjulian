@@ -61,7 +61,8 @@ MJ_UI.Tabs = Class.create( {
             hideFunction: Element.hide,
             closeTabFunction: Element.remove,
             closeContainerFunction: Element.remove,
-            loadingId : null
+            loadingId : null,
+            onEvent : 'onclick'
         };
         Object.extend( this.options, options || {} );
         $(tab_list_container).select(this.options.linkSelector).findAll(function(link){
@@ -94,7 +95,7 @@ MJ_UI.Tabs = Class.create( {
         if(!container) {
             throw "MJ_UI.Tabs: #" + link.key + " was not found on the page."; }
         this.containers.set(link.key,container);
-        link[this.options.hover ? 'onmouseover' : 'onclick'] = function(link){
+        link[this.options.onEvent] = function(link){
             if(window.event) {
                 Event.stop(window.event); }
             this.setActiveTab(link);

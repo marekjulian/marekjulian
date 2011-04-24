@@ -4,12 +4,12 @@
             <% archive.portfolios.each do |portfolio| %>
                 <li>
                     <% imageTagId = "organizer-workspace-body-portfolios-item-#{portfolio.id}" %>
-                    <%= organizer_portfolio_thumbnail_tag( portfolio, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                    <%= organizer_portfolio_thumbnail_tag( portfolio, "#{imageTagId}", "org-work-thumb") %><br/>
                     <% createNewTabLink = url_for( :controller => 'cm/organizer',
                                                    :archive_id => archive.id,
                                                    :action => :create_new_portfolio_instance_tab,
                                                    :portfolio_id => portfolio.id ) %>
-                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                    <%= javascript_tag "$('#{imageTagId}').observe('dblclick', function (event) {
                                        tabsControl.showLoading();
                                        reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
                                        req = new Ajax.Request( reqUrl, {
@@ -43,7 +43,7 @@
 <% if initial_render %>
     <%= javascript_tag "document.observe('dom:loaded', function() {
             Droppables.add( 'organizer-workspace-body-portfolios-image-area', {
-                            accept : 'organizer-preview-image',
+                            accept : 'org-prev-img',
                             onDrop : function(image) { 
                                 newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-portfolio-create').writeAttribute('href', newHRef );
@@ -56,7 +56,7 @@
      %>
 <% else %>
     <%= javascript_tag "Droppables.add( 'organizer-workspace-body-portfolios-image-area', {
-                            accept : 'organizer-preview-image',
+                            accept : 'org-prev-img',
                             onDrop : function(image) { 
                                 newHRef = '#{createPortfolioFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-portfolio-create').writeAttribute('href', newHRef );

@@ -27,7 +27,6 @@
     <%= render :partial => 'preview_loading', :locals => { :div_id => "organizer-preview-content-for-collections-tab-loading" } %>
     <div id="organizer-preview-content-for-collections-tab">
         <% if archive.images.count <= 20 %>
-            <% preview_images = archives.images %>
             <%= render :partial => 'preview_content_for_collections_tab', :locals => { :images => archive.images } %>
         <% end %>
     </div>

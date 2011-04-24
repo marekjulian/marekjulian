@@ -38,7 +38,7 @@
         <% image_area_list_id = "organizer-workspace-body-collection-image-instance-list-#{tab_id}-#{collection.id}" %>
         <ul id="<%=image_area_list_id%>">
             <% collection.images.each do |image| %>
-                <%= render :partial => "workspace_collection_image",
+                <%= render :partial => "workspace_image_in_collection",
                            :locals => { :tab_id => tab_id,
                                         :collection => collection,
                                         :image => image } %>
@@ -48,7 +48,7 @@
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
         </div>
         <%= javascript_tag "Droppables.add( '#{image_area_id}', {
-                                accept : 'organizer-preview-image',
+                                accept : 'org-prev-img',
                                 onDrop : function( previewImage ) { 
                                     var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
                                     tabControl.droppedPreviewToWorkspace( previewImage );

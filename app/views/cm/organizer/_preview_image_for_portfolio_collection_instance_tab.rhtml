@@ -1,0 +1,6 @@
+<% image_tag_id = "org-prev-img-#{tab_id}-#{image.id}" %>
+<%= organizer_image_tag image, image_tag_id, "org-prev-img" %>
+<%= javascript_tag "var newDraggable = new Draggable( '#{image_tag_id}', { ghosting: true,
+                                                                           revert: 'failure' } );
+                    CM_ORGANIZER.previewControl.addDraggable( newDraggable, '#{tab_id}', '#{image_tag_id}' );"
+ %>

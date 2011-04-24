@@ -12,9 +12,9 @@
             <div class="organizer-dialog-form-thumbnail-container" >
                 <% imageTagId = "organizer-dialog-form-thumbnail-#{@collection.id}" %>
                 <% if @collection.images.first %>
-                    <%= organizer_image_tag( @collection.images.first, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                    <%= organizer_image_tag( @collection.images.first, "#{imageTagId}", "org-work-thumb") %><br/>
                 <% else %>
-                    <%= organizer_missing_image_thumbnail_tag( "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                    <%= organizer_missing_image_thumbnail_tag( "#{imageTagId}", "org-work-thumb") %><br/>
                 <% end %>
             <div>
         </li>

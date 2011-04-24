@@ -5,15 +5,15 @@
                 <li>
                     <% imageTagId = "organizer-workspace-body-collections-item-#{collection.id}" %>
                     <% if collection.images.first %>
-                        <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                        <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "org-work-thumb") %><br/>
                     <% else %>
-                        <%= organizer_missing_image_thumbnail_tag("#{imageTagId}", "organizer-workspace-thumbnail") %><br/>
+                        <%= organizer_missing_image_thumbnail_tag("#{imageTagId}", "org-work-thumb") %><br/>
                     <% end %>
                     <% createNewTabLink = url_for( :controller => 'cm/organizer',
                                                    :archive_id => archive.id,
                                                    :action => :create_new_collection_instance_tab,
                                                    :collection_id => collection.id ) %>
-                    <%= javascript_tag "$('#{imageTagId}').observe('click', function (event) {
+                    <%= javascript_tag "$('#{imageTagId}').observe('dblclick', function (event) {
                         tabsControl.showLoading();
                         reqUrl = '#{createNewTabLink}&next_tab_id=' + tabsControl.nextTabId.toString();
                         req = new Ajax.Request( reqUrl, {
@@ -47,7 +47,7 @@
 <% if initial_render %>
     <%= javascript_tag "document.observe('dom:loaded', function() {
             Droppables.add( 'organizer-workspace-body-collections-image-area', {
-                            accept : 'organizer-preview-image',
+                            accept : 'org-prev-img',
                             onDrop : function(image) { 
                                 newHRef = '#{createCollectionFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-collection-create').writeAttribute('href', newHRef );
@@ -60,7 +60,7 @@
      %>
 <% else %>
     <%= javascript_tag "Droppables.add( 'organizer-workspace-body-collections-image-area', {
-                            accept : 'organizer-preview-image',
+                            accept : 'org-prev-img',
                             onDrop : function(image) { 
                                 newHRef = '#{createCollectionFormUrl}?image_id=' + image.readAttribute('id').split('-').pop();
                                 $('organizer-workspace-body-collection-create').writeAttribute('href', newHRef );

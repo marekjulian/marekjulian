@@ -31,7 +31,7 @@
     margin-left : auto;
 }
 
-.organizer-preview-image {
+.org-prev-img {
     display : inline-block;
     margin-top : 5px;
     margin-right : 2px;
@@ -180,20 +180,20 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     list-style-type : none;
 }
 
-.organizer-workspace-body-tab-content li {
-    float : left;
-    margin-top : 5px;
-    margin-right : 20px;
-    margin-bottom : 5px;
-    margin-left : 5px;
-}
-
 .organizer-workspace-body-image-area {
     display : block;
     position : static;
     height : 100%;
     width : 100%;
     background-color : #ebf099;
+}
+
+.organizer-workspace-body-image-area li {
+    float : left;
+    margin-top : 5px;
+    margin-right : 20px;
+    margin-bottom : 5px;
+    margin-left : 5px;
 }
 
 .organizer-workspace-body-form {
@@ -210,6 +210,20 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     margin : 10px;
     border : 0px;
     padding : 0px;
+}
+
+.organizer-workspace-body-form-form-ul {
+    display : block;
+    position : static;
+}
+
+.organizer-workspace-body-form-form-li {
+    display : block;
+    position : static;
+}
+
+.organizer-workspace-body-form-form img {
+    display : inline-block;
 }
 
 .organizer-workspace-body-form-form label {
@@ -250,7 +264,15 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     background-color : #ebf099;
 }
 
-.organizer-workspace-thumbnail {
+.organizer-workspace-body-with-form-image-area li {
+    float : left;
+    margin-top : 5px;
+    margin-right : 20px;
+    margin-bottom : 5px;
+    margin-left : 5px;
+}
+
+.org-work-thumb {
     display : inline;
     background : #eeeeee;
     padding-top : 5px;
