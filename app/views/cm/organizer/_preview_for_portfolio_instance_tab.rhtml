@@ -7,29 +7,12 @@
         <% end %>
         <% form_id = "organizer-preview-selection-form-for-#{tab_id}-tab" %>
         <form id="<%=form_id%>">
-            <% select_options = "<option id=\"organizer-preview-selection-form-for-#{tab_id}-tab-prompt\" value=\"prompt\" selected=\"selected\">Select a collection</option>" %>
-            <% if archive.images.count <= 20 %>
-                <% select_options = "<option value=\"all\" selected=\"selected\">All images</option>" %>
-            <% else %>
-                <% select_options = select_options + "<option value=\"all\">All your images</option>" %>
-            <% end %>
-            <% preview_collections.each do |preview_collection| %>
-                <% select_options = select_options + "<option value=\"#{preview_collection.id}\">Collection: #{preview_collection.tag_line}</option>" %>
-            <% end %>
-            <%= select_tag "selected-collection-id",
-                           select_options,
-                           :onchange => remote_function( :submit => form_id,
-                                                         :url => {  :action => :update_preview_content_for_portfolio_instance_tab,
-                                                                    :portfolio_id => portfolio.id,
-                                                                    :tab_id => tab_id },
-                                                                    :success => "var promptEl = $('organizer-preview-selection-form-for-#{tab_id}-tab-prompt');
-                                                                                 if ( promptEl ) {
-                                                                                     promptEl.remove();
-                                                                                 }",
-                                                                    :loading => "$('organizer-preview-content-for-#{tab_id}-tab').hide();
-                                                                                 $('organizer-preview-content-for-#{tab_id}-tab-loading').show();",
-                                                                    :loaded => "$('organizer-preview-content-for-#{tab_id}-tab-loading').hide();
-                                                                                $('organizer-preview-content-for-#{tab_id}-tab').show();" )  %>
+            <%= render :partial => 'preview_for_portfolio_instance_tab_selected_tag',
+                       :locals => { :tab_id => tab_id,
+                                    :form_id => form_id,
+                                    :archive => archive,
+                                    :portfolio => portfolio,
+                                    :preview_collections => preview_collections } %>
         </form>
     </div>
     <%= render :partial => 'preview_loading', :locals => { :div_id => "organizer-preview-content-for-#{tab_id}-tab-loading" } %>

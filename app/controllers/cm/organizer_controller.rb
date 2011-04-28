@@ -8,7 +8,9 @@ class Cm::OrganizerController < ApplicationController
                                  :create_portfolio_form,
                                  :delete_portfolio_form,
                                  :create_portfolio_collection_form,
-                                 :delete_portfolio_collection_form]
+                                 :delete_portfolio_collection_form,
+                                 :create_portfolio_collection,
+                                 :delete_portfolio_collection]
 
     layout "cm/organizer"
 
@@ -107,16 +109,17 @@ class Cm::OrganizerController < ApplicationController
         @archive = Archive.find( params[:archive_id] )
         @portfolio = Portfolio.find( params[:portfolio_id] )
         tab_id = params[:tab_id]
-        if params['selected-collection-id'] == 'all'
+        selected_collection_id = "organizer-preview-selected-collection-id-for-#{tab_id}-tab"
+        if params[selected_collection_id] == 'all'
             preview_collections = @archive.collections.select { |archive_collection| ! @portfolio.collections.include?(archive_collection) }
             preview_images = []
             preview_collections.each do |preview_collection|
                 preview_images.concat( preview_collection.images )
             end
-        elsif params['selected-collection-id'] == 'prompt'
+        elsif params[selected_collection_id] == 'prompt'
             preview_images = nil
-        elsif params['selected-collection-id']
-            collection = Collection.find( params['selected-collection-id'] )
+        elsif params[selected_collection_id]
+            collection = Collection.find( params[selected_collection_id] )
             preview_images = collection.images
         else
             preview_images = nil
@@ -274,6 +277,9 @@ class Cm::OrganizerController < ApplicationController
                                                      :portfolio_id => @portfolio.id,
                                                      :tab_id => tab_id )
             page << "CM_ORGANIZER.workspaceControl.addTab( '#{tab_id}', 'portfolio', '#{params[:portfolio_id]}', '#{replace_default_show_view_url}' )"
+            image_area_id = "organizer-workspace-body-portfolio-instance-image-area-#{tab_id}"
+            page << "CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{image_area_id}' )"
+            page << "CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' ).createSortable()"
             page << "tabsControl.addTab( $('#{ tabs_list_item_id}').down().down() )"
             page << "tabsControl.setActiveTab( $('#{tabs_list_item_id}' ).down().down() )"
         end
@@ -467,7 +473,9 @@ class Cm::OrganizerController < ApplicationController
                 @collections.push( collection )
             end
         end
+        @tab_id = params[:tab_id]
         @tab_content_id = params[:tab_content_id]
+        @image_area_container_id = params[:image_area_container_id]
         render :layout => false
     end
 
@@ -510,39 +518,105 @@ class Cm::OrganizerController < ApplicationController
         portfolio_collection.save
         @portfolio.save
 
-        response_body = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
-                                         :locals => { :archive => @archive,
-                                                      :portfolio => @portfolio,
-                                                      :tab_content_id => params[:tab_content_id],
-                                                      :tab_id => tab_id }
-        render :inline => response_body
+        form_id = "organizer-preview-selection-form-for-#{tab_id}-tab"
+        preview_collections = @archive.collections.select { |archive_collection| ! @portfolio.collections.include?(archive_collection) }
+
+        #
+        # A little bit of a missnomer, but the contest of the list are generated (all the list items).
+        #
+        image_area_list = render_to_string :partial => "workspace_portfolio_instance_image_area_list",
+                                           :locals => { :portfolio => @portfolio,
+                                                        :tab_id => tab_id,
+                                                        :tab_content_id => params[:tab_content_id],
+                                                        :image_area_container_id => params[:image_area_container_id] }
+
+        render :update do |page|
+            page.replace "organizer-preview-selected-collection-id-for-#{tab_id}-tab",
+                         :partial => 'preview_for_portfolio_instance_tab_selected_tag',
+                         :locals => { :tab_id => tab_id,
+                                      :form_id => form_id,
+                                      :archive => @archive,
+                                      :portfolio => @portfolio,
+                                      :preview_collections => preview_collections }
+            page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_portfolio_instance_tab',
+                                                                             :locals => { :images => nil,
+                                                                                          :tab_id => tab_id }
+            page.replace_html( params[:image_area_container_id], image_area_list )
+            page.insert_html :after,
+                             params[:image_area_container_id],
+                             "<script>CM_ORGANIZER.workspaceControl.getTabControl( '#{params[:tab_id]}' ).createSortable();</script>"
+        end
     end
 
     def delete_portfolio_collection_form
+        #
+        # Generate a form to delete a portfolio collection inside a portfolio instance tab.
+        #
+        # params:
+        #   :archive_id
+        #   :portfolio_collection_id
+        #   :tab_id
+        #   :tab_content_id
+        #   :image_area_container_id
+        #
         logger.debug "cm/organizer_controller/delete_portfolio_collection_form - inspecting params:"
         logger.debug params.inspect
         @archive = Archive.find params[:archive_id]
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
-        @tab_content_id = params[:tab_content_id]
         @tab_id = params[:tab_id]
+        @tab_content_id = params[:tab_content_id]
+        @image_area_container_id = params[:image_area_container_id]
         render :layout => false
     end
 
     def delete_portfolio_collection
+        #
+        # Delete a portfolio_collection in a portfolio instance tab.
+        #
+        # params:
+        #   :portfolio_collection_id
+        #   :tab_id
+        #   :tab_content_id
+        #   :image_area_container_id
+        #
         logger.debug "cm/organizer_controller/delete_portfolio_collection - inspecting params:"
         logger.debug params.inspect
         @archive = Archive.find params[:archive_id]
         @portfolio_collection = PortfolioCollection.find params[:portfolio_collection_id]
         @portfolio = @portfolio_collection.portfolio
         @portfolio_collection.destroy
+        @portfolio.save
+
         tab_id = params[:tab_id]
-        response_body = render_to_string :partial => "workspace_portfolio_instance_tab_content_div",
-                                         :locals => { :archive => @archive,
-                                                      :portfolio => @portfolio,
-                                                      :initial_render => false,
-                                                      :tab_content_id => params[:tab_content_id],
-                                                      :tab_id => tab_id }
-        render :inline => response_body
+
+        form_id = "organizer-preview-selection-form-for-#{tab_id}-tab"
+        preview_collections = @archive.collections.select { |archive_collection| ! @portfolio.collections.include?(archive_collection) }
+
+        #
+        # A little bit of a missnomer, but the contest of the list are generated (all the list items).
+        #
+        image_area_list = render_to_string :partial => "workspace_portfolio_instance_image_area_list",
+                                           :locals => { :portfolio => @portfolio,
+                                                        :tab_id => tab_id,
+                                                        :tab_content_id => params[:tab_content_id],
+                                                        :image_area_container_id => params[:image_area_container_id] }
+
+        render :update do |page|
+            page.replace "organizer-preview-selected-collection-id-for-#{tab_id}-tab",
+                         :partial => 'preview_for_portfolio_instance_tab_selected_tag',
+                         :locals => { :tab_id => tab_id,
+                                      :form_id => form_id,
+                                      :archive => @archive,
+                                      :portfolio => @portfolio,
+                                      :preview_collections => preview_collections }
+            page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_portfolio_instance_tab',
+                                                                             :locals => { :images => nil,
+                                                                                          :tab_id => tab_id }
+            page.replace_html( params[:image_area_container_id], image_area_list )
+            page.insert_html :after,
+                             params[:image_area_container_id],
+                             "<script>CM_ORGANIZER.workspaceControl.getTabControl( '#{params[:tab_id]}' ).createSortable();</script>"
+        end
     end
 
     def add_image_to_collection
@@ -729,6 +803,17 @@ class Cm::OrganizerController < ApplicationController
         portfolio = Portfolio.find params["portfolio_id"]
 
         portfolio.description = params[:description]
+
+        show_seq = 0
+        params[:sortables].split('&').each do |image|
+            id = image.split('=')[1]
+            id_parts = id.split('-')
+            portfolio_collection_id = id_parts[-1]
+            pc = PortfolioCollection.find portfolio_collection_id
+            pc.show_seq = show_seq
+            pc.save
+            show_seq = show_seq + 1
+        end
 
         if params[:default_portfolio_collection_id]
             default_portfolio_collection = PortfolioCollection.find params[:default_portfolio_collection_id]

@@ -1,0 +1,18 @@
+<!-- workspace_portfolio_collection_instance_image_area_list:
+
+    DESCRIPTION: image list of image_show_views in portfolio_collection instance tab.
+
+    LOCALS:
+        portfolio
+        tab_id
+        tab_content_id
+        image_area_container_id
+ -->
+<% portfolio.portfolio_collections.each do |portfolio_collection| %>
+    <%= render :partial => "workspace_portfolio_collection_in_portfolio",
+               :locals => { :portfolio => portfolio,
+                            :portfolio_collection => portfolio_collection,
+                            :tab_id => tab_id,
+                            :tab_content_id => tab_content_id,
+                            :image_area_container_id => image_area_container_id } %>
+<% end %>

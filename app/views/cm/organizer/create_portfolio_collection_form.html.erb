@@ -4,15 +4,25 @@
 <% else %>
     <% imageId = "" %>
 <% end %>
-<% form_remote_tag( :url => url_for( :controller => 'cm/organizer',
-                                     :action => :create_portfolio_collection,
-                                     :archive_id => @archive.id,
-                                     :portfolio_id => @portfolio.id,
-                                     :image_id => imageId,
-                                     :tab_content_id => @tab_content_id ),
-                    :update => "#{@tab_content_id}",
-                    :success => "$('#{deactivate_link_id}').fire('lb:deactivate')",
-                    :html => { :id => 'organizer-dialog-form' } ) do %>
+<% create_url = url_for( :controller => 'cm/organizer',
+                         :action => 'create_portfolio_collection',
+                         :archive_id => @archive.id,
+                         :portfolio_id => @portfolio.id,
+                         :image_id => imageId,
+                         :tab_id => @tab_id,
+                         :tab_content_id => @tab_content_id,
+                         :image_area_container_id => @image_area_container_id ) %>
+<% form_tag( { :controller => 'cm/organizer',
+               :action => 'create_portfolio_collection'
+             },
+             { :id => 'organizer-dialog-form',
+               :onSubmit => "var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{@tab_id}' );
+                             if (tabControl) {
+                                 return tabControl.createPortfolioCollection( 'organizer-dialog-form', '#{create_url}', '#{deactivate_link_id}' );
+                             }
+                             else {
+                                 return false;
+                             } " } ) do %>
     <div id="ArchivePortfolioHeading">
         <% if @collections.length == 1 %>
             <p>New Portfolio Collection: <%=@collections[0].tag_line%></p>

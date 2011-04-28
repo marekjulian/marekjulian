@@ -336,8 +336,11 @@ CM_ORGANIZER.WorkspacePortfolioTabInstanceControl = Class.create( {
         this.tabId = tabId;
         this.portfolioId = portfolioId;
         this.replaceDefaultShowViewUrl = replaceDefaultShowViewUrl;
-        var formId = "organizer-workspace-body-form-" + this.tabId + "-" + this.portfolioId;
-        this.defaultShowViewContainerId = formId + "-show-view"
+        this.imageAreaContainerId = "organizer-workspace-body-portfolio-instance-collections-list-" + tabId;
+        this.draggables = $H({});
+        this.droppables = $A();
+        this.formId = "organizer-workspace-body-form-" + this.tabId + "-" + this.portfolioId;
+        this.defaultShowViewContainerId = this.formId + "-show-view"
         this.defaultPortfolioCollectionId = null;
     },
 
@@ -355,12 +358,73 @@ CM_ORGANIZER.WorkspacePortfolioTabInstanceControl = Class.create( {
         var req = new Ajax.Request( reqUrl,
                                     { method : 'get' } );
 
-        var formId = "organizer-workspace-body-form-" + this.tabId + "-" + this.portfolioId;
-        var formSaveId = formId + "-save";
+        var formSaveId = this.formId + "-save";
         var enableClass = "organizer-form-enabled-button";
         var disableClass = "organizer-form-disabled-button";
         $( formSaveId ).removeClassName( disableClass );
         $( formSaveId ).addClassName( enableClass );
+    },
+
+    createPortfolioCollection : function( formId, createUrl, deactivateLinkId ) {
+        // alert("createPortfolioCollectioni - formId = " + formId + ", createUrl = " + createUrl);
+        var formData = $( formId ).serialize( true );
+
+        jsonPayload = Object.toJSON( formData );
+
+        var req = new Ajax.Request( createUrl,
+                                    { method : 'post',
+                                      contentType : 'application/json',
+                                      parameters : { format : 'json' },
+                                      postBody : jsonPayload,
+                                      onSuccess : function( response ) { $( deactivateLinkId ).fire('lb:deactivate'); }
+                                    } );
+        return false;
+    },
+
+    deletePortfolioCollection : function( formId, deleteUrl, deactivateLinkId ) {
+        // alert("About to delete portfolio collection via url: " + deleteUrl + ", form id = " + formId + ", deactivate link = " + deactivateLinkId );
+
+        var formData = $( formId ).serialize( true );
+
+        formData['deactivate_link_id'] = deactivateLinkId;
+
+        jsonPayload = Object.toJSON( formData );
+
+        var req = new Ajax.Request( deleteUrl,
+                                    { method : 'post', 
+                                      contentType : 'application/json',
+                                      parameters : { format : 'json' },
+                                      postBody : jsonPayload,
+                                      onSuccess : function( response ) { $( deactivateLinkId ).fire('lb:deactivate'); }
+                                    } );
+        return false;
+    },
+
+    addDraggable : function( draggable, draggableId ) {
+        this.draggables.set( draggableId, draggable );
+    },
+
+    addDroppable : function( droppableId ) {
+        // alert("Adding droppable with  id = " + droppableId + "!");
+        this.droppables.push( droppableId );
+    },
+
+    createSortable : function() {
+        // alert("CM_ORGANIZER.WorkspacePortfolioTabInstanceControl.createSortable - about to create sortable, container id = " + this.imageAreaContainerId);
+        var self = this;
+        sortableHandles = $$( '#' + this.imageAreaContainerId + ' img.org-work-thumb' );
+        Sortable.create( this.imageAreaContainerId,
+                         { handles: sortableHandles,
+                           format: /^(.*)$/,
+                           ghosting: false,
+                           overlap: 'horizontal',
+                           constraint: '',
+                           onUpdate: function( container ) {
+                               $( self.formId + "-save" ).removeClassName( 'organizer-form-disabled-button' );
+                               $( self.formId + "-save" ).addClassName( 'organizer-form-enabled-button' );
+                             }
+                         } );
+        // alert("CM_ORGANIZER.WorkspacePortfolioCollectionTabInstanceControl.creatingSortable - created!");
     },
 
     save : function( formId, saveUrl ) {
@@ -372,6 +436,8 @@ CM_ORGANIZER.WorkspacePortfolioTabInstanceControl = Class.create( {
         if ( this.defaultPortfolioCollectionId ) {
             formData[ 'default_portfolio_collection_id' ] = this.defaultPortfolioCollectionId;
         }
+
+        formData[ 'sortables' ] = Sortable.serialize( this.imageAreaContainerId, { name: 'images' } );
 
         jsonPayload = Object.toJSON( formData );
 

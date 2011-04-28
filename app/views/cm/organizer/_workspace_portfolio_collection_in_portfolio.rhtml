@@ -3,17 +3,17 @@
     DESCRIPTION: Image representing a portfolio collection in the workspace body of a portfolio instance tab.
 
     LOCALS:
-        tab_id
         portfolio
         portfolio_collection
+        tab_id
         tab_content_id
+        image_area_container_id
  -->
 <% image_li_tag_id = "organizer-workspace-portfolio-collection-li-#{tab_id}-#{portfolio_collection.id}" %>
 <% image_li_tag_class = "org-work-img-li" %>
 <li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
     <% imageTagId = "organizer-workspace-portfolio-collection-#{portfolio_collection.id}" %>
     <%= organizer_portfolio_collection_thumbnail_tag( portfolio_collection, imageTagId, "org-work-thumb") %>
-    <%#= draggable_element "#{imageTagId}", :ghosting => true, :revert => true %>
     <% createNewTabLink = url_for( :controller => 'cm/organizer',
                                    :archive_id => portfolio.archive_id,
                                    :action => :create_new_portfolio_collection_instance_tab,
@@ -32,7 +32,9 @@
                          :archive_id => portfolio.archive_id,
                          :action => :delete_portfolio_collection_form,
                          :portfolio_collection_id => portfolio_collection.id,
-                         :tab_content_id => "#{tab_content_id}" ),
+                         :tab_id => "#{tab_id}",
+                         :tab_content_id => "#{tab_content_id}",
+                         :image_area_container_id => "#{image_area_container_id}" ),
                 :method => :get,
                 :class => "lbOn" %>
 </li>
