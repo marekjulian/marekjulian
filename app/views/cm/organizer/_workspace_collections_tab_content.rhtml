@@ -20,7 +20,7 @@
                                                 method :  'get' } )
                         });"
                      %>
-                    <%= link_to collection.tag_line, archive_collection_gallery_path(archive, collection.id), :class => "NavLink" %>
+                    <%= link_to collection.tag_line, edit_cm_archive_collection_path(archive, collection), :class => "NavLink" %>
                     <%= pluralize collection.images.count, 'image' %>
                     <% if logged_in? %>
                         <%= link_to image_tag("delete.png", :class => 'organizer-workspace-body-tab-content-list-item-delete'),
