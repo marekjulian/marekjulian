@@ -1,6 +1,6 @@
 <div id="<%=preview_div_id%>">
     <% preview_content_div_id = "organizer-preview-content-for-#{tab_id}-tab" %>
-    <div id="<%=preview_content_div_id%>">
+    <div id="<%=preview_content_div_id%>" class="organizer-preview-content-for-tab">
         <% portfolio_collection_images = [] %>
         <% portfolio_collection.image_show_views.each do |image_show_view| %>
             <% portfolio_collection_images.push( image_show_view.image ) %>
@@ -18,5 +18,5 @@
                                                 }
                                             }
                                         } );
-                        CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{preview_content_div_id}' );" %>
+        CM_ORGANIZER.workspaceControl.addDroppable( '#{tab_id}', '#{preview_content_div_id}' );" %>
 </div>

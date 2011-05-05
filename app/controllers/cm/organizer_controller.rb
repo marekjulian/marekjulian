@@ -988,6 +988,16 @@ class Cm::OrganizerController < ApplicationController
                     elsif image_show_view.thumbnail_variant_id == nil and iv.is_thumbnail
                         image_show_view.thumbnail_variant_id = iv.id
                     end
+                    if image_show_view.show_variant_id == nil
+                        if iv.file.exists? :web
+                            image_show_view.show_variant_id = iv.id
+                        end
+                    end
+                    if image_show_view.thumbnail_variant_id == nil
+                        if iv.file.exists? :default_thumb
+                            image_show_view.thumbnail_variant_id = iv.id
+                        end
+                    end
                 end
                 @portfolio_collection.image_show_views << image_show_view
                 image_show_view.save

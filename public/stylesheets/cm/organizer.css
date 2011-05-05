@@ -25,6 +25,10 @@
     background : white;
 }
 
+.organizer-preview-content-for-tab {
+    min-height : 80px;
+}
+
 .organizer-preview-loading {
     display : block;
     margin-right : auto;

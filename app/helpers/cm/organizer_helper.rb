@@ -103,10 +103,11 @@ module Cm::OrganizerHelper
         if show_view
             if show_view.thumbnail_variant_id and ImageVariant.exists?( show_view.thumbnail_variant_id )
                 show_variant = ImageVariant.find( show_view.thumbnail_variant_id )
-                if show_variant
+                if show_variant and show_variant.is_thumbnail
                     thumbnail_elem = image_tag show_variant.file.url, :id => image_tag_id, :class => image_tag_class, :alt => "", :border => 0
                 end
-            else
+            end
+            if thumbnail_elem == ""
                 image = Image.find( show_view.image_id )
                 if image
                     image.image_variants.each do |imageVariant|
