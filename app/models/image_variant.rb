@@ -34,6 +34,12 @@ class ImageVariant < ActiveRecord::Base
     # ...and perform post-processing after save in background
     after_save :schedule_processing
 
+    include Comparable
+
+    def <=>(other)
+        self.file_file_name<=>other.file_file_name
+    end
+
     def can_be_web_default
         height, width = self.dimensions
         if width == -1 and height == -1 then

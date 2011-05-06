@@ -8,7 +8,8 @@
                 <% end %>
             <% end %>
         <% end %>
-        <%= render :partial => 'preview_content_for_collection_image_instance_tab', :locals => { :image_variants => collection_image_variants,
+        <% sorted_collection_image_variants = collection_image_variants.sort %>
+        <%= render :partial => 'preview_content_for_collection_image_instance_tab', :locals => { :image_variants => sorted_collection_image_variants,
                                                                                                  :tab_id => tab_id } %>
     </div>
 </div>

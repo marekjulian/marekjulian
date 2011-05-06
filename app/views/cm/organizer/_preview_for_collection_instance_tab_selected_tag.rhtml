@@ -1,0 +1,28 @@
+<!--
+    LOCALS:
+        tab_id
+        form_id
+        archive
+  -->
+<% select_options = "<option id=\"organizer-preview-selection-form-for-#{tab_id}-tab-prompt\" value=\"prompt\" selected=\"selected\">Select a collection</option>" %>
+<% if archive.images.count <= 20 %>
+    <% select_options = "<option value=\"all\" selected=\"selected\">All images</option>" %>
+<% else %>
+    <% select_options = select_options + "<option value=\"all\">All your images</option>" %>
+<% end %>
+<% archive.collections.each do |coll| %>
+    <% select_options = select_options + "<option value=\"#{coll.id}\">Collection: #{coll.tag_line}</option>" %>
+<% end %>
+<%= select_tag "organizer-preview-selected-collection-id-for-#{tab_id}-tab",
+               select_options,
+               :onchange => remote_function( :submit => form_id,
+                                             :url => {  :action => :update_preview_content_for_collection_instance_tab,
+                                                        :tab_id => tab_id },
+                                             :success => "var promptEl = $('organizer-preview-selection-form-for-#{tab_id}-tab-prompt');
+                                                                     if ( promptEl ) {
+                                                                         promptEl.remove();
+                                                                     }",
+                                                        :loading => "$('organizer-preview-content-for-#{tab_id}-tab').hide();
+                                                                     $('organizer-preview-content-for-#{tab_id}-tab-loading').show();",
+                                                        :loaded => "$('organizer-preview-content-for-#{tab_id}-tab-loading').hide();
+                                                                    $('organizer-preview-content-for-#{tab_id}-tab').show();" )  %>

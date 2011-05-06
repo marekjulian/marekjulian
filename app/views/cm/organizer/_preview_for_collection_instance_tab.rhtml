@@ -1,20 +1,25 @@
+<!--
+    LOCALS:
+        tab_id
+        preview_div_id
+        archive
+  -->
 <div id="<%=preview_div_id%>">
     <div id="organizer-preview-selection-for-<%=tab_id%>-tab">
-        <form id="organizer-preview-selection-form-for-<%=tab_id%>-tab">
-            <% select_options = "<option value=\"all\" selected=\"selected\">All your images</option>" %>
-            <% archive.collections.each do |collection| %>
-                <% select_options = select_options + "<option value=\"#{collection.id}\">Collection: #{collection.tag_line}</option>" %>
-            <% end %>
-            <%= select_tag "selected-collection-id",
-                           select_options,
-                           :onchange => remote_function( :submit => 'organizer-preview-selection-form-for-#{tab_id}-tab',
-                           :url => {  :action => :update_preview_content_for_collection_instance_tab,
-                                      :tab_id => tab_id } ) %>
+        <% form_id= "organizer-preview-selection-form-for-#{tab_id}-tab" %>
+        <form id="<%=form_id%>">
+            <%= render :partial => 'preview_for_collection_instance_tab_selected_tag',
+                       :locals => { :tab_id => tab_id,
+                                    :form_id => form_id,
+                                    :archive => archive } %>
         </form>
     </div>
+    <%= render :partial => 'preview_loading', :locals => { :div_id => "organizer-preview-content-for-#{tab_id}-tab-loading" } %>
     <div id="organizer-preview-content-for-<%=tab_id%>-tab">
-        <%= render :partial => 'preview_content_for_collection_instance_tab', :locals => { :images => @archive.images,
-                                                                                           :tab_id => tab_id,
-                                                                                           :collection_id => 'all' } %>
+        <% if archive.images.count <= 20 %>
+            <%= render :partial => 'preview_content_for_collection_instance_tab', :locals => { :images => archive.images,
+                                                                                               :tab_id => tab_id,
+                                                                                               :collection_id => 'all' } %>
+        <% end %>
     </div>
 </div>

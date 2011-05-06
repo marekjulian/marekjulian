@@ -87,15 +87,16 @@ class Cm::OrganizerController < ApplicationController
         logger.debug "update_preview_content_for_collection_instance_tab: params - "
         logger.debug params.inspect
         @archive = Archive.find( params[:archive_id] )
-        collection_id = params['selected-collection-id']
-        if params['selected-collection-id'] == 'all'
+        tab_id = params[:tab_id]
+        selected_collection_id = "organizer-preview-selected-collection-id-for-#{tab_id}-tab"
+        collection_id = params[selected_collection_id]
+        if collection_id == 'all'
             images = @archive.images
         else
             collection = Collection.find( collection_id )
             images = collection.images
         end
         render :update do |page|
-            tab_id = params[:tab_id]
             page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_collection_instance_tab',
                                                                              :locals => { :images => images,
                                                                                           :tab_id => tab_id,
