@@ -1,0 +1,15 @@
+<!-- workspace_collection_instance_image_area_list
+
+    DESCRIPTION: images in a collection, sorted by filename.
+
+    LOCALS:
+        tab_id
+        collection
+  -->
+<% images = collection.images.sort %>
+<% images.each do |image| %>
+    <%= render :partial => "workspace_image_in_collection",
+               :locals => { :tab_id => tab_id,
+                            :collection => collection,
+                            :image => image } %>
+<% end %>

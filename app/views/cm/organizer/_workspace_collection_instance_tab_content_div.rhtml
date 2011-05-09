@@ -37,12 +37,9 @@
     <div id="<%=image_area_id%>" class="organizer-workspace-body-with-form-image-area">
         <% image_area_list_id = "organizer-workspace-body-collection-image-instance-list-#{tab_id}-#{collection.id}" %>
         <ul id="<%=image_area_list_id%>">
-            <% collection.images.each do |image| %>
-                <%= render :partial => "workspace_image_in_collection",
-                           :locals => { :tab_id => tab_id,
-                                        :collection => collection,
-                                        :image => image } %>
-            <% end %>
+            <%= render :partial => "workspace_collection_instance_image_area_list",
+                       :locals => { :tab_id => tab_id,
+                                    :collection => collection } %>
         </ul>
         <div class="organizer-workspace-trash-container">
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
