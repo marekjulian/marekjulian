@@ -16,7 +16,11 @@
       <% if @showCollections %>
         <% @showCollections.each do | sColl | %>
           <% coll = sColl.collection %>
-          <%= link_to coll.tag_line, port_portfolio_portfolio_collection_path( @portfolio, sColl ), :class => "NavLink" %>
+          <% if @portfolio_collection and @portfolio_collection.id == sColl.id %>
+              <%= link_to coll.tag_line, port_portfolio_portfolio_collection_path( @portfolio, sColl ), :class => "NavLinkCurrent" %>
+          <% else %>
+              <%= link_to coll.tag_line, port_portfolio_portfolio_collection_path( @portfolio, sColl ), :class => "NavLink" %>
+          <% end %>
         <% end %>
       <% end %>
       <a class="NavLink" href="http://marekjulian.blogspot.com/">my photo blog</a>

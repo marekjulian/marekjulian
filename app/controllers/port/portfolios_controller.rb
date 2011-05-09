@@ -6,6 +6,7 @@ class Port::PortfoliosController < ApplicationController
     def show
         @portfolio = Portfolio.find(params[:id])
         @showCollections = @portfolio.portfolio_collections
+        @portfolio_collection = nil
         if @portfolio.default_show_view_id
             showView = ImageShowView.find( @portfolio.default_show_view_id )
             @mainImageVariant = ImageVariant.find showView.show_variant_id
