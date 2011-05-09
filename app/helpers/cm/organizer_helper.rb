@@ -68,34 +68,38 @@ module Cm::OrganizerHelper
         thumbnailElem
     end
 
-    def organizer_portfolio_collection_thumbnail_tag( portfolioCollection, imageTagId, imageClass )
-        thumbnailElem = ""
-        if portfolioCollection.default_show_view_id and ImageShowView.exists?( portfolioCollection.default_show_view_id )
-            showView = ImageShowView.find( portfolioCollection.default_show_view_id )
+    def organizer_portfolio_collection_thumbnail_tag( portfolio_collection, image_tag_id, image_class )
+        thumbnail_elem = ""
+        if portfolio_collection.default_show_view_id and ImageShowView.exists?( portfolio_collection.default_show_view_id )
+            show_view = ImageShowView.find( portfolio_collection.default_show_view_id )
         else
-            showView = nil
+            show_view = nil
         end
-        if showView
-            if showView.thumbnail_variant_id and ImageVariant.exists?( showView.thumbnail_variant_id )
-                showVariant = ImageVariant.find( showView.thumbnail_variant_id )
-                if showVariant
-                    thumbnailElem = image_tag showVariant.file.url, :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+        if show_view
+            if show_view.thumbnail_variant_id and ImageVariant.exists?( show_view.thumbnail_variant_id )
+                show_variant = ImageVariant.find( show_view.thumbnail_variant_id )
+                if show_variant
+                    if show_variant.is_thumbnail
+                        thumbnail_elem = image_tag show_variant.file.url, :id => image_tag_id, :class => image_class, :alt => "", :border => 0
+                    elsif show_variant.is_master and show_variant.file.exists? :default_thumb
+                        thumbnail_elem = image_tag show_variant.file.url(:default_thumb), :id => image_tag_id, :class => image_class, :alt => "", :border => 0
+                    end
                 end
             else
-                image = Image.find( showView.image_id )
+                image = Image.find( show_view.image_id )
                 if image
-                    image.image_variants.each do |imageVariant|
-                        if imageVariant.is_master
-                            thumbnailElem = image_tag imageVariant.file.url(:default_thumb), :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+                    image.image_variants.each do |image_variant|
+                        if image_variant.is_master and image_variant.file.exists? :default_thumb
+                            thumbnail_elem = image_tag image_variant.file.url(:default_thumb), :id => image_tag_id, :class => image_class, :alt => "", :border => 0
                         end
                     end
                 end
             end
         end
-        if thumbnailElem == ""
-            thumbnailElem = image_tag 'camera_60x60px.gif', :id => imageTagId, :class => imageClass, :alt => "", :border => 0
+        if thumbnail_elem == ""
+            thumbnail_elem = image_tag 'camera_60x60px.gif', :id => image_tag_id, :class => image_class, :alt => "", :border => 0
         end
-        thumbnailElem
+        thumbnail_elem
     end
 
     def organizer_image_show_view_thumbnail_tag( show_view, image_tag_id, image_tag_class )
