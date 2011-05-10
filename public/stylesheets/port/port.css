@@ -5,6 +5,7 @@
     top : 6em;
     left : 345px;
     right : auto;
+    min-height : 500px;
 }
 
 .Thumbnails {

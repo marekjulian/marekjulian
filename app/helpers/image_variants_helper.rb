@@ -1,7 +1,7 @@
 module ImageVariantsHelper
 
   def image_variant_tag( image_variant )
-    logger.info "Generating image variant tag for url - #{image_variant.file.url}."
+    # logger.info "Generating image variant tag for url - #{image_variant.file.url}."
     image_tag image_variant.file.url, :alt => "", :border => 0
   end
 
