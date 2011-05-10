@@ -21,7 +21,7 @@
 
 <div class="ArchiveImageList">
     <% if @collection %>
-        <% images = @collection.images %>
+        <% images = @collection.images.sort %>
         <% images.each do | image | %>
             <% masterVariant = nil %>
             <% mainVariant = nil %>
