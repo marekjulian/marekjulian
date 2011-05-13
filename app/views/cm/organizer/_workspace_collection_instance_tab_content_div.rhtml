@@ -1,15 +1,33 @@
+<!-- workspace_collection_instance_tab_content_div:
+
+    DESCRIPTION: The workspace of a collection instance tab.
+
+    LOCALS:
+        tab_id
+        collection
+  -->
 <div id="<%=tab_content_id%>" class="organizer-workspace-body-tab-content">
     <div class="organizer-workspace-body-form">
         <% form_id = "organizer-workspace-body-form-#{tab_id}-#{collection.id}" %>
         <% save_url = url_for( :controller => 'cm/organizer',
                                :action => 'workspace_save_collection' ) %>
+        <% reload_url = url_for( :controller => 'cm/organizer',
+                                 :action => 'reload_collection_instance_tab' ) %>
         <% form_tag( { :controller => 'cm/organizer',
                        :action => 'workspace_save_collection' },
                      { :id => form_id,
                        :class => "organizer-workspace-body-form-form",
                        :onSubmit => "var tabControl = CM_ORGANIZER.workspaceControl.getTabControl( '#{tab_id}' );
                                      if (tabControl) {
-                                         return tabControl.save( '#{form_id}', '#{save_url}' );
+                                         if (CM_ORGANIZER.submitted === 'save') {
+                                             return tabControl.save( '#{form_id}', '#{save_url}' );
+                                         }
+                                         else if (CM_ORGANIZER.submitted === 'reload') {
+                                             return tabControl.reload( '#{form_id}', '#{reload_url}' );
+                                         }
+                                         else {
+                                             return false;
+                                         }
                                      }
                                      else {
                                          return false;
@@ -17,18 +35,29 @@
             <ul>
                 <li>
                     <%= label_tag :description, "Tag Line:" %>
-                    <%= text_field_tag :tag_line, collection.tag_line %>
+                    <%= text_field_tag :tag_line, 
+                                       collection.tag_line,
+                                       { :id => "#{form_id}-tag-line" } %>
                     <br/>
                 </li>
                 <li>
                     <%= label_tag :description, "Description:" %>
-                    <%= text_field_tag :description, collection.description %>
+                    <%= text_field_tag :description, 
+                                       collection.description,
+                                       { :id => "#{form_id}-description" } %>
                     <br/>
                 </li>
                 <li>
                     <%= submit_tag "Save", 
                                    :id => "#{form_id}-save", 
-                                   :class => "organizer-form-disabled-button" %>
+                                   :class => "organizer-form-disabled-button",
+                                   :onclick => "CM_ORGANIZER.submitted='save'" %>
+                </li>
+                <li>
+                    <%= submit_tag "Reload", 
+                                   :id => "#{form_id}-reload", 
+                                   :class => "organizer-form-enabled-button",
+                                   :onclick => "CM_ORGANIZER.submitted='reload'" %>
                 </li>
             </ul>
         <% end %>          
@@ -41,9 +70,11 @@
                        :locals => { :tab_id => tab_id,
                                     :collection => collection } %>
         </ul>
+<!--
         <div class="organizer-workspace-trash-container">
             <%= image_tag "trash.png", :class => "organizer-workspace-trash" %>
         </div>
+  -->
         <%= javascript_tag "Droppables.add( '#{image_area_id}', {
                                 accept : 'org-prev-img',
                                 onDrop : function( previewImage ) { 

@@ -274,6 +274,10 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     margin-right : 20px;
     margin-bottom : 5px;
     margin-left : 5px;
+    height : 110px;
+    width : 160px;
+    overflow : hidden;
+    white-space : nowrap;
 }
 
 .org-work-thumb {

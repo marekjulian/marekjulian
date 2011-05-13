@@ -27,6 +27,25 @@ module Cm::OrganizerHelper
         thumbnailElem
     end
 
+    def organizer_image_filename( image )
+        filename = ""
+        if image.master_variant_id
+            image_variant = ImageVariant.find( image.master_variant_id )
+            filename = image_variant.file_file_name
+        elsif image.image_variants.count > 0
+            image.image_variants.each do |image_variant|
+                if image_variant.is_master
+                    filename = image_variant.file_file_name
+                end
+            end
+            if filename == ""
+                image_variant = image.image_variants[0]
+                filename = image_variant.file_file_name
+            end
+        end
+        filename
+    end
+
     def organizer_image_variant_tag( imageVariant, tagId, tagClass )
         thumbnailElem = ""
         if imageVariant.is_thumbnail

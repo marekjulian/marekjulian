@@ -347,6 +347,34 @@ class Cm::OrganizerController < ApplicationController
         end
     end
 
+    def reload_collection_instance_tab
+        @archive = Archive.find( params[:archive_id] )
+        @collection = Collection.find( params[:collection_id] )
+        tab_id = params[:tab_id]
+        preview_form_id = "organizer-preview-selection-form-for-#{tab_id}-tab"
+        workspace_form_id = "organizer-workspace-body-form-#{tab_id}-#{@collection.id}"
+        render :update do |page|
+            page.replace_html preview_form_id, :partial => 'preview_for_collection_instance_tab_selected_tag',
+                                               :locals => { :tab_id => tab_id,
+                                                            :form_id =>  preview_form_id,
+                                                            :archive => @archive }
+            if @archive.images.count <= 20
+                page.replace_html "organizer-preview-content-for-#{tab_id}-tab", :partial => 'preview_content_for_collection_instance_tab',
+                                                                                 :locals => { :images => @archive.images,
+                                                                                              :tab_id => tab_id,
+                                                                                              :collection_id => 'all' }
+            else
+                page.replace_html "organizer-preview-content-for-#{tab_id}-tab", ""
+            end
+            page << "$( '#{workspace_form_id}-tag-line' ).value = '#{@collection.tag_line}';"
+            page << "$( '#{workspace_form_id}-description' ).value = '#{@collection.description}';"
+            image_area_list_id = "organizer-workspace-body-collection-image-instance-list-#{tab_id}-#{@collection.id}"
+            page.replace_html image_area_list_id, :partial => "workspace_collection_instance_image_area_list",
+                                                  :locals => { :tab_id => tab_id,
+                                                               :collection => @collection }
+        end
+    end
+
     def create_collection_form
         logger.debug "cm/organizer_controlloer/create_collection_form - inspecting  params:"
         logger.debug  params.inspect

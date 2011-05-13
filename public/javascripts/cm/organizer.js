@@ -16,7 +16,8 @@ if(typeof(CM_ORGANIZER) == "undefined") {
                          },
                          newWorkspaceControl : function() {
                              this.workspaceControl = new this.WorkspaceControl();
-                         }
+                         },
+                         submitted : null
      };
 }
 
@@ -210,8 +211,34 @@ CM_ORGANIZER.WorkspaceCollectionTabInstanceControl = Class.create( {
                                                                          var enableClass = "organizer-form-enabled-button";
                                                                          var disableClass = "organizer-form-disabled-button";
                                                                          $( formSaveId ).removeClassName( enableClass );
-                                                                         $( formSaveId ).addClassName( enableClass ); }  
+                                                                         $( formSaveId ).addClassName( disableClass ); }  
                                     } );
+        return false;
+    },
+
+    reload : function( formId, reloadUrl ) {
+        var formData = $( formId ).serialize( true );
+
+        formData[ 'tab_id' ] = this.tabId;
+        formData[ 'collection_id' ] = this.collectionId;
+
+        jsonPayload = Object.toJSON( formData );
+
+        var self = this;
+
+        var req = new Ajax.Request( reloadUrl,
+                                    { method : 'post',
+                                      contentType : 'application/json',
+                                      parameters : { format : 'json' },
+                                      postBody : jsonPayload,
+                                      onSuccess : function( response ) { self.changes = $A();
+                                                                         var formSaveId = formId + '-save';
+                                                                         var enableClass = "organizer-form-enabled-button";
+                                                                         var disableClass = "organizer-form-disabled-button";
+                                                                         $( formSaveId ).removeClassName( enableClass );
+                                                                         $( formSaveId ).addClassName( disableClass ); }  
+                                    } );
+
         return false;
     }
 

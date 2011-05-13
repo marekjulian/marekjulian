@@ -3,16 +3,20 @@
     DESCRIPTION: image in the workspace body of a collection instance tab.
 
     LOCALS:
+        tab_id
         collection
         image
-        tab_id
 
  -->
 <% image_li_tag_id = "org-work-img-li-#{tab_id}-#{collection.id}-#{image.id}" %>
 <% image_li_tag_class = "org-work-img-li" %>
 <li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+
     <% image_tag_id = "org-work-img-#{tab_id}-#{collection.id}-#{image.id}" %>
     <%= organizer_image_tag( image, image_tag_id, "org-work-thumb") %>
+
+    <% image_filename = organizer_image_filename image %>
+    <%= link_to image_filename, edit_cm_archive_image_path(collection.archive, image), :class => "NavLink" %>
 
     <%= javascript_tag "var newDraggable = new Draggable( '#{image_li_tag_id}', { ghosting: true, 
                                                                                   revert: true } );

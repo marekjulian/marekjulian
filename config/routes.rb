@@ -58,6 +58,7 @@ ActionController::Routing::Routes.draw do |map|
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_collection_image_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_instance_tab => :get }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_new_portfolio_collection_instance_tab => :get }
+            archive.resource  :organizer, :controller => 'organizer', :member => { :reload_collection_instance_tab => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_collection_form => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :create_collection => :post }
             archive.resource  :organizer, :controller => 'organizer', :member => { :delete_collection_form => :post }
