@@ -10,8 +10,7 @@
         image_area_container_id
  -->
 <% image_li_tag_id = "organizer-workspace-portfolio-collection-li-#{tab_id}-#{portfolio_collection.id}" %>
-<% image_li_tag_class = "org-work-img-li" %>
-<li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+<li id="<%=image_li_tag_id%>" class="org-work-img-with-delete-li">
     <% imageTagId = "organizer-workspace-portfolio-collection-#{portfolio_collection.id}" %>
     <%= organizer_portfolio_collection_thumbnail_tag( portfolio_collection, imageTagId, "org-work-thumb") %>
     <% createNewTabLink = url_for( :controller => 'cm/organizer',

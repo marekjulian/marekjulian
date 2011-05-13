@@ -274,8 +274,6 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     margin-right : 20px;
     margin-bottom : 5px;
     margin-left : 5px;
-    height : 110px;
-    width : 160px;
     overflow : hidden;
     white-space : nowrap;
 }
@@ -294,6 +292,16 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     border-style : solid;
     border-color : #cccccc;
     margin : 0px;
+}
+
+.org-work-img-li {
+    height : 110px;
+    width : 160px;
+}
+
+.org-work-img-with-delete-li {
+    height : 120px;
+    width : 160px;
 }
 
 .organizer-workspace-body-tab-content-list-item-delete {
