@@ -9,8 +9,7 @@
 
  -->
 <% image_li_tag_id = "org-work-img-li-#{tab_id}-#{collection.id}-#{image.id}" %>
-<% image_li_tag_class = "org-work-img-li" %>
-<li id="<%=image_li_tag_id%>" class="<%=image_li_tag_class%>">
+<li id="<%=image_li_tag_id%>" class="org-work-img-with-filename-li">
 
     <% image_tag_id = "org-work-img-#{tab_id}-#{collection.id}-#{image.id}" %>
     <%= organizer_image_tag( image, image_tag_id, "org-work-thumb") %>
