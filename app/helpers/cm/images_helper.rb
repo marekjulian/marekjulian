@@ -1,2 +1,3 @@
 module Cm::ImagesHelper
+
 end

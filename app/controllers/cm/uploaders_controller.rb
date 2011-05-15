@@ -1,5 +1,7 @@
 class Cm::UploadersController < ApplicationController
 
+    include ImageAndVariants
+
     before_filter :show_session
     #
     # Require login ONLY for show and NOT create to avoid a flash cookie bug.
@@ -7,6 +9,7 @@ class Cm::UploadersController < ApplicationController
     #
     before_filter :login_required, :only => [ :show ]
     skip_before_filter :verify_authenticity_token, :only => [:create]
+
     layout "cm/uploader"
 
     def show_session
@@ -62,7 +65,7 @@ class Cm::UploadersController < ApplicationController
         #
         fakeParamsHash = { :description => params[:Filename],
                            :image_variants_attributes => { 0 => { :update_type => "add_image_variant",
-                                                                  :attributes_mode => "user",
+                                                                  :attributes_mode => "auto",
                                                                   :is_web_default => "0",
                                                                   :is_thumbnail => "0",
                                                                   :is_master => "1",
@@ -71,7 +74,9 @@ class Cm::UploadersController < ApplicationController
 
         @image = Image.new( fakeParamsHash )
 
-        if @image
+        ok = resolve_image_variants( @image )
+
+        if ok && @image
             logger.info "cm/uploaders/create - Created new image, id = %d." % @image.id
             ok = @archive.images << @image
             if ok && @collection

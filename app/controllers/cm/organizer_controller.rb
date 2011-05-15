@@ -1,5 +1,7 @@
 class Cm::OrganizerController < ApplicationController
 
+    include ImageAndVariants
+
     before_filter :login_required
 
     skip_before_filter :verify_authenticity_token,
@@ -967,15 +969,17 @@ class Cm::OrganizerController < ApplicationController
         # Save all the images... We delete an affected image if it has NO image_variants.
         # However, we never delete the image which is the focus of the tab.
         #
+        image.image_variants.each do |iv|
+            iv.attributes_mode = 'auto'
+        end
+        resolve_image_variants( image )
         image.save
         other_affected_images.each_value do |affected_image|
             if affected_image.image_variants.count > 0
-                if affected_image.master_variant_id == nil
-                    affected_image.master_variant_id = affected_image.image_variants.first.id
+                affected_image.image_variants.each do |iv|
+                    iv.attributes_mode = 'auto'
                 end
-                if affected_image.web_default_variant_id == nil
-                    affected_image.web_default_variant_id = affected_image.image_variants.first.id
-                end
+                resolve_image_variants( affected_image )
                 affected_image.save
             else
                 affected_image.destroy
