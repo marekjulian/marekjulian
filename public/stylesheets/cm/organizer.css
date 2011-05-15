@@ -278,6 +278,20 @@ li.organizer-workspace-tab img.organizer-workspace-tab-close {
     white-space : nowrap;
 }
 
+.org-work-thumb-with-filename-li {
+    overflow : hidden;
+    white-space : nowrap;
+    height : 110px;
+    width : 160px;
+}
+
+.org-work-thumb-with-delete-li {
+    overflow : hidden;
+    white-space : nowrap;
+    height : 120px;
+    width : 160px;
+}
+
 .org-work-thumb {
     display : inline;
     background : #eeeeee;

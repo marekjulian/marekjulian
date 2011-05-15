@@ -2,7 +2,7 @@
     <% if archive.collections.any? %>
         <ul id="organizer-workspace-body-collections-list">
             <% archive.collections.each do |collection| %>
-                <li>
+                <li class="org-work-thumb-with-delete-li">
                     <% imageTagId = "organizer-workspace-body-collections-item-#{collection.id}" %>
                     <% if collection.images.first %>
                         <%= organizer_image_tag(collection.images.first, "#{imageTagId}", "org-work-thumb") %><br/>
