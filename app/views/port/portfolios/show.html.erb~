@@ -1,2 +1,0 @@
-<%= render :partial => "portfolio_collections/main_image" %>
-

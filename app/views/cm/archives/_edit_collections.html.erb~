@@ -1,9 +1,0 @@
-<div class="ArchiveList">
-    <%= render :partial => "heading", :locals => { :label => "Archive Collections" } %>
-    <% if @collections %>
-        <% @collections.each do | s_coll | %>
-            <%= link_to s_coll.tag_line, edit_cm_archive_collection_path(@archive, s_coll), :class => "NavLink" %>
-        <% end %>
-    <% end %>
-    <%= link_to "new collection", new_cm_archive_collection_path(@archive), :class => "NavLink" %>
-</div>
