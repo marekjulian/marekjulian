@@ -14,7 +14,7 @@ development:
   database: marekjulian_development
   pool: 5
   username: postgres
-  password: J1Ulrich
+  password: xxxx
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -48,4 +48,4 @@ production:
   database: marekjulian_production
   pool: 5
   username: postgres
-  password: J1Ulrich
+  password: xxxx
